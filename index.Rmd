@@ -1,0 +1,20 @@
+---
+pagetitle: "Rspatialdata"
+---
+
+### Rspatialdata is a collection of data sources and tutorials on visualising spatial data using R.
+
+
+[Administrative Boundaries](admin_boundaries.html)  
+[Population](population.html)  
+[Elevation](elevation.html)  
+[Temperature](temperature.html)  
+[Rainfall](rainfall.html)  
+[Humidity](humidity.html)  
+[Vegetation](vegetation.html)  
+[Land Cover](land_cov.html)  
+[Malaria](malaria.html)  
+[DHS](dhs.html)  
+[Mobility](mobility.html)  
+[Air Pollution](air_pollution.html)  
+[Socio-economic](socio_economic.html)  

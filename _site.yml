@@ -1,4 +1,5 @@
 name: "rspatialdata"
+output_dir: "docs"
 navbar:
   title: "Rspatialdata"
   left:

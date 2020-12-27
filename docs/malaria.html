@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>Malaria</title>
+
+<script src="site_libs/jquery-1.12.4/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/journal.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/anchor-sections-1.0/anchor-sections.css" rel="stylesheet" />
+<script src="site_libs/anchor-sections-1.0/anchor-sections.js"></script>
+<script src="site_libs/htmlwidgets-1.5.1/htmlwidgets.js"></script>
+<link href="site_libs/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet" />
+<script src="site_libs/datatables-binding-0.15/datatables.js"></script>
+<link href="site_libs/dt-core-1.10.20/css/jquery.dataTables.min.css" rel="stylesheet" />
+<link href="site_libs/dt-core-1.10.20/css/jquery.dataTables.extra.css" rel="stylesheet" />
+<script src="site_libs/dt-core-1.10.20/js/jquery.dataTables.min.js"></script>
+<link href="site_libs/dt-ext-scroller-1.10.20/css/scroller.dataTables.min.css" rel="stylesheet" />
+<script src="site_libs/dt-ext-scroller-1.10.20/js/dataTables.scroller.min.js"></script>
+<link href="site_libs/dt-ext-fixedcolumns-1.10.20/css/fixedColumns.dataTables.min.css" rel="stylesheet" />
+<script src="site_libs/dt-ext-fixedcolumns-1.10.20/js/dataTables.fixedColumns.min.js"></script>
+<link href="site_libs/crosstalk-1.1.0.1/css/crosstalk.css" rel="stylesheet" />
+<script src="site_libs/crosstalk-1.1.0.1/js/crosstalk.min.js"></script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+<link rel="stylesheet" href="malaria-css.css" type="text/css" />
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 61px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 66px;
+  margin-top: -66px;
+}
+.section h2 {
+  padding-top: 66px;
+  margin-top: -66px;
+}
+.section h3 {
+  padding-top: 66px;
+  margin-top: -66px;
+}
+.section h4 {
+  padding-top: 66px;
+  margin-top: -66px;
+}
+.section h5 {
+  padding-top: 66px;
+  margin-top: -66px;
+}
+.section h6 {
+  padding-top: 66px;
+  margin-top: -66px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Rspatialdata</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Tutorials
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="admin_boundaries.html">Administrative Boundaries</a>
+    </li>
+    <li>
+      <a href="population.html">Population</a>
+    </li>
+    <li>
+      <a href="elevation.html">Elevation</a>
+    </li>
+    <li>
+      <a href="temperature.html">Temperature</a>
+    </li>
+    <li>
+      <a href="rainfall.html">Rainfall</a>
+    </li>
+    <li>
+      <a href="humidity.html">Humidity</a>
+    </li>
+    <li>
+      <a href="vegetation.html">Vegetation</a>
+    </li>
+    <li>
+      <a href="land_cov.html">Land Cover</a>
+    </li>
+    <li>
+      <a href="malaria.html">Malaria</a>
+    </li>
+    <li>
+      <a href="dhs.html">DHS</a>
+    </li>
+    <li>
+      <a href="mobility.html">Mobility</a>
+    </li>
+    <li>
+      <a href="air_pollution.html">Air Pollution</a>
+    </li>
+    <li>
+      <a href="socio_economic.html">Socio-economic</a>
+    </li>
+  </ul>
+</li>
+<li>
+  <a href="contributors.html">Contributors</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Malaria</h1>
+
+</div>
+
+
+<div id="downloading-and-visualising-parasite-rate-data" class="section level2">
+<h2>Downloading and visualising parasite rate data</h2>
+<p>This is a tutorial for the <code>mapAtlas</code> package which enables users to download, visualize and manipulate global parasite rate survey data(Plasmodium and P.vivax) and modeled raster outputs. This package is to provide users of the R programming language with a convenient API to interact with the publicly available data.</p>
+</div>
+<div id="installation-of-malariaatlas-package" class="section level2">
+<h2>Installation of <code>malariaAtlas</code> package</h2>
+<p>To download the data and the other functions required to visualize the same, you need the <code>malarisAtlas</code> package, which can be downloaded from CRAN using</p>
+<pre class="r"><code>install.packages(&quot;malariaAtlas&quot;)</code></pre>
+<p>And the package can be loaded for usage of its functionalities as follows:</p>
+<pre class="r"><code>library(malariaAtlas)</code></pre>
+<div id="available-data" class="section level3">
+<h3>Available Data</h3>
+<p>The data can be explored interactively at <a href="https://malariaatlas.org/explorer/#/">data explorer</a>. This can also be used for finding more information on raster data.</p>
+</div>
+<div id="list-of-data-present-in-the-package" class="section level3">
+<h3>List of data present in the package</h3>
+<p>The <code>listData()</code> function from the <code>mapAtlas</code> package helps retrieve a list of all the available data to download.</p>
+<p>We can download the data for any available country by using the function and passing values to its arguments.</p>
+<pre class="r"><code>listData(datatype = &quot;pr points&quot;) </code></pre>
+<p>The above syntax helps find all the countries that have PR survey points data, that can be downloaded. Or if you need the vector survey data for the countries that have raster data ,there are two ways you can do so:</p>
+<pre class="r"><code>listData(datatype = &quot;raster&quot;) 
+#or
+listRaster()</code></pre>
+<p>If you need the list of all the countries that have the shapefiles data, there are two ways you can do so:</p>
+<pre class="r"><code>listData(datatype = &quot;shape&quot;) 
+#or 
+listShp()</code></pre>
+</div>
+<div id="other-available-functions" class="section level3">
+<h3>Other Available functions</h3>
+<ol style="list-style-type: decimal">
+<li><code>isAvaiilable_pr</code> is a function which confirms whether a specified country has a <em>PR survey points</em> for downloading or not. It can be used like thus,</li>
+</ol>
+<pre class="r"><code>isAvailable_pr(country = &quot;Zimbabwe&quot;)</code></pre>
+<p>For a country where the <strong>pr survey points</strong> are not available the following message will be displayed:</p>
+<pre class="r"><code>isAvailable_pr(ISO = &quot;USA&quot;)</code></pre>
+<ol start="2" style="list-style-type: decimal">
+<li><code>isAvailable_vec</code>is a function which confirms whether a specified country has <em>vector occurrences data</em> for downloading or not. This function can be used thus,</li>
+</ol>
+<pre class="r"><code>isAvailable_vec(country = &quot;India&quot;)</code></pre>
+<p>For a country where the <strong>vector survey points</strong> are not available the following message will be displayed:</p>
+<pre class="r"><code>isAvailable_vec(ISO = &quot;USA&quot;)</code></pre>
+</div>
+<div id="available-functions-for-dowloading-and-visualising-data" class="section level3">
+<h3>Available functions for dowloading and visualising data</h3>
+<ul>
+<li><strong>get* functions</strong> and <strong>autoplot methods</strong></li>
+</ul>
+<ol style="list-style-type: decimal">
+<li><code>getPR()</code> : downloads all the publicly available PR points for the country and returns it as a dataframe. The arguments included in this are <em>country, ISO, continent,species</em>. The species is string specifying the Plasmodium species for which we need to find the PR points,the options include: <em>Pf</em>or <em>Pv</em> or <em>both</em>. It can be used as thus</li>
+</ol>
+<pre class="r"><code>getPR(country = &quot;Zimbabwe&quot;, species = &quot;both&quot;) %&gt;% 
+  head(10) %&gt;% 
+  datatable(extensions = c(&#39;Scroller&#39;,&#39;FixedColumns&#39;), options = list(
+  deferRender = TRUE,
+  #scrollY = 350,
+  scrollX = 350,
+  dom = &#39;t&#39;,
+  scroller = TRUE,
+  fixedColumns = list(leftColumns = 4)
+))</code></pre>
+<div id="htmlwidget-ca242c19194edab033e5" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-ca242c19194edab033e5">{"x":{"filter":"none","extensions":["Scroller","FixedColumns"],"data":[["9","11","17","19","21","24","26","30","34","38"],[null,null,null,null,null,null,null,null,null,null],[16142,17018,18443,68,19390,17564,14287,2943,11029,20058],["Chilonga","Ume - Kahobo","Bandanyenje","Piringani","Zidulini","Lutumba","Seula School","Ndlovu","Bambaninga","Pumula Mission"],[-18.4,-17.8091,-18.8667,-16.9667,-18.7333,-22.122,-21.6176,-18.8667,-20.4146,-19.617],[27.1667,28.8209,31.95,30.1333,28.6667,30.1757,28.4033,27.75,31.7562,27.116],["UNKNOWN","UNKNOWN","UNKNOWN","UNKNOWN","UNKNOWN","UNKNOWN","UNKNOWN","UNKNOWN","UNKNOWN","UNKNOWN"],["Zimbabwe","Zimbabwe","Zimbabwe","Zimbabwe","Zimbabwe","Zimbabwe","Zimbabwe","Zimbabwe","Zimbabwe","Zimbabwe"],["ZWE","ZWE","ZWE","ZWE","ZWE","ZWE","ZWE","ZWE","ZWE","ZWE"],["Africa","Africa","Africa","Africa","Africa","Africa","Africa","Africa","Africa","Africa"],[3,3,3,3,3,3,3,3,3,3],[1991,1991,1991,1991,1991,1991,1991,1991,1991,1991],[4,4,4,4,4,4,4,4,4,4],[1991,1991,1991,1991,1991,1991,1991,1991,1991,1991],[4,4,4,4,4,4,4,4,4,4],[16,16,16,16,16,16,16,16,16,16],[107,40,125,103,125,118,118,125,125,129],[0,3,0,0,1,0,0,10,1,1],[0,0.075,0,0,0.008,0,0,0.08,0.008,0.0078],["P. falciparum","P. falciparum","P. falciparum","P. falciparum","P. falciparum","P. falciparum","P. falciparum","P. falciparum","P. falciparum","P. falciparum"],["Microscopy","Microscopy","Microscopy","Microscopy","Microscopy","Microscopy","Microscopy","Microscopy","Microscopy","Microscopy"],["","","","","","","","","",""],[null,null,null,null,null,null,null,null,null,null],["true","true","true","true","true","true","true","true","true","true"],["true","true","true","true","true","true","true","true","true","true"],["","","","","","","","","",""],["Freeman, T.W. and Chandiwana, S.K. (1996).  &lt;b&gt;A retrospective analysis of data from the 1991 national malaria prevalence survey in Zimbabwe.&lt;/b&gt; &lt;i&gt;Malaria and Infectious Diseases in Africa&lt;/i&gt;, &lt;b&gt;4&lt;/b&gt;():19-24","Freeman, T.W. and Chandiwana, S.K. (1996).  &lt;b&gt;A retrospective analysis of data from the 1991 national malaria prevalence survey in Zimbabwe.&lt;/b&gt; &lt;i&gt;Malaria and Infectious Diseases in Africa&lt;/i&gt;, &lt;b&gt;4&lt;/b&gt;():19-24","Freeman, T.W. and Chandiwana, S.K. (1996).  &lt;b&gt;A retrospective analysis of data from the 1991 national malaria prevalence survey in Zimbabwe.&lt;/b&gt; &lt;i&gt;Malaria and Infectious Diseases in Africa&lt;/i&gt;, &lt;b&gt;4&lt;/b&gt;():19-24","Freeman, T.W. and Chandiwana, S.K. (1996).  &lt;b&gt;A retrospective analysis of data from the 1991 national malaria prevalence survey in Zimbabwe.&lt;/b&gt; &lt;i&gt;Malaria and Infectious Diseases in Africa&lt;/i&gt;, &lt;b&gt;4&lt;/b&gt;():19-24","Freeman, T.W. and Chandiwana, S.K. (1996).  &lt;b&gt;A retrospective analysis of data from the 1991 national malaria prevalence survey in Zimbabwe.&lt;/b&gt; &lt;i&gt;Malaria and Infectious Diseases in Africa&lt;/i&gt;, &lt;b&gt;4&lt;/b&gt;():19-24","Freeman, T.W. and Chandiwana, S.K. (1996).  &lt;b&gt;A retrospective analysis of data from the 1991 national malaria prevalence survey in Zimbabwe.&lt;/b&gt; &lt;i&gt;Malaria and Infectious Diseases in Africa&lt;/i&gt;, &lt;b&gt;4&lt;/b&gt;():19-24","Freeman, T.W. and Chandiwana, S.K. (1996).  &lt;b&gt;A retrospective analysis of data from the 1991 national malaria prevalence survey in Zimbabwe.&lt;/b&gt; &lt;i&gt;Malaria and Infectious Diseases in Africa&lt;/i&gt;, &lt;b&gt;4&lt;/b&gt;():19-24","Freeman, T.W. and Chandiwana, S.K. (1996).  &lt;b&gt;A retrospective analysis of data from the 1991 national malaria prevalence survey in Zimbabwe.&lt;/b&gt; &lt;i&gt;Malaria and Infectious Diseases in Africa&lt;/i&gt;, &lt;b&gt;4&lt;/b&gt;():19-24","Freeman, T.W. and Chandiwana, S.K. (1996).  &lt;b&gt;A retrospective analysis of data from the 1991 national malaria prevalence survey in Zimbabwe.&lt;/b&gt; &lt;i&gt;Malaria and Infectious Diseases in Africa&lt;/i&gt;, &lt;b&gt;4&lt;/b&gt;():19-24","Freeman, T.W. and Chandiwana, S.K. (1996).  &lt;b&gt;A retrospective analysis of data from the 1991 national malaria prevalence survey in Zimbabwe.&lt;/b&gt; &lt;i&gt;Malaria and Infectious Diseases in Africa&lt;/i&gt;, &lt;b&gt;4&lt;/b&gt;():19-24"],[" (2010). &lt;b&gt;http://mara-database.org/mara/.&lt;/b&gt; . MARA/ARMA."," (2010). &lt;b&gt;http://mara-database.org/mara/.&lt;/b&gt; . MARA/ARMA."," (2010). &lt;b&gt;http://mara-database.org/mara/.&lt;/b&gt; . MARA/ARMA."," (2010). &lt;b&gt;http://mara-database.org/mara/.&lt;/b&gt; . MARA/ARMA."," (2010). &lt;b&gt;http://mara-database.org/mara/.&lt;/b&gt; . MARA/ARMA."," (2010). &lt;b&gt;http://mara-database.org/mara/.&lt;/b&gt; . MARA/ARMA."," (2010). &lt;b&gt;http://mara-database.org/mara/.&lt;/b&gt; . MARA/ARMA."," (2010). &lt;b&gt;http://mara-database.org/mara/.&lt;/b&gt; . MARA/ARMA."," (2010). &lt;b&gt;http://mara-database.org/mara/.&lt;/b&gt; . MARA/ARMA."," (2010). &lt;b&gt;http://mara-database.org/mara/.&lt;/b&gt; . MARA/ARMA."],["Le Sueur, D., Binka, F., Lengeler, C., De Savigny, D., Snow, B., Teuscher, T. and Toure, Y. (1997).  &lt;b&gt;An atlas of malaria in Africa.&lt;/b&gt; &lt;i&gt;Africa health&lt;/i&gt;, &lt;b&gt;19&lt;/b&gt;(2):23-4","Le Sueur, D., Binka, F., Lengeler, C., De Savigny, D., Snow, B., Teuscher, T. and Toure, Y. (1997).  &lt;b&gt;An atlas of malaria in Africa.&lt;/b&gt; &lt;i&gt;Africa health&lt;/i&gt;, &lt;b&gt;19&lt;/b&gt;(2):23-4","Le Sueur, D., Binka, F., Lengeler, C., De Savigny, D., Snow, B., Teuscher, T. and Toure, Y. (1997).  &lt;b&gt;An atlas of malaria in Africa.&lt;/b&gt; &lt;i&gt;Africa health&lt;/i&gt;, &lt;b&gt;19&lt;/b&gt;(2):23-4","Le Sueur, D., Binka, F., Lengeler, C., De Savigny, D., Snow, B., Teuscher, T. and Toure, Y. (1997).  &lt;b&gt;An atlas of malaria in Africa.&lt;/b&gt; &lt;i&gt;Africa health&lt;/i&gt;, &lt;b&gt;19&lt;/b&gt;(2):23-4","Le Sueur, D., Binka, F., Lengeler, C., De Savigny, D., Snow, B., Teuscher, T. and Toure, Y. (1997).  &lt;b&gt;An atlas of malaria in Africa.&lt;/b&gt; &lt;i&gt;Africa health&lt;/i&gt;, &lt;b&gt;19&lt;/b&gt;(2):23-4","Le Sueur, D., Binka, F., Lengeler, C., De Savigny, D., Snow, B., Teuscher, T. and Toure, Y. (1997).  &lt;b&gt;An atlas of malaria in Africa.&lt;/b&gt; &lt;i&gt;Africa health&lt;/i&gt;, &lt;b&gt;19&lt;/b&gt;(2):23-4","Le Sueur, D., Binka, F., Lengeler, C., De Savigny, D., Snow, B., Teuscher, T. and Toure, Y. (1997).  &lt;b&gt;An atlas of malaria in Africa.&lt;/b&gt; &lt;i&gt;Africa health&lt;/i&gt;, &lt;b&gt;19&lt;/b&gt;(2):23-4","Le Sueur, D., Binka, F., Lengeler, C., De Savigny, D., Snow, B., Teuscher, T. and Toure, Y. (1997).  &lt;b&gt;An atlas of malaria in Africa.&lt;/b&gt; &lt;i&gt;Africa health&lt;/i&gt;, &lt;b&gt;19&lt;/b&gt;(2):23-4","Le Sueur, D., Binka, F., Lengeler, C., De Savigny, D., Snow, B., Teuscher, T. and Toure, Y. (1997).  &lt;b&gt;An atlas of malaria in Africa.&lt;/b&gt; &lt;i&gt;Africa health&lt;/i&gt;, &lt;b&gt;19&lt;/b&gt;(2):23-4","Le Sueur, D., Binka, F., Lengeler, C., De Savigny, D., Snow, B., Teuscher, T. and Toure, Y. (1997).  &lt;b&gt;An atlas of malaria in Africa.&lt;/b&gt; &lt;i&gt;Africa health&lt;/i&gt;, &lt;b&gt;19&lt;/b&gt;(2):23-4"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>dhs_id<\/th>\n      <th>site_id<\/th>\n      <th>site_name<\/th>\n      <th>latitude<\/th>\n      <th>longitude<\/th>\n      <th>rural_urban<\/th>\n      <th>country<\/th>\n      <th>country_id<\/th>\n      <th>continent_id<\/th>\n      <th>month_start<\/th>\n      <th>year_start<\/th>\n      <th>month_end<\/th>\n      <th>year_end<\/th>\n      <th>lower_age<\/th>\n      <th>upper_age<\/th>\n      <th>examined<\/th>\n      <th>positive<\/th>\n      <th>pr<\/th>\n      <th>species<\/th>\n      <th>method<\/th>\n      <th>rdt_type<\/th>\n      <th>pcr_type<\/th>\n      <th>malaria_metrics_available<\/th>\n      <th>location_available<\/th>\n      <th>permissions_info<\/th>\n      <th>citation1<\/th>\n      <th>citation2<\/th>\n      <th>citation3<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"deferRender":true,"scrollX":350,"dom":"t","scroller":true,"fixedColumns":{"leftColumns":4},"columnDefs":[{"className":"dt-right","targets":[2,4,5,10,11,12,13,14,15,16,17,18]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+<ol start="2" style="list-style-type: decimal">
+<li><code>getVecOcc()</code>: downloads all publicly available vector points for the country ans returns it as a dataframe. The arguments included in this are <em>country, ISO, continent, species</em>. The species argument is a strong specifying the Anopheles species for finding the vector occurrences points, the options are: <em>Anopheles….(specific species of Anopheles)</em> or <em>ALL</em>.</li>
+</ol>
+<pre class="r"><code>getVecOcc(country = &quot;India&quot;, species = &quot;ALL&quot;) %&gt;% 
+  head(10)%&gt;% 
+  datatable(extensions = c(&#39;Scroller&#39;,&#39;FixedColumns&#39;), options = list(
+  deferRender = TRUE,
+  #scrollY = 350,
+  scrollX = 350,
+  dom = &#39;t&#39;,
+  scroller = TRUE,
+  fixedColumns = list(leftColumns = 4)
+))</code></pre>
+<div id="htmlwidget-2001da083be125c12a34" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-2001da083be125c12a34">{"x":{"filter":"none","extensions":["Scroller","FixedColumns"],"data":[["1","2","3","4","5","6","7","8","9","10"],[28473,28473,28475,1000000477,1000000477,28472,28473,28473,28472,28475],[24.717,24.717,24.567,26.9311,26.9311,24.717,24.717,24.717,24.717,24.567],[87.55,87.55,87.417,92.6631,92.6631,87.433,87.55,87.55,87.433,87.417],["India","India","India","India","India","India","India","India","India","India"],["IND","IND","IND","IND","IND","IND","IND","IND","IND","IND"],["Asia","Asia","Asia","Asia","Asia","Asia","Asia","Asia","Asia","Asia"],[8,8,8,5,5,8,8,8,8,8],[1998,1998,1998,1992,1992,1998,1998,1998,1998,1998],[8,8,8,6,6,8,8,8,8,8],[1998,1998,1998,1992,1992,1998,1998,1998,1998,1998],[35,4,30,35,15,35,30,11,4,11],["Anopheles minimus species complex","Anopheles annularis van der Wulp, 1884","Anopheles maculatus Group","Anopheles minimus species complex","Anopheles culicifacies species complex","Anopheles minimus species complex","Anopheles maculatus Group","Anopheles barbirostris species complex","Anopheles annularis van der Wulp, 1884","Anopheles barbirostris species complex"],["Anopheles minimus","Anopheles annularis","Anopheles maculatus","Anopheles minimus","Anopheles culicifacies","Anopheles minimus","Anopheles maculatus","Anopheles barbirostris","Anopheles annularis","Anopheles barbirostris"],["morphology","morphology","morphology","morphology","morphology","morphology","morphology","morphology","morphology","morphology"],["not applicable","not applicable","not applicable","not applicable","not applicable","not applicable","not applicable","not applicable","not applicable","not applicable"],["indoor light trap","indoor light trap","indoor light trap","house resting inside","house resting inside","indoor light trap","indoor light trap","indoor light trap","indoor light trap","indoor light trap"],["unknown","unknown","unknown","man biting indoors","man biting indoors","unknown","unknown","unknown","unknown","unknown"],["","","","larval collection","larval collection","","","","",""],["","","","","","","","","",""],["","","includes var. willmorei (3)","","","","","","",""],["Das, N.G., Bhuyan, M. and Das, S.C. (2000).  &lt;b&gt;Entomological and epidemiological studies on malaria in Rajmahal range, Bihar.&lt;/b&gt; &lt;i&gt;Indian Journal of Malariology&lt;/i&gt;, &lt;b&gt;37&lt;/b&gt;(3-4):88-96","Das, N.G., Bhuyan, M. and Das, S.C. (2000).  &lt;b&gt;Entomological and epidemiological studies on malaria in Rajmahal range, Bihar.&lt;/b&gt; &lt;i&gt;Indian Journal of Malariology&lt;/i&gt;, &lt;b&gt;37&lt;/b&gt;(3-4):88-96","Das, N.G., Bhuyan, M. and Das, S.C. (2000).  &lt;b&gt;Entomological and epidemiological studies on malaria in Rajmahal range, Bihar.&lt;/b&gt; &lt;i&gt;Indian Journal of Malariology&lt;/i&gt;, &lt;b&gt;37&lt;/b&gt;(3-4):88-96","Dev, V. (1996).  &lt;b&gt;Malaria survey in Tarajulie tea estate and adjoining hamlets in Sonitpur District, Assam.&lt;/b&gt; &lt;i&gt;Indian Journal of Malariology&lt;/i&gt;, &lt;b&gt;33&lt;/b&gt;(1):21-9","Dev, V. (1996).  &lt;b&gt;Malaria survey in Tarajulie tea estate and adjoining hamlets in Sonitpur District, Assam.&lt;/b&gt; &lt;i&gt;Indian Journal of Malariology&lt;/i&gt;, &lt;b&gt;33&lt;/b&gt;(1):21-9","Das, N.G., Bhuyan, M. and Das, S.C. (2000).  &lt;b&gt;Entomological and epidemiological studies on malaria in Rajmahal range, Bihar.&lt;/b&gt; &lt;i&gt;Indian Journal of Malariology&lt;/i&gt;, &lt;b&gt;37&lt;/b&gt;(3-4):88-96","Das, N.G., Bhuyan, M. and Das, S.C. (2000).  &lt;b&gt;Entomological and epidemiological studies on malaria in Rajmahal range, Bihar.&lt;/b&gt; &lt;i&gt;Indian Journal of Malariology&lt;/i&gt;, &lt;b&gt;37&lt;/b&gt;(3-4):88-96","Das, N.G., Bhuyan, M. and Das, S.C. (2000).  &lt;b&gt;Entomological and epidemiological studies on malaria in Rajmahal range, Bihar.&lt;/b&gt; &lt;i&gt;Indian Journal of Malariology&lt;/i&gt;, &lt;b&gt;37&lt;/b&gt;(3-4):88-96","Das, N.G., Bhuyan, M. and Das, S.C. (2000).  &lt;b&gt;Entomological and epidemiological studies on malaria in Rajmahal range, Bihar.&lt;/b&gt; &lt;i&gt;Indian Journal of Malariology&lt;/i&gt;, &lt;b&gt;37&lt;/b&gt;(3-4):88-96","Das, N.G., Bhuyan, M. and Das, S.C. (2000).  &lt;b&gt;Entomological and epidemiological studies on malaria in Rajmahal range, Bihar.&lt;/b&gt; &lt;i&gt;Indian Journal of Malariology&lt;/i&gt;, &lt;b&gt;37&lt;/b&gt;(3-4):88-96"],["POINT (24.717 87.55)","POINT (24.717 87.55)","POINT (24.567 87.417)","POINT (26.9311 92.6631)","POINT (26.9311 92.6631)","POINT (24.717 87.433)","POINT (24.717 87.55)","POINT (24.717 87.55)","POINT (24.717 87.433)","POINT (24.567 87.417)"],["1998-08-01","1998-08-01","1998-08-01","1992-05-01","1992-05-01","1998-08-01","1998-08-01","1998-08-01","1998-08-01","1998-08-01"],["1998-08-01","1998-08-01","1998-08-01","1992-06-01","1992-06-01","1998-08-01","1998-08-01","1998-08-01","1998-08-01","1998-08-01"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>site_id<\/th>\n      <th>latitude<\/th>\n      <th>longitude<\/th>\n      <th>country<\/th>\n      <th>country_id<\/th>\n      <th>continent_id<\/th>\n      <th>month_start<\/th>\n      <th>year_start<\/th>\n      <th>month_end<\/th>\n      <th>year_end<\/th>\n      <th>anopheline_id<\/th>\n      <th>species<\/th>\n      <th>species_plain<\/th>\n      <th>id_method1<\/th>\n      <th>id_method2<\/th>\n      <th>sample_method1<\/th>\n      <th>sample_method2<\/th>\n      <th>sample_method3<\/th>\n      <th>sample_method4<\/th>\n      <th>assi<\/th>\n      <th>citation<\/th>\n      <th>geom<\/th>\n      <th>time_start<\/th>\n      <th>time_end<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"deferRender":true,"scrollX":350,"dom":"t","scroller":true,"fixedColumns":{"leftColumns":4},"columnDefs":[{"className":"dt-right","targets":[1,2,3,7,8,9,10,11]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+<p><code>autoplot.pr.points</code> is an autoplot method to enable quick visualizing of the locations of downloaded PR points. It can be used thus:</p>
+<pre class="r"><code>ZM_PR_data &lt;- getPR(country = &quot;Zimbabwe&quot;, species = &quot;both&quot;)
+autoplot(ZM_PR_data)</code></pre>
+<pre><code>## OGR data source with driver: ESRI Shapefile 
+## Source: &quot;C:\Users\varsh\AppData\Local\Temp\Rtmp0eBrkQ\shp\shp897064aa2c48\mapadmin_0_2018.shp&quot;, layer: &quot;mapadmin_0_2018&quot;
+## with 1 features
+## It has 8 fields</code></pre>
+<p><img src="malaria_files/figure-html/viz-PR-1.png" width="672" /></p>
+<p><code>autoplot.vector.points</code>: is an autoplot method to quickly and easily visualize the vector occurrence data foe a specifies country.It can be used thus:</p>
+<pre class="r"><code>IN_VEC_data &lt;- getVecOcc(ISO = &quot;IND&quot;, species = &quot;ALL&quot;)
+autoplot(IN_VEC_data)</code></pre>
+<pre><code>## OGR data source with driver: ESRI Shapefile 
+## Source: &quot;C:\Users\varsh\AppData\Local\Temp\Rtmp0eBrkQ\shp\shp89705d8c2ee2\mapadmin_0_2018.shp&quot;, layer: &quot;mapadmin_0_2018&quot;
+## with 1 features
+## It has 8 fields</code></pre>
+<p><img src="malaria_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
+<p>Since the package, when loaded also loads <code>ggplot2</code> as its dependency, the functionalities of ggplot2 can be used to the above ggplot2 plots for more appeal and options.</p>
+<pre class="r"><code>p &lt;- autoplot(ZM_PR_data,printed = FALSE)
+
+p + scale_fill_gradientn(colors = rev(palettetown::pokepal(&#39;hoothoot&#39;,spread = 3))) + 
+  theme_solarized()+
+  labs(x = &quot;Longitude&quot;,
+       y = &quot;Latitude&quot;)</code></pre>
+<p><img src="malaria_files/figure-html/ggplot2-info-1.png" width="672" /></p>
+<ul>
+<li><strong>Modelled Shapefiles</strong></li>
+</ul>
+<p><code>getShp</code>: downloads a shapefile for a specified country( or countries) and returns this as either a spatial Polygon or data.frame object.</p>
+<pre class="r"><code>IN_shp &lt;- getShp(ISO = &quot;IND&quot;, admin_level = c(&quot;admin1&quot;,&quot;admin2&quot;))</code></pre>
+<pre><code>## OGR data source with driver: ESRI Shapefile 
+## Source: &quot;C:\Users\varsh\AppData\Local\Temp\Rtmp0eBrkQ\shp\shp897039951fba\mapadmin_1_2018.shp&quot;, layer: &quot;mapadmin_1_2018&quot;
+## with 36 features
+## It has 12 fields
+## OGR data source with driver: ESRI Shapefile 
+## Source: &quot;C:\Users\varsh\AppData\Local\Temp\Rtmp0eBrkQ\shp\shp8970f80130d\mapadmin_2_2018.shp&quot;, layer: &quot;mapadmin_2_2018&quot;
+## with 666 features
+## It has 16 fields</code></pre>
+<p><code>autoplot.MAPshp</code>: builds autoplot method to enable quick mapping of downloaded shapefiles.</p>
+<pre class="r"><code>IN_shp &lt;- as.MAPshp(IN_shp)
+autoplot(IN_shp)</code></pre>
+<p><img src="malaria_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<ul>
+<li><strong>Modelled Rasters</strong></li>
+</ul>
+<p><code>getRaster()</code> : downloads publicly available MAP rasters for a specific surface and year, clipped to a given bounding box or shapefile.</p>
+<pre class="r"><code>ZM_shp &lt;- getShp(country = &quot;Zimbabwe&quot;, admin_level = &quot;admin0&quot;)
+ZMB_Pf &lt;- getRaster(surface = &quot;Plasmodium falciparum PR2-10&quot;, shp = ZM_shp, year = 2010)</code></pre>
+<p>Note that to use downloaded rasters and shapefiles directly with autoplot, it must first be converted to the usable raster and shapefiles data.frames, hence we use the <code>as.MAPraster()</code> and <code>as.MAPShp()</code> respectively.</p>
+<p><code>autoplot.MAPraster</code> or <code>autoplot_MAPraster</code>: are autoplot methods to enable quick and easy mapping of all the downloaded rasters.</p>
+<pre class="r"><code>ZMB_Pf &lt;- as.MAPraster(ZMB_Pf)
+ZMB_shp_data &lt;- as.MAPshp(ZM_shp)
+autoplot(ZMB_Pf, shp_df = ZMB_shp_data)  </code></pre>
+<p><img src="malaria_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+</div>
+<div id="combined-visuals" class="section level3">
+<h3>Combined Visuals</h3>
+<p>Using the above tools along with ggplot, simple comparison plots can be made.</p>
+<ul>
+<li>Example for PR survey points -</li>
+</ul>
+<pre class="r"><code>ZMB_shp &lt;- getShp(country = &quot;Zimbabwe&quot;, admin_level = &quot;admin0&quot;)
+ZMB_shp_df &lt;- as.MAPshp(ZMB_shp)
+ZMB_PfPR2_10 &lt;- getRaster(surface = &quot;Plasmodium falciparum PR2-10&quot;, shp = ZMB_shp, year = 2013)
+ZMB_PfPR2_10_df &lt;- as.MAPraster(ZMB_PfPR2_10)
+
+p &lt;- autoplot(ZMB_PfPR2_10_df, shp_df = ZMB_shp_df, printed = FALSE)
+
+pr &lt;- getPR(country = c(&quot;Zimbabwe&quot;), species = &quot;Pf&quot;)
+p[[1]] +
+geom_point(data = pr[pr$year_start==2013,], aes(longitude, latitude, fill = positive / examined, size = examined), shape = 21)+
+scale_size_continuous(name = &quot;Survey Size&quot;)+
+ scale_fill_distiller(name = &quot;PfPR&quot;, palette = &quot;RdYlBu&quot;)+
+ ggtitle(&quot;Raw PfPR Survey points\n + Plasmodium falciparum PR2-10 in Zimbabwe in 2013&quot;)+
+  theme_solarized()+
+  labs(x = &quot;Longitude&quot;, y = &quot;Latitude&quot;)</code></pre>
+<p><img src="malaria_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+<ul>
+<li>Example for Vector points-</li>
+</ul>
+<pre class="r"><code>IND_shp &lt;- getShp(country = &quot;India&quot;, admin_level = &quot;admin0&quot;)
+IND_shp_df &lt;- as.MAPshp(IND_shp)
+IND_an_dirus &lt;- getRaster(surface = &quot;Anopheles dirus species complex&quot;, shp = IND_shp)
+IND_an_dirus_df &lt;- as.MAPraster(IND_an_dirus)
+
+p &lt;- autoplot(IND_an_dirus_df, shp_df = IND_shp_df, printed = FALSE)
+
+vec &lt;- getVecOcc(country = c(&quot;India&quot;), species = &quot;Anopheles dirus&quot;)
+p[[1]] +
+geom_point(data = vec, aes(longitude, latitude), shape = 21,  show.legend = TRUE)+
+  scale_fill_distiller(name = &quot;Predicted distribution&quot;, palette = &quot;YlOrRd&quot;)+
+  ggtitle(&quot;Raw Vector Survey points + \nThe predicted distribution of Anohpeles dirus species complex&quot;)+
+  theme(legend.position = &quot;bottom&quot;)+
+  theme_solarized()+
+  labs(x = &quot;Longitude&quot;, y = &quot;Latitude&quot;)</code></pre>
+<p><img src="malaria_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+<style>
+div.blue { background-color:#e6f0ff; border-radius: 5px; padding: 20px;}
+</style>
+<div class="blue">
+<ul>
+<li><p>Raster data is stored as a grid of values which are rendered on a map as pixels.</p></li>
+<li><p>Each pixel value represents an area on the Earth’s surface.</p></li>
+<li><p>Vector data structures represent specific features on the Earth’s surface, and assign attributes to those features.</p></li>
+</ul>
+</div>
+</div>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

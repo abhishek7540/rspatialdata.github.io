@@ -21,12 +21,12 @@ library(ggthemes)
 
 ## Downloading and visualising parasite rate data
 
-This is a tutorial for the `mapAtlas` package which enables users to download, visualize and manipulate global parasite rate survey data(Plasmodium and P.vivax) and modeled raster outputs. This package is to provide users of the R programming language with a convenient API to interact with the publicly available data.
+This is a tutorial for the `mapAtlas` package which allows users to download, visualise and manipulate global parasite rate survey data(Plasmodium and P.vivax) and modeled raster outputs. This package is to provide users with a convenient API to interact with the publicly available parasite data.
 
 
 ## Installation of `malariaAtlas` package
 
-To download the data and the other functions required to visualize the same, you need the `malarisAtlas` package, which can be downloaded from CRAN using
+To download the data and the other functions required to visualise the same, you need the `malarisAtlas` package, which can be downloaded from CRAN using
 
 ```{r install-malariaAtlas, eval=FALSE}
 install.packages("malariaAtlas")
@@ -39,11 +39,11 @@ library(malariaAtlas)
 ```
 
 
-### Available Data
+## Available Data
 
-The data can be explored interactively at [data explorer](https://malariaatlas.org/explorer/#/). This can also be used for finding more information on raster data.
+The data can be explored interactively at [data explorer](https://malariaatlas.org/explorer/#/). This can also be used for finding more information on raster data. It consists of a dashboard which the shows the spread of the parasite over time and also the option for downloading the data used.
 
-### List of data present in the package
+## List of data present in the package
 
 The `listData()` function from the `mapAtlas` package helps retrieve a list of all the available data to download.
 
@@ -53,7 +53,7 @@ We can download the data for any available country by using the function and pas
 listData(datatype = "pr points") 
 ```
 
-The above syntax helps find all the countries that have PR survey points data, that can be downloaded. Or if you need the vector survey data for the countries that have raster data ,there are two ways you can do so:
+The above syntax helps find all the countries that have **PR survey points data**, that can be downloaded. Or if you need the vector survey data for the countries that have **raster data** ,there are two ways you can do so:
 
 ```{r listrasters,message = FALSE}
 listData(datatype = "raster") 
@@ -61,7 +61,7 @@ listData(datatype = "raster")
 listRaster()
 ```
 
-If you need the list of all the countries that have the shapefiles data, there are two ways you can do so:
+If you need the list of all the countries that have the **shapefiles data**, there are two ways you can do so:
 
 ```{r message = FALSE}
 listData(datatype = "shape") 
@@ -70,7 +70,7 @@ listShp()
 ```
 
 
-### Other Available functions
+## Functions to check data availability
 
 1. `isAvaiilable_pr` is a function which confirms whether a specified country has a *PR survey points* for downloading or not. It can be used like thus,
 
@@ -97,7 +97,7 @@ isAvailable_vec(ISO = "USA")
 ```
 
 
-### Available functions for dowloading and visualising data
+## Available functions for dowloading and visualising data
 
  - **get* functions** and **autoplot methods**
  
@@ -105,10 +105,9 @@ isAvailable_vec(ISO = "USA")
  
 ```{r get-pr,message = FALSE,warning=FALSE}
 getPR(country = "Zimbabwe", species = "both") %>% 
-  head(10) %>% 
   datatable(extensions = c('Scroller','FixedColumns'), options = list(
   deferRender = TRUE,
-  #scrollY = 350,
+  scrollY = 350,
   scrollX = 350,
   dom = 't',
   scroller = TRUE,
@@ -116,14 +115,13 @@ getPR(country = "Zimbabwe", species = "both") %>%
 ))
 ```
  
-2. `getVecOcc()`: downloads all publicly available vector points for the country ans returns it as a dataframe. The arguments included in this are *country, ISO, continent, species*. The species argument is a strong specifying the Anopheles species for finding the vector occurrences points, the options are: *Anopheles....(specific species of Anopheles)* or *ALL*.
+2. `getVecOcc()`: downloads all publicly available vector points for the country and returns it as a dataframe. The arguments included in this are *country, ISO, continent, species*. The species argument is a strong specifying the Anopheles species for finding the vector occurrences points, the options are: *Anopheles....(specific species of Anopheles)* or *ALL*.
  
 ```{r get-vec,message = FALSE,warning=FALSE}
 getVecOcc(country = "India", species = "ALL") %>% 
-  head(10)%>% 
   datatable(extensions = c('Scroller','FixedColumns'), options = list(
   deferRender = TRUE,
-  #scrollY = 350,
+  scrollY = 350,
   scrollX = 350,
   dom = 't',
   scroller = TRUE,
@@ -132,14 +130,14 @@ getVecOcc(country = "India", species = "ALL") %>%
 ```
 
 
- `autoplot.pr.points` is an autoplot method to enable quick visualizing of the locations of downloaded PR points. It can be used thus:
+3. `autoplot.pr.points` is an autoplot method to enable quick visualising of the locations of downloaded PR points. It can be used thus:
  
 ```{r viz-PR, message=FALSE,warning=FALSE}
 ZM_PR_data <- getPR(country = "Zimbabwe", species = "both")
 autoplot(ZM_PR_data)
 ```
  
- `autoplot.vector.points`: is an autoplot method to quickly and easily visualize the vector occurrence data foe a specifies country.It can be used thus:
+3. `autoplot.vector.points`: is an autoplot method to quickly and easily visualise the vector occurrence data for a specific country.It can be used thus:
 
 ```{r message = FALSE}
 IN_VEC_data <- getVecOcc(ISO = "IND", species = "ALL")
@@ -151,16 +149,14 @@ Since the package, when loaded also loads `ggplot2` as its dependency, the funct
 ```{r ggplot2-info,message = FALSE}
 p <- autoplot(ZM_PR_data,printed = FALSE)
 
-p + scale_fill_gradientn(colors = rev(palettetown::pokepal('hoothoot',spread = 3))) + 
-  theme_solarized()+
+p + theme_solarized()+
   labs(x = "Longitude",
        y = "Latitude")
-
 ```
 
 - **Modelled Shapefiles**
 
- `getShp`: downloads a shapefile for a specified country( or countries) and returns this as either a spatial Polygon or data.frame object.
+ `getShp`: downloads a shapefile for a specified country(or countries) and returns this as either a spatial Polygon or data.frame object.
 
 ```{r message = FALSE}
 IN_shp <- getShp(ISO = "IND", admin_level = c("admin1","admin2"))
@@ -175,7 +171,7 @@ autoplot(IN_shp)
 
 - **Modelled Rasters**
 
- `getRaster()` : downloads publicly available MAP rasters for a specific surface and year, clipped to a given bounding box or shapefile.
+ `getRaster()` : downloads publicly available MAP rasters for a specific surface and year, clipped to a given bounding box or shapefile. For example for Zimbabwe, we use the `getRaster` function as:
  
 ```{r message = FALSE}
 ZM_shp <- getShp(country = "Zimbabwe", admin_level = "admin0")
@@ -192,11 +188,11 @@ ZMB_shp_data <- as.MAPshp(ZM_shp)
 autoplot(ZMB_Pf, shp_df = ZMB_shp_data)  
 ```
 
-### Combined Visuals
+## Combined Visuals
 
 Using the above tools along with ggplot, simple comparison plots can be made.
 
-- Example for PR survey points -
+- Example for PR survey points :
 
 ```{r message = FALSE}
 ZMB_shp <- getShp(country = "Zimbabwe", admin_level = "admin0")
@@ -216,7 +212,7 @@ scale_size_continuous(name = "Survey Size")+
   labs(x = "Longitude", y = "Latitude")
 ```
 
-- Example for Vector points-
+- Example for Vector points:
 
 ```{r message = FALSE}
 IND_shp <- getShp(country = "India", admin_level = "admin0")
@@ -249,3 +245,7 @@ div.blue { background-color:#e6f0ff; border-radius: 5px; padding: 20px;}
 - Vector data structures represent specific features on the Earth's surface, and assign attributes to those features.
 
 </div>
+
+## References
+
+- The `malriaAtlas` package repository : https://github.com/malaria-atlas-project/malariaAtlas

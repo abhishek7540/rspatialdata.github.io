@@ -18,3 +18,4 @@ pagetitle: "Rspatialdata"
 [Mobility](mobility.html)  
 [Air Pollution](air_pollution.html)  
 [Socio-economic](socio_economic.html)  
+[Points of Interest using Open Street Maps](osm.html)

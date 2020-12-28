@@ -33,6 +33,8 @@ navbar:
           href: air_pollution.html
         - text: "Socio-economic"
           href: socio_economic.html
+        - text: "Points of Interest using Open Street Maps"
+          href: osm.html
     - text: "Contributors"
       href: contributors.html
 output:

@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>Administrative Boundaries</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+<link rel="stylesheet" href="styles.css" type="text/css" />
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 51px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h2 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h3 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h4 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h5 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h6 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Rspatialdata</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Tutorials
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="admin_boundaries.html">Administrative Boundaries</a>
+    </li>
+    <li>
+      <a href="population.html">Population</a>
+    </li>
+    <li>
+      <a href="elevation.html">Elevation</a>
+    </li>
+    <li>
+      <a href="temperature.html">Temperature</a>
+    </li>
+    <li>
+      <a href="rainfall.html">Rainfall</a>
+    </li>
+    <li>
+      <a href="humidity.html">Humidity</a>
+    </li>
+    <li>
+      <a href="vegetation.html">Vegetation</a>
+    </li>
+    <li>
+      <a href="land_cov.html">Land Cover</a>
+    </li>
+    <li>
+      <a href="malaria.html">Malaria</a>
+    </li>
+    <li>
+      <a href="dhs.html">DHS</a>
+    </li>
+    <li>
+      <a href="mobility.html">Mobility</a>
+    </li>
+    <li>
+      <a href="air_pollution.html">Air Pollution</a>
+    </li>
+    <li>
+      <a href="socio_economic.html">Socio-economic</a>
+    </li>
+  </ul>
+</li>
+<li>
+  <a href="contributors.html">Contributors</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Administrative Boundaries</h1>
+
+</div>
+
+
+<div id="downloading-and-visualising-administrative-boundaries-of-countries" class="section level1">
+<h1>Downloading and Visualising Administrative Boundaries of Countries</h1>
+<p>This tutorial takes you through the steps of downloading and visualising administrative boundaries of countries using R.</p>
+<div id="downloading-administrative-boundaries" class="section level2">
+<h2>Downloading Administrative Boundaries</h2>
+<p>To download the Administrative Boundaries of different countries we use the <code>rgeoboundaries</code> package which is a client for the <a href="https://www.geoboundaries.org/">geoBoundaries API</a>, providing country political administrative boundaries.</p>
+<div id="installing-rgeoboundaries" class="section level3">
+<h3>Installing <code>rgeoboundaries</code></h3>
+<p>The <code>rgeoboundaries</code> package can be downloaded from GitHub using the <code>remotes</code> package. So install the <code>remotes</code> package, if you don’t have it installed already. <code>remotes</code> is package which allows easy installation of R packages from remote repositories such as GitHub.</p>
+<p>Then load the <code>remotes</code> package and use it to install the <code>rgeoboundaries</code> package from GitHub.</p>
+<pre class="r"><code>install.packages(&quot;remotes&quot;)
+library(remotes)
+remotes::install_github(&quot;wmgeolab/rgeoboundaries&quot;)</code></pre>
+</div>
+<div id="downloading-administrative-boundaries-1" class="section level3">
+<h3>Downloading Administrative Boundaries</h3>
+<p>The <code>geoboundaries()</code> function of the <code>rgeoboundaries</code> package allows you to download boundaries of countries.</p>
+<p>We can therefore download the administrative boundary of Nigeria as follows. The downloaded boundary is then assigned to a variable called <code>nigeria_boundary</code>.</p>
+<pre class="r"><code>library(rgeoboundaries)
+nigeria_boundary &lt;- geoboundaries(&quot;Nigeria&quot;)</code></pre>
+<p>We can also download the boundaries of multiple countries together. We just have to include the names of countries as a list. See how the boundaries of Nigeria and Chad are downloaded below.</p>
+<pre class="r"><code>nigeria_chad_boundaries &lt;- geoboundaries(c(&quot;Nigeria&quot;, &quot;Chad&quot;))</code></pre>
+<p>If available, lower levels of administrative boundaries in countries can be downloaded via the <code>rgeoboudaries</code> package too. We just have to pass the administrative level as an argument in the <code>geoboundaries()</code> function.</p>
+<p>Administrative level 1 (“adm1”) is the highest level, while Administrative level 5 (“adm5”) is the lowest. This means the country will be further sub-divided into administrative divisions as the Administrative level progresses from 1 to 5.</p>
+<p>See how the first and second administrative level boundaries of Nigeria and Chad are downloaded below.</p>
+<pre class="r"><code>#downloading administrative level 1 boundaries
+nigeria_chad_admlvl1_boundaries &lt;- geoboundaries(c(&quot;Nigeria&quot;, &quot;Chad&quot;), &quot;adm1&quot;)
+
+#downloading administrative level 2 boundaries
+nigeria_chad_admlvl2_boundaries &lt;- geoboundaries(c(&quot;Nigeria&quot;, &quot;Chad&quot;), &quot;adm2&quot;)</code></pre>
+</div>
+<div id="understanding-the-downloaded-data" class="section level3">
+<h3>Understanding the downloaded data</h3>
+<p>If we print out the downloaded administrative boundary of Nigeria, we will see that the downloaded boundary is a <em>Simple feature collection with 1 feature and 5 fields.</em></p>
+<pre class="r"><code>nigeria_boundary</code></pre>
+<pre><code>## Simple feature collection with 1 feature and 5 fields
+## geometry type:  MULTIPOLYGON
+## dimension:      XY
+## bbox:           xmin: 2.668432 ymin: 4.277144 xmax: 14.67808 ymax: 13.90103
+## geographic CRS: WGS 84
+##   shapeName shapeISO                shapeID shapeGroup shapeType
+## 1   Nigeria      NGA NGA-ADM0-1590546715-B1        NGA      ADM0
+##                         geometry
+## 1 MULTIPOLYGON (((5.746892 4....</code></pre>
+<p>Simple Feature Objects are how real-world objects are represented in computers, with emphasis on the spatial geometry of these objects.</p>
+<p>A feature is thought of as a single object, Nigeria in this case. The fields are thought of as the geometrical attributes included about each feature; <code>ShapeName</code>, <code>shapeISO</code>, <code>shapeID</code>, <code>shapeGroup</code> and <code>shapeType</code> in the above object.</p>
+<p>The simple feature object retreived when the boundaries of Nigeria and Chad will be a <em>Simple feature collection with 2 features and 5 fields</em></p>
+<pre class="r"><code>nigeria_chad_boundaries</code></pre>
+<pre><code>## Simple feature collection with 2 features and 5 fields
+## geometry type:  GEOMETRY
+## dimension:      XY
+## bbox:           xmin: 2.668432 ymin: 4.277144 xmax: 24 ymax: 23.4975
+## geographic CRS: WGS 84
+##   shapeName shapeISO                shapeID shapeGroup shapeType
+## 1   Nigeria      NGA NGA-ADM0-1590546715-B1        NGA      ADM0
+## 2      Chad      TCD TCD-ADM0-1590546715-B1        TCD      ADM0
+##                         geometry
+## 1 MULTIPOLYGON (((5.746892 4....
+## 2 POLYGON ((23.99944 15.79972...</code></pre>
+<p>The 2 features will refer to the two countries - Nigeria and Chad, and the features wil be the geometrical attributes of each feature.</p>
+<p>The downloads of administrative level 1 and 2 boundaries of Nigeria and Chad will result in simple feature objects with 60 and 843 features respectively.</p>
+<pre class="r"><code>nigeria_chad_admlvl1_boundaries</code></pre>
+<pre><code>## Simple feature collection with 60 features and 5 fields
+## geometry type:  GEOMETRY
+## dimension:      XY
+## bbox:           xmin: 2.668432 ymin: 4.277144 xmax: 24 ymax: 23.4975
+## geographic CRS: WGS 84
+## First 10 features:
+##      shapeName shapeISO                 shapeID shapeGroup shapeType
+## 1         Abia    NG-AB  NGA-ADM1-1590546715-B1        NGA      ADM1
+## 2      Adamawa    NG-AD  NGA-ADM1-1590546715-B2        NGA      ADM1
+## 3    Akwa lbom    NG-AK  NGA-ADM1-1590546715-B3        NGA      ADM1
+## 4      Anambra    NG-AN  NGA-ADM1-1590546715-B4        NGA      ADM1
+## 5       Bauchi    NG-BA  NGA-ADM1-1590546715-B5        NGA      ADM1
+## 6      Bayelsa    NG-BY  NGA-ADM1-1590546715-B6        NGA      ADM1
+## 7        Benue    NG-BE  NGA-ADM1-1590546715-B7        NGA      ADM1
+## 8        Borno    NG-BO  NGA-ADM1-1590546715-B8        NGA      ADM1
+## 9  Cross River    NG-CR  NGA-ADM1-1590546715-B9        NGA      ADM1
+## 10       Delta    NG-DE NGA-ADM1-1590546715-B10        NGA      ADM1
+##                          geometry
+## 1  MULTIPOLYGON (((7.547192 5....
+## 2  MULTIPOLYGON (((13.71303 10...
+## 3  MULTIPOLYGON (((8.332865 4....
+## 4  MULTIPOLYGON (((7.339063 6....
+## 5  MULTIPOLYGON (((11.00732 11...
+## 6  MULTIPOLYGON (((5.746892 4....
+## 7  MULTIPOLYGON (((9.179126 7....
+## 8  MULTIPOLYGON (((13.71303 10...
+## 9  MULTIPOLYGON (((8.305132 4....
+## 10 MULTIPOLYGON (((6.668921 6....</code></pre>
+<pre class="r"><code>nigeria_chad_admlvl2_boundaries </code></pre>
+<pre><code>## Simple feature collection with 843 features and 5 fields
+## geometry type:  GEOMETRY
+## dimension:      XY
+## bbox:           xmin: 2.668432 ymin: 4.277144 xmax: 24 ymax: 23.43944
+## geographic CRS: WGS 84
+## First 10 features:
+##            shapeName shapeISO                 shapeID shapeGroup shapeType
+## 1          Aba North     None  NGA-ADM2-1590546715-B1        NGA      ADM2
+## 2          Aba South     None  NGA-ADM2-1590546715-B2        NGA      ADM2
+## 3          Arochukwu     None  NGA-ADM2-1590546715-B3        NGA      ADM2
+## 4              Bende     None  NGA-ADM2-1590546715-B4        NGA      ADM2
+## 5            Ikwuano     None  NGA-ADM2-1590546715-B5        NGA      ADM2
+## 6  Isiala-Ngwa North     None  NGA-ADM2-1590546715-B6        NGA      ADM2
+## 7  Isiala-Ngwa South     None  NGA-ADM2-1590546715-B7        NGA      ADM2
+## 8          Isuikwato     None  NGA-ADM2-1590546715-B8        NGA      ADM2
+## 9            Obi Nwa     None  NGA-ADM2-1590546715-B9        NGA      ADM2
+## 10            Ohafia     None NGA-ADM2-1590546715-B10        NGA      ADM2
+##                          geometry
+## 1  MULTIPOLYGON (((7.320203 5....
+## 2  MULTIPOLYGON (((7.306681 5....
+## 3  MULTIPOLYGON (((7.904579 5....
+## 4  MULTIPOLYGON (((7.551945 5....
+## 5  MULTIPOLYGON (((7.542587 5....
+## 6  MULTIPOLYGON (((7.291589 5....
+## 7  MULTIPOLYGON (((7.37354 5.4...
+## 8  MULTIPOLYGON (((7.394222 5....
+## 9  MULTIPOLYGON (((7.502546 5....
+## 10 MULTIPOLYGON (((7.713079 5....</code></pre>
+<p>Here each feature will be a single administrative division. We can see the number of administrative divisions increasing as the countries are further sub-divided from administrative level 1 divisions to administrative level 2 divisions.</p>
+</div>
+</div>
+<div id="visualising-administrative-boundaries" class="section level2">
+<h2>Visualising Administrative Boundaries</h2>
+<p>The <code>ggplot2</code> package is one of the most commonly used packages that allows us to create elegant data visualisations, and is used to plot administrative boundaries in this tutorial.</p>
+<div id="installing-the-ggplot2-package" class="section level3">
+<h3>Installing the <code>ggplot2</code> package</h3>
+<p>Installing the <code>ggplot2</code> package is very straightforward and can be done as follows.</p>
+<pre class="r"><code>install.packages(&quot;ggplot2&quot;)</code></pre>
+</div>
+<div id="visualising-administrative-boundaries-1" class="section level3">
+<h3>Visualising Administrative Boundaries</h3>
+<p>The <code>ggplot2</code> package allows us to easily visualise simple feature objects using the <code>geom_sf()</code> function</p>
+<p>We will first plot the administrative boundary of Nigeria. Here we can use the administrative boundary that we downloaded and stored in a variable called <code>nigeria_boundary</code> earlier in the tutorial.</p>
+<pre class="r"><code>library(ggplot2)
+ggplot(data = nigeria_boundary) +
+  geom_sf() </code></pre>
+<p><img src="admin_boundaries_files/figure-html/vis-nigeria-boundary-1.png" width="672" /></p>
+<p>We can also similarly visualise the other administrative boundaries we downloaded earlier. We just have to replace the data argument with the downloaded administrative boundary.</p>
+<pre class="r"><code>ggplot(data = nigeria_chad_admlvl2_boundaries) +
+  geom_sf()</code></pre>
+<p><img src="admin_boundaries_files/figure-html/vis-nigeria-chad-admlvl2-boundary-1.png" width="672" /></p>
+<p>We can also label the visualisation using the <code>geom_sf_label()</code> function. Here we add the names of the administrative divisions for Nigeria and Chad.</p>
+<pre class="r"><code>ggplot(data = nigeria_chad_boundaries) +
+  geom_sf() +
+  geom_sf_label(aes(label = shapeName))</code></pre>
+<p><img src="admin_boundaries_files/figure-html/vis-nigeria-chad-boundary-wnames-1.png" width="672" /></p>
+<p>Note how we said <code>label = shapeName</code>. This comes from the field names of the simple feature object we use. The <code>shapeName</code> field has the complete names of the administrative divisions.</p>
+<pre class="r"><code>nigeria_chad_boundaries</code></pre>
+<pre><code>## Simple feature collection with 2 features and 5 fields
+## geometry type:  GEOMETRY
+## dimension:      XY
+## bbox:           xmin: 2.668432 ymin: 4.277144 xmax: 24 ymax: 23.4975
+## geographic CRS: WGS 84
+##   shapeName shapeISO                shapeID shapeGroup shapeType
+## 1   Nigeria      NGA NGA-ADM0-1590546715-B1        NGA      ADM0
+## 2      Chad      TCD TCD-ADM0-1590546715-B1        TCD      ADM0
+##                         geometry
+## 1 MULTIPOLYGON (((5.746892 4....
+## 2 POLYGON ((23.99944 15.79972...</code></pre>
+<p>Labelling the administrative divisions also automatically labelled the axes as <code>x</code> and <code>y</code>. If we want to change these axis labels, we can use <code>xlab()</code> and <code>ylab()</code> functions.</p>
+<p>We can also use the <code>ggtitle()</code> function to add a title to the plot.</p>
+<pre class="r"><code>ggplot(data = nigeria_chad_boundaries) +
+  geom_sf() +
+  geom_sf_label(aes(label = shapeName)) +
+  xlab(&quot;Longitude&quot;) +
+  ylab(&quot;Latitude&quot;) +
+  ggtitle(&quot;Nigeria and Chad boundaries&quot;)</code></pre>
+<p><img src="admin_boundaries_files/figure-html/vis-nigeria-chad-wtitle-1.png" width="672" /></p>
+</div>
+</div>
+<div id="examples" class="section level2">
+<h2>Examples</h2>
+<div id="using-the-rgeoboundaries-package" class="section level3">
+<h3>Using the <code>rgeoboundaries</code> package</h3>
+<p>The following is a complete example of using the <code>rgeoboundaries</code> package to download administrative boundaries and <code>ggplot2</code> to visualise it</p>
+<pre class="r"><code>library(rgeoboundaries)
+library(ggplot2)
+
+# Country boundaries of Nigeria and Chad
+nigeria_chad_boundaries &lt;- geoboundaries(c(&quot;Nigeria&quot;, &quot;Chad&quot;))
+ggplot(data = nigeria_chad_boundaries) +
+  geom_sf() +
+  geom_sf_label(aes(label = shapeName)) +
+  xlab(&quot;Longitude&quot;) +
+  ylab(&quot;Latitude&quot;) +
+  ggtitle(&quot;Country boundaries&quot;)</code></pre>
+<p><img src="admin_boundaries_files/figure-html/rgeoboundaries-example-1.png" width="672" /></p>
+<pre class="r"><code># Administrative Level 1 boundaries of Nigeria and Chad
+nigeria_chad_admlvl1_boundaries &lt;- geoboundaries(c(&quot;Nigeria&quot;, &quot;Chad&quot;), &quot;adm1&quot;)
+ggplot(data = nigeria_chad_admlvl1_boundaries) +
+  geom_sf() +
+  ggtitle(&quot;Administrative Level 1 boundaries&quot;)</code></pre>
+<p><img src="admin_boundaries_files/figure-html/rgeoboundaries-example-2.png" width="672" /></p>
+<pre class="r"><code># Administrative Level 2 boundaries of Nigeria and Chad
+nigeria_chad_admlvl2_boundaries &lt;- geoboundaries(c(&quot;Nigeria&quot;, &quot;Chad&quot;), &quot;adm2&quot;)
+ggplot(data = nigeria_chad_admlvl2_boundaries) +
+  geom_sf() +
+  ggtitle(&quot;Administrative Level 2 boundaries&quot;)</code></pre>
+<p><img src="admin_boundaries_files/figure-html/rgeoboundaries-example-3.png" width="672" /></p>
+</div>
+<div id="using-the-rnaturalearth-package" class="section level3">
+<h3>Using the <code>rnaturalearth</code> package</h3>
+<p>The <code>rnaturalearth</code> package is an alternative to the <code>rgeoboundaries</code> package, and also provides <a href="https://www.naturalearthdata.com/">Natural Earth</a> vector data commonly used in world mapping. The following example briefly runs through how we can use the <code>rnaturalearth</code> alternatively to download and visualise administrative boundaries.</p>
+<pre class="r"><code>#install.packages(&quot;rnaturalearth&quot;)
+library(rnaturalearth)
+library(ggplot2)
+
+nigeria_chad_rnaturalearth &lt;- ne_countries(country = c(&#39;nigeria&#39;,&#39;chad&#39;), returnclass=&#39;sf&#39;)
+ggplot(data = nigeria_chad_rnaturalearth) +
+  geom_sf() +
+  geom_sf_label(aes(label = sovereignt)) +
+  xlab(&quot;Longitude&quot;) +
+  ylab(&quot;Latitude&quot;) +
+  ggtitle(&quot;Country boundaries&quot;)</code></pre>
+<p><img src="admin_boundaries_files/figure-html/rnaturalearth-example-1.png" width="672" /></p>
+<pre class="r"><code>nigeria_chad_rnaturalearth_admlvl1 &lt;- ne_states(country = c(&#39;nigeria&#39;,&#39;chad&#39;), returnclass=&#39;sf&#39;)
+ggplot(data = nigeria_chad_rnaturalearth_admlvl1) +
+  geom_sf() +
+  ggtitle(&quot;Administrative Level 1 boundaries&quot;)</code></pre>
+<p><img src="admin_boundaries_files/figure-html/rnaturalearth-example-2.png" width="672" /></p>
+</div>
+</div>
+<div id="references" class="section level2">
+<h2>References</h2>
+<ul>
+<li>The <code>rgeoboundaries</code> repository : <a href="https://github.com/wmgeolab/rgeoboundaries" class="uri">https://github.com/wmgeolab/rgeoboundaries</a><br />
+</li>
+<li>The <code>rnaturalearth</code> repository : <a href="https://github.com/ropensci/rnaturalearth" class="uri">https://github.com/ropensci/rnaturalearth</a></li>
+</ul>
+</div>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

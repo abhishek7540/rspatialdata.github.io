@@ -1,0 +1,216 @@
+---
+title: "Administrative Boundaries"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    number_sections: false
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
+```
+
+# Downloading and Visualising Administrative Boundaries of Countries
+
+This tutorial takes you through the steps of downloading and visualising administrative boundaries of countries using R.
+
+
+## Downloading Administrative Boundaries
+
+To download the Administrative Boundaries of different countries we use the `rgeoboundaries` package which is a client for the [geoBoundaries API](https://www.geoboundaries.org/), providing country political administrative boundaries.
+
+### Installing `rgeoboundaries`
+
+The `rgeoboundaries` package can be downloaded from GitHub using the `remotes` package. So install the `remotes` package, if you don't have it installed already. `remotes` is package which allows easy installation of R packages from remote repositories such as GitHub.
+
+Then load the `remotes` package and use it to install the `rgeoboundaries` package from GitHub.
+
+```{r install-rgeoboundaries, eval=FALSE}
+install.packages("remotes")
+library(remotes)
+remotes::install_github("wmgeolab/rgeoboundaries")
+```
+
+### Downloading Administrative Boundaries
+
+The `geoboundaries()` function of the `rgeoboundaries` package allows you to download boundaries of countries.
+
+We can therefore download the administrative boundary of Nigeria as follows. The downloaded boundary is then assigned to a variable called `nigeria_boundary`.
+
+```{r download-nigeria-boundary}
+library(rgeoboundaries)
+nigeria_boundary <- geoboundaries("Nigeria")
+```
+
+We can also download the boundaries of multiple countries together. We just have to include the names of countries as a list. See how the boundaries of Nigeria and Chad are downloaded below.
+
+```{r download-nigeria-chad-boundary}
+nigeria_chad_boundaries <- geoboundaries(c("Nigeria", "Chad"))
+```
+
+If available, lower levels of administrative boundaries in countries can be downloaded via the `rgeoboudaries` package too. We just have to pass the administrative level as an argument in the `geoboundaries()` function.
+
+Administrative level 1 ("adm1") is the highest level, while Administrative level 5 ("adm5") is the lowest. This means the country will be further sub-divided into administrative divisions as the Administrative level progresses from 1 to 5.
+
+See how the first and second administrative level boundaries of Nigeria and Chad are downloaded below.
+
+````{r download-nigeria-chad-lowerlvl-boundary}
+#downloading administrative level 1 boundaries
+nigeria_chad_admlvl1_boundaries <- geoboundaries(c("Nigeria", "Chad"), "adm1")
+
+#downloading administrative level 2 boundaries
+nigeria_chad_admlvl2_boundaries <- geoboundaries(c("Nigeria", "Chad"), "adm2")
+```
+
+### Understanding the downloaded data
+
+If we print out the downloaded administrative boundary of Nigeria, we will see that the downloaded boundary is a *Simple feature collection with 1 feature and 5 fields.*
+
+```{r print-nigeria-boundary}
+nigeria_boundary
+```
+
+Simple Feature Objects are how real-world objects are represented in computers, with emphasis on the spatial geometry of these objects.
+
+A feature is thought of as a single object, Nigeria in this case. The fields are thought of as the geometrical attributes included about each feature; `ShapeName`, `shapeISO`, `shapeID`, `shapeGroup` and `shapeType` in the above object.
+
+The simple feature object retreived when the boundaries of Nigeria and Chad will be a *Simple feature collection with 2 features and 5 fields*
+
+```{r print-nigeria-chad-boundary}
+nigeria_chad_boundaries
+```
+
+The 2 features will refer to the two countries - Nigeria and Chad, and the features wil be the geometrical attributes of each feature.
+
+The downloads of administrative level 1 and 2 boundaries of Nigeria and Chad will result in simple feature objects with 60 and 843 features respectively.
+
+````{r print-nigeria-chad-lowerlvl-boundary}
+nigeria_chad_admlvl1_boundaries
+nigeria_chad_admlvl2_boundaries 
+```
+
+Here each feature will be a single administrative division. We can see the number of administrative divisions increasing as the countries are further sub-divided from administrative level 1 divisions to administrative level 2 divisions.
+
+## Visualising Administrative Boundaries
+
+The `ggplot2` package is one of the most commonly used packages that allows us to create elegant data visualisations, and is used to plot administrative boundaries in this tutorial.
+
+### Installing the `ggplot2` package
+
+Installing the `ggplot2` package is very straightforward and can be done as follows.
+
+```{r install-ggplot2, eval=FALSE}
+install.packages("ggplot2")
+```
+
+### Visualising Administrative Boundaries
+
+The `ggplot2` package allows us to easily visualise simple feature objects using the `geom_sf()` function
+
+We will first plot the administrative boundary of Nigeria. Here we can use the administrative boundary that we downloaded and stored in a variable called `nigeria_boundary` earlier in the tutorial.
+
+```{r vis-nigeria-boundary}
+library(ggplot2)
+ggplot(data = nigeria_boundary) +
+  geom_sf() 
+```
+
+We can also similarly visualise the other administrative boundaries we downloaded earlier. We just have to replace the data argument with the downloaded administrative boundary.
+
+```{r vis-nigeria-chad-admlvl2-boundary}
+ggplot(data = nigeria_chad_admlvl2_boundaries) +
+  geom_sf()
+```
+
+We can also label the visualisation using the `geom_sf_label()` function. Here we add the names of the administrative divisions for Nigeria and Chad.
+
+```{r vis-nigeria-chad-boundary-wnames}
+ggplot(data = nigeria_chad_boundaries) +
+  geom_sf() +
+  geom_sf_label(aes(label = shapeName))
+```
+
+Note how we said `label = shapeName`. This comes from the field names of the simple feature object we use. The `shapeName` field has the complete names of the administrative divisions.
+
+```{r print-nigeria-chad-sf}
+nigeria_chad_boundaries
+```
+
+Labelling the administrative divisions also automatically labelled the axes as `x` and `y`. If we want to change these axis labels, we can use `xlab()` and `ylab()` functions.
+
+We can also use the `ggtitle()` function to add a title to the plot.
+
+```{r vis-nigeria-chad-wtitle}
+ggplot(data = nigeria_chad_boundaries) +
+  geom_sf() +
+  geom_sf_label(aes(label = shapeName)) +
+  xlab("Longitude") +
+  ylab("Latitude") +
+  ggtitle("Nigeria and Chad boundaries")
+```
+
+
+## Examples
+
+### Using the `rgeoboundaries` package
+
+
+The following is a complete example of using the `rgeoboundaries` package to download administrative boundaries and `ggplot2` to visualise it
+
+```{r rgeoboundaries-example}
+library(rgeoboundaries)
+library(ggplot2)
+
+# Country boundaries of Nigeria and Chad
+nigeria_chad_boundaries <- geoboundaries(c("Nigeria", "Chad"))
+ggplot(data = nigeria_chad_boundaries) +
+  geom_sf() +
+  geom_sf_label(aes(label = shapeName)) +
+  xlab("Longitude") +
+  ylab("Latitude") +
+  ggtitle("Country boundaries")
+
+# Administrative Level 1 boundaries of Nigeria and Chad
+nigeria_chad_admlvl1_boundaries <- geoboundaries(c("Nigeria", "Chad"), "adm1")
+ggplot(data = nigeria_chad_admlvl1_boundaries) +
+  geom_sf() +
+  ggtitle("Administrative Level 1 boundaries")
+
+# Administrative Level 2 boundaries of Nigeria and Chad
+nigeria_chad_admlvl2_boundaries <- geoboundaries(c("Nigeria", "Chad"), "adm2")
+ggplot(data = nigeria_chad_admlvl2_boundaries) +
+  geom_sf() +
+  ggtitle("Administrative Level 2 boundaries")
+```
+
+### Using the `rnaturalearth` package
+
+The `rnaturalearth` package is an alternative to the `rgeoboundaries` package, and also provides [Natural Earth](https://www.naturalearthdata.com/) vector data commonly used in world mapping.
+The following example briefly runs through how we can use the `rnaturalearth` alternatively to download and visualise administrative boundaries.
+
+```{r rnaturalearth-example}
+#install.packages("rnaturalearth")
+library(rnaturalearth)
+library(ggplot2)
+
+nigeria_chad_rnaturalearth <- ne_countries(country = c('nigeria','chad'), returnclass='sf')
+ggplot(data = nigeria_chad_rnaturalearth) +
+  geom_sf() +
+  geom_sf_label(aes(label = sovereignt)) +
+  xlab("Longitude") +
+  ylab("Latitude") +
+  ggtitle("Country boundaries")
+
+nigeria_chad_rnaturalearth_admlvl1 <- ne_states(country = c('nigeria','chad'), returnclass='sf')
+ggplot(data = nigeria_chad_rnaturalearth_admlvl1) +
+  geom_sf() +
+  ggtitle("Administrative Level 1 boundaries")
+```
+
+
+## References
+
+- The `rgeoboundaries` repository : https://github.com/wmgeolab/rgeoboundaries  
+- The `rnaturalearth` repository : https://github.com/ropensci/rnaturalearth  
+

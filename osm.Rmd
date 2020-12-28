@@ -1,0 +1,245 @@
+---
+title: "Open Street Maps"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    number_sections: false
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
+```
+
+# Retrieving and Visualising points of interest using Open Street Maps
+
+This tutorial takes you through the steps of retrieving and visualising points of interest in defined geographical areas using R.
+
+
+## Installing and exploring the `osmdata` package
+
+`osmdata` is an R package for downloading and using data from [OpenStreetMap (OSM)](https://www.openstreetmap.org/#map=2/-30.8/119.1)
+
+### Installing the `osmdata` package
+
+We can install the `osmdata` package from CRAN as follows
+
+```{r install-osmdata, eval=FALSE}
+install.packages("osmdata")
+```
+
+After loading it in, we are ready to use it
+
+```{r load-osmdata}
+library(osmdata)
+```
+
+### Exploring the `osmdata` package
+
+The `osmdata` package provides spatial data about a wide range of spatial properties and objects across the world.
+
+The `available_features()` function can be used to get the list of recognized features in OSM. A list of the available features can be found in the [OSM wiki](https://wiki.openstreetmap.org/wiki/Map_Features).
+
+
+```{r print-available-features, attr.output='style="max-height: 200px;"'}
+available_features()
+```
+
+The `available_tags()` function lists out the tags associated with each feature. The tags associated with the feature - "amenity" can be retrieved as follows.
+
+```{r print-available-tags, attr.output='style="max-height: 200px;"'}
+available_tags("amenity")
+```
+
+## Creating a query
+
+The first step in creating an `osmdata` query is defining the geographical area we want to include in the query. This can be done by defining a bounding box for the selected geographical area.
+
+### Defining the bounding box
+
+A bounding box defines a geographical area by its bounding latitudes and longitudes. The `osmdata` package provides a function `getbb()` to retrieve the bounding box of a place using it's name.
+
+We can now create the bounding box of Lagos, the largest city in Nigeria.
+
+```{r get-lagos-boundingbox}
+lagos_bb <- getbb("Lagos")
+lagos_bb
+```
+
+### Creating an overpass query
+
+The `osmdata` package retrieves data from the [overpass API](overpass-api.de), which is a read-only API that serves up custom selected parts of the OSM map data.
+
+To retrieve the required features of a place (defined by the bounding box), we have to then create an overpass query. This can be easily done using the `opq()` function of the `osmdata` package.
+
+Here we use the previously defined bounding box of Lagos to create the overpass query
+
+```{r create-lagos-opq}
+lagos_bb %>%
+  opq()
+```
+
+Then the `add_osm_feature()` function can be used to add the required features to the query, using the features and tags we explored earlier in this tutorial.
+
+This query is used to retreive data on hospitals in Lagos
+
+```{r create-lagos-hospital-opq}
+lagos_bb %>%
+  opq() %>%
+  add_osm_feature("amenity", "hospital")
+```
+
+## The `osmdata` object
+
+### Retrieving the `osmdata` object
+
+There are two primary osmdata functions for obtaining data from a query: `osmdata_sf()` and `osmdata_sp()`, which return data in Simple Features (sf) and Spatial (sp) formats, respectively.
+
+In this tutorial, we will use the `osmdata_sf()` function to obtain a Simple Feature Object of the resultant query.
+
+
+```{r get-lagos-hospitals}
+lagos_hospitals <- lagos_bb %>%
+  opq() %>%
+  add_osm_feature("amenity", "hospital") %>%
+  osmdata_sf()
+```
+
+### Understanding the `osmdata` object
+
+The `osmdata` objects will contain the following components
+
+- A bounding box used in query
+- The call submitted to the overpass API  
+- Meta data about the object such as timestamp and version numbers
+- Spatial data - some of which may be empty depending on the type of data retrieved
+
+The following is the `osmdata` object retrieved by querying the hospitals in Lagos
+
+```{r print-lagos-hopitals-osmdata-obj, attr.output='style="max-height: 200px;"'}
+lagos_hospitals
+
+```
+
+Note how each component of the `osmdata` objects is preceded by a $ symbol and some of them are NULL. This is expected, since we queried for hospitals in Lagos, and they are represented using points and polygons only.
+
+We can also print out each of these components and explore each of them for a better understanding of them.
+
+```{r print-osmdataobj-components}
+# bounding box used in query
+lagos_hospitals$bbox
+
+# metadata
+lagos_hospitals$meta
+```
+
+Note how the Spatial data returned by the query are Simple Feature objects as we requested using the`osmdata_sf()` function, and how the polygons also contain more details about the hospitals such as their names, websites, wikipedia pages etc. where available.
+
+```{r print-osmdataobj-spatial-components, attr.output='style="max-height: 100px;"'}
+# osm_points
+lagos_hospitals$osm_points
+
+# osm_polyogns
+lagos_hospitals$osm_polygons
+```
+
+
+## Visualising queried data
+
+TO visualise the retrieved data about hospitals in Lagos, this tutorial uses the `ggplot2` package.
+
+### Installing the `ggplot2` package
+
+Installing the `ggplot2` package is very straightforward and can be done as follows.
+
+```{r install-ggplot2, eval=FALSE}
+install.packages("ggplot2")
+```
+
+### Visualising Hospitals in Lagos
+
+The `ggplot2` package allows us to easily visualise simple feature objects using the `geom_sf()` function.
+
+```{r vis-lagos-hospitals-ggplot2}
+library(ggplot2)
+
+ggplot()+
+  geom_sf(data = lagos_hospitals$osm_polygons)
+```
+
+While the visualisation above provides useful information about the spread of hospitals in Lagos, it would be useful to plot the locations of hospitals overlayed on a map Of Lagos. For this we use the `ggmap` package.
+
+### Installing the `ggmap` package
+
+The `ggmpap` package can be installed simply as follows
+
+```{r install-ggmap, eval=FALSE}
+install.packages("ggmap")
+```
+
+### Visualising Hospitals in Lagos
+
+To get a map of Lagos, we use the `get_map()` function provided by the `ggmap` package. Here we have used the maptype "roadmap", but the function allows many more maptypes which can be found [here](https://www.rdocumentation.org/packages/ggmap/versions/3.0.0/topics/get_map).
+
+```{r get-lagos-map}
+library(ggmap)
+lagos_map <- get_map(lagos_bb, maptype = "roadmap")
+```
+
+Then we can use the reteived map using `ggmap` and overlay the spatial data of the hospitals on it. Note how we have changed the colour and outline line size of the polygons, filled them in and also changed the opacity to intriduce some transparency to the polygons.
+
+```{r vis-lagos-hospitals-ggmap}
+ggmap(lagos_map) +
+  geom_sf(data = lagos_hospitals$osm_polygons,
+          inherit.aes = FALSE,
+          colour = "#08519c",
+          fill = "#08306b",
+          alpha = .5,
+          size = 1)+
+  labs(x = "", y = "")
+```
+
+
+## Examples
+
+### Visualising Hospitals in Lagos
+
+The following is a complete example of using the `osmdata` package to retrieve data of hospitals in Lagos and `ggmap` to visualise it
+
+```{r lagos-hospitals-example}
+library(osmdata)
+library(ggplot2)
+library(ggmap)
+
+#creating bounding box for Lagos
+lagos_bb <- getbb("Lagos")
+
+# retrieving data of hospitals in Lagos
+lagos_hospitals <- lagos_bb %>%
+  opq() %>%
+  add_osm_feature("amenity", "hospital") %>%
+  osmdata_sf()
+
+# retrieving map of lagos
+lagos_map <- get_map(lagos_bb, maptype = "roadmap")
+
+# visualising map of lagos overlayed by hospitals in lagos
+ggmap(lagos_map) +
+  geom_sf(data = lagos_hospitals$osm_polygons,
+          inherit.aes = FALSE,
+          colour = "#08519c",
+          fill = "#08306b",
+          alpha = .5,
+          size = 1)+
+  labs(x = "", y = "")
+```
+
+
+
+## References
+
+- The `osmdata` repository : https://github.com/ropensci/osmdata  
+- `osmdata` package vignette : https://cran.r-project.org/web/packages/osmdata/vignettes/osmdata.html
+- `ggmap` package documentation : https://www.rdocumentation.org/packages/ggmap/versions/3.0.0/topics/get_map
+- 'Accessing Open Street Map data with R' : https://dominicroye.github.io/en/2018/accessing-openstreetmap-data-with-r/
+

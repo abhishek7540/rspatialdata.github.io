@@ -1,0 +1,974 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>Open Street Maps</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+<link rel="stylesheet" href="styles.css" type="text/css" />
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 51px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h2 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h3 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h4 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h5 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h6 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Rspatialdata</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Tutorials
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="admin_boundaries.html">Administrative Boundaries</a>
+    </li>
+    <li>
+      <a href="population.html">Population</a>
+    </li>
+    <li>
+      <a href="elevation.html">Elevation</a>
+    </li>
+    <li>
+      <a href="temperature.html">Temperature</a>
+    </li>
+    <li>
+      <a href="rainfall.html">Rainfall</a>
+    </li>
+    <li>
+      <a href="humidity.html">Humidity</a>
+    </li>
+    <li>
+      <a href="vegetation.html">Vegetation</a>
+    </li>
+    <li>
+      <a href="land_cov.html">Land Cover</a>
+    </li>
+    <li>
+      <a href="malaria.html">Malaria</a>
+    </li>
+    <li>
+      <a href="dhs.html">DHS</a>
+    </li>
+    <li>
+      <a href="mobility.html">Mobility</a>
+    </li>
+    <li>
+      <a href="air_pollution.html">Air Pollution</a>
+    </li>
+    <li>
+      <a href="socio_economic.html">Socio-economic</a>
+    </li>
+    <li>
+      <a href="osm.html">Points of Interest using Open Street Maps</a>
+    </li>
+  </ul>
+</li>
+<li>
+  <a href="contributors.html">Contributors</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Open Street Maps</h1>
+
+</div>
+
+
+<div id="retrieving-and-visualising-points-of-interest-using-open-street-maps" class="section level1">
+<h1>Retrieving and Visualising points of interest using Open Street Maps</h1>
+<p>This tutorial takes you through the steps of retrieving and visualising points of interest in defined geographical areas using R.</p>
+<div id="installing-and-exploring-the-osmdata-package" class="section level2">
+<h2>Installing and exploring the <code>osmdata</code> package</h2>
+<p><code>osmdata</code> is an R package for downloading and using data from <a href="https://www.openstreetmap.org/#map=2/-30.8/119.1">OpenStreetMap (OSM)</a></p>
+<div id="installing-the-osmdata-package" class="section level3">
+<h3>Installing the <code>osmdata</code> package</h3>
+<p>We can install the <code>osmdata</code> package from CRAN as follows</p>
+<pre class="r"><code>install.packages(&quot;osmdata&quot;)</code></pre>
+<p>After loading it in, we are ready to use it</p>
+<pre class="r"><code>library(osmdata)</code></pre>
+</div>
+<div id="exploring-the-osmdata-package" class="section level3">
+<h3>Exploring the <code>osmdata</code> package</h3>
+<p>The <code>osmdata</code> package provides spatial data about a wide range of spatial properties and objects across the world.</p>
+<p>The <code>available_features()</code> function can be used to get the list of recognized features in OSM. A list of the available features can be found in the <a href="https://wiki.openstreetmap.org/wiki/Map_Features">OSM wiki</a>.</p>
+<pre class="r"><code>available_features()</code></pre>
+<pre style="max-height: 200px;"><code>##   [1] &quot;4wd_only&quot;                &quot;abandoned&quot;              
+##   [3] &quot;abutters&quot;                &quot;access&quot;                 
+##   [5] &quot;addr&quot;                    &quot;addr:city&quot;              
+##   [7] &quot;addr:conscriptionnumber&quot; &quot;addr:country&quot;           
+##   [9] &quot;addr:district&quot;           &quot;addr:flats&quot;             
+##  [11] &quot;addr:full&quot;               &quot;addr:hamlet&quot;            
+##  [13] &quot;addr:housename&quot;          &quot;addr:housenumber&quot;       
+##  [15] &quot;addr:inclusion&quot;          &quot;addr:interpolation&quot;     
+##  [17] &quot;addr:place&quot;              &quot;addr:postcode&quot;          
+##  [19] &quot;addr:province&quot;           &quot;addr:state&quot;             
+##  [21] &quot;addr:street&quot;             &quot;addr:subdistrict&quot;       
+##  [23] &quot;addr:suburb&quot;             &quot;admin_level&quot;            
+##  [25] &quot;aeroway&quot;                 &quot;agricultural&quot;           
+##  [27] &quot;alt_name&quot;                &quot;amenity&quot;                
+##  [29] &quot;area&quot;                    &quot;atv&quot;                    
+##  [31] &quot;backward&quot;                &quot;barrier&quot;                
+##  [33] &quot;basin&quot;                   &quot;bdouble&quot;                
+##  [35] &quot;bicycle&quot;                 &quot;bicycle_road&quot;           
+##  [37] &quot;biergarten&quot;              &quot;boat&quot;                   
+##  [39] &quot;border_type&quot;             &quot;boundary&quot;               
+##  [41] &quot;bridge&quot;                  &quot;building&quot;               
+##  [43] &quot;building:fireproof&quot;      &quot;building:flats&quot;         
+##  [45] &quot;building:levels&quot;         &quot;building:min_level&quot;     
+##  [47] &quot;building:soft_storey&quot;    &quot;bus_bay&quot;                
+##  [49] &quot;busway&quot;                  &quot;charge&quot;                 
+##  [51] &quot;construction&quot;            &quot;covered&quot;                
+##  [53] &quot;craft&quot;                   &quot;crossing&quot;               
+##  [55] &quot;crossing:island&quot;         &quot;cuisine&quot;                
+##  [57] &quot;cutting&quot;                 &quot;cycleway&quot;               
+##  [59] &quot;denomination&quot;            &quot;destination&quot;            
+##  [61] &quot;diet&quot;                    &quot;direction&quot;              
+##  [63] &quot;dispensing&quot;              &quot;disused&quot;                
+##  [65] &quot;disused:shop&quot;            &quot;drink&quot;                  
+##  [67] &quot;drive_in&quot;                &quot;drive_through&quot;          
+##  [69] &quot;ele&quot;                     &quot;electric_bicycle&quot;       
+##  [71] &quot;electrified&quot;             &quot;embankment&quot;             
+##  [73] &quot;embedded_rails&quot;          &quot;emergency&quot;              
+##  [75] &quot;end_date&quot;                &quot;entrance&quot;               
+##  [77] &quot;est_width&quot;               &quot;fee&quot;                    
+##  [79] &quot;fire_object:type&quot;        &quot;fire_operator&quot;          
+##  [81] &quot;fire_rank&quot;               &quot;foot&quot;                   
+##  [83] &quot;footway&quot;                 &quot;ford&quot;                   
+##  [85] &quot;forestry&quot;                &quot;forward&quot;                
+##  [87] &quot;frequency&quot;               &quot;fuel&quot;                   
+##  [89] &quot;gauge&quot;                   &quot;golf_cart&quot;              
+##  [91] &quot;goods&quot;                   &quot;hazmat&quot;                 
+##  [93] &quot;healthcare&quot;              &quot;healthcare:counselling&quot; 
+##  [95] &quot;healthcare:speciality&quot;   &quot;height&quot;                 
+##  [97] &quot;hgv&quot;                     &quot;highway&quot;                
+##  [99] &quot;historic&quot;                &quot;horse&quot;                  
+## [101] &quot;ice_road&quot;                &quot;incline&quot;                
+## [103] &quot;industrial&quot;              &quot;inline_skates&quot;          
+## [105] &quot;inscription&quot;             &quot;internet_access&quot;        
+## [107] &quot;junction&quot;                &quot;kerb&quot;                   
+## [109] &quot;landuse&quot;                 &quot;lanes&quot;                  
+## [111] &quot;lanes:bus&quot;               &quot;lanes:psv&quot;              
+## [113] &quot;layer&quot;                   &quot;leaf_cycle&quot;             
+## [115] &quot;leaf_type&quot;               &quot;leisure&quot;                
+## [117] &quot;lhv&quot;                     &quot;lit&quot;                    
+## [119] &quot;location&quot;                &quot;man_made&quot;               
+## [121] &quot;maxaxleload&quot;             &quot;maxheight&quot;              
+## [123] &quot;maxlength&quot;               &quot;maxspeed&quot;               
+## [125] &quot;maxstay&quot;                 &quot;maxweight&quot;              
+## [127] &quot;maxwidth&quot;                &quot;military&quot;               
+## [129] &quot;minspeed&quot;                &quot;mofa&quot;                   
+## [131] &quot;moped&quot;                   &quot;motor_vehicle&quot;          
+## [133] &quot;motorboat&quot;               &quot;motorcar&quot;               
+## [135] &quot;motorcycle&quot;              &quot;motorroad&quot;              
+## [137] &quot;mountain_pass&quot;           &quot;mtb:description&quot;        
+## [139] &quot;mtb:scale:imba&quot;          &quot;mtb_scale&quot;              
+## [141] &quot;name&quot;                    &quot;narrow&quot;                 
+## [143] &quot;natural&quot;                 &quot;noexit&quot;                 
+## [145] &quot;non_existent_levels&quot;     &quot;note&quot;                   
+## [147] &quot;nudism&quot;                  &quot;office&quot;                 
+## [149] &quot;official_name&quot;           &quot;old_name&quot;               
+## [151] &quot;oneway&quot;                  &quot;opening_hours&quot;          
+## [153] &quot;operator&quot;                &quot;organic&quot;                
+## [155] &quot;oven&quot;                    &quot;overtaking&quot;             
+## [157] &quot;parking:condition&quot;       &quot;parking:lane&quot;           
+## [159] &quot;passing_places&quot;          &quot;place&quot;                  
+## [161] &quot;power&quot;                   &quot;priority_road&quot;          
+## [163] &quot;produce&quot;                 &quot;proposed&quot;               
+## [165] &quot;protected_area&quot;          &quot;psv&quot;                    
+## [167] &quot;public_transport&quot;        &quot;railway&quot;                
+## [169] &quot;railway:preserved&quot;       &quot;railway:track_ref&quot;      
+## [171] &quot;recycling_type&quot;          &quot;ref&quot;                    
+## [173] &quot;religion&quot;                &quot;residential&quot;            
+## [175] &quot;resource&quot;                &quot;roadtrain&quot;              
+## [177] &quot;route&quot;                   &quot;sac_scale&quot;              
+## [179] &quot;service&quot;                 &quot;service_times&quot;          
+## [181] &quot;shelter_type&quot;            &quot;shop&quot;                   
+## [183] &quot;sidewalk&quot;                &quot;site&quot;                   
+## [185] &quot;ski&quot;                     &quot;smoothness&quot;             
+## [187] &quot;social_facility&quot;         &quot;speed_pedelec&quot;          
+## [189] &quot;start_date&quot;              &quot;step_count&quot;             
+## [191] &quot;substation&quot;              &quot;surface&quot;                
+## [193] &quot;tactile_paving&quot;          &quot;tank&quot;                   
+## [195] &quot;tidal&quot;                   &quot;toilets:wheelchair&quot;     
+## [197] &quot;toll&quot;                    &quot;tourism&quot;                
+## [199] &quot;tracks&quot;                  &quot;tracktype&quot;              
+## [201] &quot;traffic_calming&quot;         &quot;traffic_sign&quot;           
+## [203] &quot;trail_visibility&quot;        &quot;tunnel&quot;                 
+## [205] &quot;turn&quot;                    &quot;type&quot;                   
+## [207] &quot;usage&quot;                   &quot;vehicle&quot;                
+## [209] &quot;vending&quot;                 &quot;voltage&quot;                
+## [211] &quot;water&quot;                   &quot;wheelchair&quot;             
+## [213] &quot;wholesale&quot;               &quot;width&quot;                  
+## [215] &quot;winter_road&quot;             &quot;wood&quot;</code></pre>
+<p>The <code>available_tags()</code> function lists out the tags associated with each feature. The tags associated with the feature - “amenity” can be retrieved as follows.</p>
+<pre class="r"><code>available_tags(&quot;amenity&quot;)</code></pre>
+<pre style="max-height: 200px;"><code>##   [1] &quot;animal_boarding&quot;               &quot;animal_breeding&quot;              
+##   [3] &quot;animal_shelter&quot;                &quot;arts_centre&quot;                  
+##   [5] &quot;atm&quot;                           &quot;baby_hatch&quot;                   
+##   [7] &quot;baking_oven&quot;                   &quot;bank&quot;                         
+##   [9] &quot;bar&quot;                           &quot;bbq&quot;                          
+##  [11] &quot;bench&quot;                         &quot;bicycle_parking&quot;              
+##  [13] &quot;bicycle_rental&quot;                &quot;bicycle_repair_station&quot;       
+##  [15] &quot;biergarten&quot;                    &quot;boat_rental&quot;                  
+##  [17] &quot;boat_sharing&quot;                  &quot;brothel&quot;                      
+##  [19] &quot;bureau_de_change&quot;              &quot;bus_station&quot;                  
+##  [21] &quot;cafe&quot;                          &quot;car_rental&quot;                   
+##  [23] &quot;car_sharing&quot;                   &quot;car_wash&quot;                     
+##  [25] &quot;casino&quot;                        &quot;charging_station&quot;             
+##  [27] &quot;childcare&quot;                     &quot;cinema&quot;                       
+##  [29] &quot;clinic&quot;                        &quot;clock&quot;                        
+##  [31] &quot;college&quot;                       &quot;community_centre&quot;             
+##  [33] &quot;conference_centre&quot;             &quot;courthouse&quot;                   
+##  [35] &quot;crematorium&quot;                   &quot;dentist&quot;                      
+##  [37] &quot;dive_centre&quot;                   &quot;doctors&quot;                      
+##  [39] &quot;dog_toilet&quot;                    &quot;drinking_water&quot;               
+##  [41] &quot;driving_school&quot;                &quot;embassy&quot;                      
+##  [43] &quot;fast_food&quot;                     &quot;ferry_terminal&quot;               
+##  [45] &quot;fire_station&quot;                  &quot;firepit&amp;action=edit&amp;redlink=1&quot;
+##  [47] &quot;food_court&quot;                    &quot;fountain&quot;                     
+##  [49] &quot;fuel&quot;                          &quot;funeral_hall&quot;                 
+##  [51] &quot;gambling&quot;                      &quot;give_box&quot;                     
+##  [53] &quot;grave_yard&quot;                    &quot;grit_bin&quot;                     
+##  [55] &quot;gym&quot;                           &quot;hospital&quot;                     
+##  [57] &quot;hunting_stand&quot;                 &quot;ice_cream&quot;                    
+##  [59] &quot;internet_cafe&quot;                 &quot;kindergarten&quot;                 
+##  [61] &quot;kitchen&quot;                       &quot;kneipp_water_cure&quot;            
+##  [63] &quot;language_school&quot;               &quot;library&quot;                      
+##  [65] &quot;lounger&quot;                       &quot;love_hotel&quot;                   
+##  [67] &quot;marketplace&quot;                   &quot;monastery&quot;                    
+##  [69] &quot;motorcycle_parking&quot;            &quot;music_school&quot;                 
+##  [71] &quot;nightclub&quot;                     &quot;nursing_home&quot;                 
+##  [73] &quot;parking&quot;                       &quot;parking_entrance&quot;             
+##  [75] &quot;parking_space&quot;                 &quot;pharmacy&quot;                     
+##  [77] &quot;photo_booth&quot;                   &quot;place_of_worship&quot;             
+##  [79] &quot;planetarium&quot;                   &quot;police&quot;                       
+##  [81] &quot;post_box&quot;                      &quot;post_depot&quot;                   
+##  [83] &quot;post_office&quot;                   &quot;prison&quot;                       
+##  [85] &quot;pub&quot;                           &quot;public_bath&quot;                  
+##  [87] &quot;public_bookcase&quot;               &quot;public_building&quot;              
+##  [89] &quot;ranger_station&quot;                &quot;recycling&quot;                    
+##  [91] &quot;refugee_site&quot;                  &quot;restaurant&quot;                   
+##  [93] &quot;sanitary_dump_station&quot;         &quot;sauna&quot;                        
+##  [95] &quot;school&quot;                        &quot;shelter&quot;                      
+##  [97] &quot;shower&quot;                        &quot;social_centre&quot;                
+##  [99] &quot;social_facility&quot;               &quot;stripclub&quot;                    
+## [101] &quot;studio&quot;                        &quot;swingerclub&quot;                  
+## [103] &quot;taxi&quot;                          &quot;telephone&quot;                    
+## [105] &quot;theatre&quot;                       &quot;toilets&quot;                      
+## [107] &quot;townhall&quot;                      &quot;toy_library&quot;                  
+## [109] &quot;university&quot;                    &quot;vehicle_inspection&quot;           
+## [111] &quot;vending_machine&quot;               &quot;veterinary&quot;                   
+## [113] &quot;waste_basket&quot;                  &quot;waste_disposal&quot;               
+## [115] &quot;waste_transfer_station&quot;        &quot;water_point&quot;                  
+## [117] &quot;watering_place&quot;</code></pre>
+</div>
+</div>
+<div id="creating-a-query" class="section level2">
+<h2>Creating a query</h2>
+<p>The first step in creating an <code>osmdata</code> query is defining the geographical area we want to include in the query. This can be done by defining a bounding box for the selected geographical area.</p>
+<div id="defining-the-bounding-box" class="section level3">
+<h3>Defining the bounding box</h3>
+<p>A bounding box defines a geographical area by its bounding latitudes and longitudes. The <code>osmdata</code> package provides a function <code>getbb()</code> to retrieve the bounding box of a place using it’s name.</p>
+<p>We can now create the bounding box of Lagos, the largest city in Nigeria.</p>
+<pre class="r"><code>lagos_bb &lt;- getbb(&quot;Lagos&quot;)
+lagos_bb</code></pre>
+<pre><code>##        min      max
+## x 3.234180 3.554180
+## y 6.295058 6.615057</code></pre>
+</div>
+<div id="creating-an-overpass-query" class="section level3">
+<h3>Creating an overpass query</h3>
+<p>The <code>osmdata</code> package retrieves data from the <a href="overpass-api.de">overpass API</a>, which is a read-only API that serves up custom selected parts of the OSM map data.</p>
+<p>To retrieve the required features of a place (defined by the bounding box), we have to then create an overpass query. This can be easily done using the <code>opq()</code> function of the <code>osmdata</code> package.</p>
+<p>Here we use the previously defined bounding box of Lagos to create the overpass query</p>
+<pre class="r"><code>lagos_bb %&gt;%
+  opq()</code></pre>
+<pre><code>## $bbox
+## [1] &quot;6.2950575,3.2341795,6.6150575,3.5541795&quot;
+## 
+## $prefix
+## [1] &quot;[out:xml][timeout:25];\n(\n&quot;
+## 
+## $suffix
+## [1] &quot;);\n(._;&gt;;);\nout body;&quot;
+## 
+## $features
+## NULL
+## 
+## attr(,&quot;class&quot;)
+## [1] &quot;list&quot;           &quot;overpass_query&quot;
+## attr(,&quot;nodes_only&quot;)
+## [1] FALSE</code></pre>
+<p>Then the <code>add_osm_feature()</code> function can be used to add the required features to the query, using the features and tags we explored earlier in this tutorial.</p>
+<p>This query is used to retreive data on hospitals in Lagos</p>
+<pre class="r"><code>lagos_bb %&gt;%
+  opq() %&gt;%
+  add_osm_feature(&quot;amenity&quot;, &quot;hospital&quot;)</code></pre>
+<pre><code>## $bbox
+## [1] &quot;6.2950575,3.2341795,6.6150575,3.5541795&quot;
+## 
+## $prefix
+## [1] &quot;[out:xml][timeout:25];\n(\n&quot;
+## 
+## $suffix
+## [1] &quot;);\n(._;&gt;;);\nout body;&quot;
+## 
+## $features
+## [1] &quot; [\&quot;amenity\&quot;=\&quot;hospital\&quot;]&quot;
+## 
+## attr(,&quot;class&quot;)
+## [1] &quot;list&quot;           &quot;overpass_query&quot;
+## attr(,&quot;nodes_only&quot;)
+## [1] FALSE</code></pre>
+</div>
+</div>
+<div id="the-osmdata-object" class="section level2">
+<h2>The <code>osmdata</code> object</h2>
+<div id="retrieving-the-osmdata-object" class="section level3">
+<h3>Retrieving the <code>osmdata</code> object</h3>
+<p>There are two primary osmdata functions for obtaining data from a query: <code>osmdata_sf()</code> and <code>osmdata_sp()</code>, which return data in Simple Features (sf) and Spatial (sp) formats, respectively.</p>
+<p>In this tutorial, we will use the <code>osmdata_sf()</code> function to obtain a Simple Feature Object of the resultant query.</p>
+<pre class="r"><code>lagos_hospitals &lt;- lagos_bb %&gt;%
+  opq() %&gt;%
+  add_osm_feature(&quot;amenity&quot;, &quot;hospital&quot;) %&gt;%
+  osmdata_sf()</code></pre>
+</div>
+<div id="understanding-the-osmdata-object" class="section level3">
+<h3>Understanding the <code>osmdata</code> object</h3>
+<p>The <code>osmdata</code> objects will contain the following components</p>
+<ul>
+<li>A bounding box used in query</li>
+<li>The call submitted to the overpass API<br />
+</li>
+<li>Meta data about the object such as timestamp and version numbers</li>
+<li>Spatial data - some of which may be empty depending on the type of data retrieved</li>
+</ul>
+<p>The following is the <code>osmdata</code> object retrieved by querying the hospitals in Lagos</p>
+<pre class="r"><code>lagos_hospitals</code></pre>
+<p>Note how each component of the <code>osmdata</code> objects is preceded by a $ symbol and some of them are NULL. This is expected, since we queried for hospitals in Lagos, and they are represented using points and polygons only.</p>
+<p>We can also print out each of these components and explore each of them for a better understanding of them.</p>
+<pre class="r"><code># bounding box used in query
+lagos_hospitals$bbox</code></pre>
+<pre><code>## [1] &quot;6.2950575,3.2341795,6.6150575,3.5541795&quot;</code></pre>
+<pre class="r"><code># metadata
+lagos_hospitals$meta</code></pre>
+<pre><code>## $timestamp
+## [1] &quot;[ Mon 2 Dec 2020 03:57:03 ]&quot;
+## 
+## $OSM_version
+## [1] &quot;0.6&quot;
+## 
+## $overpass_version
+## [1] &quot;Overpass API 0.7.56.7 b85c4387&quot;</code></pre>
+<p>Note how the Spatial data returned by the query are Simple Feature objects as we requested using the<code>osmdata_sf()</code> function, and how the polygons also contain more details about the hospitals such as their names, websites, wikipedia pages etc. where available.</p>
+<pre class="r"><code># osm_points
+lagos_hospitals$osm_points</code></pre>
+<pre style="max-height: 100px;"><code>## Simple feature collection with 403 features and 5 fields
+## geometry type:  POINT
+## dimension:      XY
+## bbox:           xmin: 3.250371 ymin: 6.427682 xmax: 3.522714 ymax: 6.610555
+## geographic CRS: WGS 84
+## First 10 features:
+##                osm_id name amenity barrier fixme                  geometry
+## 815678325   815678325 &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;  &lt;NA&gt; POINT (3.303055 6.461788)
+## 928544939   928544939 &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;  &lt;NA&gt; POINT (3.361348 6.495705)
+## 1209198481 1209198481 &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;  &lt;NA&gt; POINT (3.397627 6.447358)
+## 1209198504 1209198504 &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;  &lt;NA&gt;    POINT (3.397712 6.447)
+## 1209198747 1209198747 &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;  &lt;NA&gt; POINT (3.397854 6.447192)
+## 3024218835 3024218835 &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;  &lt;NA&gt; POINT (3.370959 6.511046)
+## 3845787945 3845787945 &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;  &lt;NA&gt; POINT (3.397503 6.448392)
+## 3845787949 3845787949 &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;  &lt;NA&gt; POINT (3.397583 6.448494)
+## 3845787951 3845787951 &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;  &lt;NA&gt;  POINT (3.397146 6.44864)
+## 3971452305 3971452305 &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;  &lt;NA&gt; POINT (3.386569 6.551142)</code></pre>
+<pre class="r"><code># osm_polyogns
+lagos_hospitals$osm_polygons</code></pre>
+<pre style="max-height: 100px;"><code>## Simple feature collection with 34 features and 21 fields
+## geometry type:  POLYGON
+## dimension:      XY
+## bbox:           xmin: 3.250371 ymin: 6.427682 xmax: 3.522714 ymax: 6.610555
+## geographic CRS: WGS 84
+## First 10 features:
+##              osm_id                                     name addr.city
+## 394119616 394119616                 Gbagada General Hospital      &lt;NA&gt;
+## 525043228 525043228     National Orthopaedic Hospital Igbobi      &lt;NA&gt;
+## 556508170 556508170         Gold Cross Hospital - Bourdillon     Lagos
+## 568367654 568367654          Reddington Hospital - Ikeja GRA      &lt;NA&gt;
+## 594743340 594743340                      Reddington Hospital      &lt;NA&gt;
+## 595195260 595195260   Eye Foundation Hospital &amp; Laser Centre      &lt;NA&gt;
+## 643481485 643481485       St. Kizito Clinic &amp; Maternity Ward      &lt;NA&gt;
+## 659370489 659370489        Nigerian Police Hospital - Falomo      &lt;NA&gt;
+## 672092174 672092174                   General Hospital Lagos      &lt;NA&gt;
+## 704991085 704991085 Lagos State University Teaching Hospital      &lt;NA&gt;
+##           addr.housenumber          addr.street alt_name  amenity building
+## 394119616             &lt;NA&gt;                 &lt;NA&gt;     &lt;NA&gt; hospital     &lt;NA&gt;
+## 525043228             &lt;NA&gt;                 &lt;NA&gt;     &lt;NA&gt; hospital     &lt;NA&gt;
+## 556508170              17B      Bourdillon Road     &lt;NA&gt; hospital     &lt;NA&gt;
+## 568367654             &lt;NA&gt;                 &lt;NA&gt;     &lt;NA&gt; hospital     &lt;NA&gt;
+## 594743340             &lt;NA&gt; Idowu Martins Street     &lt;NA&gt; hospital     &lt;NA&gt;
+## 595195260             &lt;NA&gt;                 &lt;NA&gt;     &lt;NA&gt; hospital     &lt;NA&gt;
+## 643481485             &lt;NA&gt;                 &lt;NA&gt;     &lt;NA&gt; hospital     &lt;NA&gt;
+## 659370489             &lt;NA&gt;                 &lt;NA&gt;     &lt;NA&gt; hospital     &lt;NA&gt;
+## 672092174             &lt;NA&gt;                 &lt;NA&gt;     &lt;NA&gt; hospital     &lt;NA&gt;
+## 704991085             &lt;NA&gt;                 &lt;NA&gt;     &lt;NA&gt; hospital     &lt;NA&gt;
+##           emergency health_facility.type healthcare healthcare.speciality level
+## 394119616      &lt;NA&gt;                 &lt;NA&gt;   hospital                  &lt;NA&gt;  &lt;NA&gt;
+## 525043228      &lt;NA&gt;                 &lt;NA&gt;   hospital          orthopaedics  &lt;NA&gt;
+## 556508170      &lt;NA&gt;                 &lt;NA&gt;   hospital                  &lt;NA&gt;  &lt;NA&gt;
+## 568367654      &lt;NA&gt;                 &lt;NA&gt;   hospital                  &lt;NA&gt;  &lt;NA&gt;
+## 594743340      &lt;NA&gt;                 &lt;NA&gt;   hospital                  &lt;NA&gt;  &lt;NA&gt;
+## 595195260      &lt;NA&gt;                 &lt;NA&gt;   hospital                  &lt;NA&gt;  &lt;NA&gt;
+## 643481485      &lt;NA&gt;                 &lt;NA&gt;   hospital                  &lt;NA&gt;  &lt;NA&gt;
+## 659370489      &lt;NA&gt;                 &lt;NA&gt;   hospital                  &lt;NA&gt;  &lt;NA&gt;
+## 672092174      &lt;NA&gt;                 &lt;NA&gt;   hospital                  &lt;NA&gt;  &lt;NA&gt;
+## 704991085      &lt;NA&gt;                 &lt;NA&gt;   hospital                  &lt;NA&gt;  &lt;NA&gt;
+##           opening_hours operator short_name source start_date
+## 394119616          &lt;NA&gt;     &lt;NA&gt;       &lt;NA&gt;   &lt;NA&gt;       &lt;NA&gt;
+## 525043228          &lt;NA&gt;     &lt;NA&gt;      NOHIL   &lt;NA&gt;       &lt;NA&gt;
+## 556508170          &lt;NA&gt;     &lt;NA&gt;       &lt;NA&gt;   &lt;NA&gt;       &lt;NA&gt;
+## 568367654          &lt;NA&gt;     &lt;NA&gt;       &lt;NA&gt;   &lt;NA&gt;       &lt;NA&gt;
+## 594743340          &lt;NA&gt;     &lt;NA&gt;       &lt;NA&gt;   &lt;NA&gt;       &lt;NA&gt;
+## 595195260          &lt;NA&gt;     &lt;NA&gt;       &lt;NA&gt;   &lt;NA&gt;       &lt;NA&gt;
+## 643481485          &lt;NA&gt;     &lt;NA&gt;       &lt;NA&gt;   &lt;NA&gt;       &lt;NA&gt;
+## 659370489          &lt;NA&gt;     &lt;NA&gt;       &lt;NA&gt;   &lt;NA&gt;       &lt;NA&gt;
+## 672092174          &lt;NA&gt;     &lt;NA&gt;       &lt;NA&gt;   &lt;NA&gt;       1893
+## 704991085          &lt;NA&gt;     &lt;NA&gt;     LASUTH   &lt;NA&gt;       &lt;NA&gt;
+##                               website  wikidata
+## 394119616                        &lt;NA&gt; Q48743188
+## 525043228 http://www.nohlagos.gov.ng/ Q23023017
+## 556508170                        &lt;NA&gt;      &lt;NA&gt;
+## 568367654                        &lt;NA&gt;      &lt;NA&gt;
+## 594743340                        &lt;NA&gt;      &lt;NA&gt;
+## 595195260                        &lt;NA&gt;      &lt;NA&gt;
+## 643481485                        &lt;NA&gt;      &lt;NA&gt;
+## 659370489                        &lt;NA&gt;      &lt;NA&gt;
+## 672092174   http://www.ghlagos.org.ng Q19874986
+## 704991085                        &lt;NA&gt; Q28449098
+##                                             wikipedia
+## 394119616                 en:Gbagada General Hospital
+## 525043228            en:National Orthopaedic Hospital
+## 556508170                                        &lt;NA&gt;
+## 568367654                                        &lt;NA&gt;
+## 594743340                                        &lt;NA&gt;
+## 595195260                                        &lt;NA&gt;
+## 643481485                                        &lt;NA&gt;
+## 659370489                                        &lt;NA&gt;
+## 672092174            en:Lagos Island General Hospital
+## 704991085 en:Lagos State University Teaching Hospital
+##                                 geometry
+## 394119616 POLYGON ((3.387942 6.554221...
+## 525043228 POLYGON ((3.368175 6.532734...
+## 556508170 POLYGON ((3.436958 6.446001...
+## 568367654 POLYGON ((3.356857 6.583489...
+## 594743340 POLYGON ((3.420182 6.433274...
+## 595195260 POLYGON ((3.456025 6.439484...
+## 643481485 POLYGON ((3.505188 6.434465...
+## 659370489 POLYGON ((3.42908 6.443328,...
+## 672092174 POLYGON ((3.39582 6.448513,...
+## 704991085 POLYGON ((3.344492 6.590988...</code></pre>
+</div>
+</div>
+<div id="visualising-queried-data" class="section level2">
+<h2>Visualising queried data</h2>
+<p>TO visualise the retrieved data about hospitals in Lagos, this tutorial uses the <code>ggplot2</code> package.</p>
+<div id="installing-the-ggplot2-package" class="section level3">
+<h3>Installing the <code>ggplot2</code> package</h3>
+<p>Installing the <code>ggplot2</code> package is very straightforward and can be done as follows.</p>
+<pre class="r"><code>install.packages(&quot;ggplot2&quot;)</code></pre>
+</div>
+<div id="visualising-hospitals-in-lagos" class="section level3">
+<h3>Visualising Hospitals in Lagos</h3>
+<p>The <code>ggplot2</code> package allows us to easily visualise simple feature objects using the <code>geom_sf()</code> function.</p>
+<pre class="r"><code>library(ggplot2)
+
+ggplot()+
+  geom_sf(data = lagos_hospitals$osm_polygons)</code></pre>
+<p><img src="osm_files/figure-html/vis-lagos-hospitals-ggplot2-1.png" width="672" /></p>
+<p>While the visualisation above provides useful information about the spread of hospitals in Lagos, it would be useful to plot the locations of hospitals overlayed on a map Of Lagos. For this we use the <code>ggmap</code> package.</p>
+</div>
+<div id="installing-the-ggmap-package" class="section level3">
+<h3>Installing the <code>ggmap</code> package</h3>
+<p>The <code>ggmpap</code> package can be installed simply as follows</p>
+<pre class="r"><code>install.packages(&quot;ggmap&quot;)</code></pre>
+</div>
+<div id="visualising-hospitals-in-lagos-1" class="section level3">
+<h3>Visualising Hospitals in Lagos</h3>
+<p>To get a map of Lagos, we use the <code>get_map()</code> function provided by the <code>ggmap</code> package. Here we have used the maptype “roadmap”, but the function allows many more maptypes which can be found <a href="https://www.rdocumentation.org/packages/ggmap/versions/3.0.0/topics/get_map">here</a>.</p>
+<pre class="r"><code>library(ggmap)
+lagos_map &lt;- get_map(lagos_bb, maptype = &quot;roadmap&quot;)</code></pre>
+<p>Then we can use the reteived map using <code>ggmap</code> and overlay the spatial data of the hospitals on it. Note how we have changed the colour and outline line size of the polygons, filled them in and also changed the opacity to intriduce some transparency to the polygons.</p>
+<pre class="r"><code>ggmap(lagos_map) +
+  geom_sf(data = lagos_hospitals$osm_polygons,
+          inherit.aes = FALSE,
+          colour = &quot;#08519c&quot;,
+          fill = &quot;#08306b&quot;,
+          alpha = .5,
+          size = 1)+
+  labs(x = &quot;&quot;, y = &quot;&quot;)</code></pre>
+<p><img src="osm_files/figure-html/vis-lagos-hospitals-ggmap-1.png" width="672" /></p>
+</div>
+</div>
+<div id="examples" class="section level2">
+<h2>Examples</h2>
+<div id="visualising-hospitals-in-lagos-2" class="section level3">
+<h3>Visualising Hospitals in Lagos</h3>
+<p>The following is a complete example of using the <code>osmdata</code> package to retrieve data of hospitals in Lagos and <code>ggmap</code> to visualise it</p>
+<pre class="r"><code>library(osmdata)
+library(ggplot2)
+library(ggmap)
+
+# retrieving data of hospitals in Lagos
+lagos_hospitals &lt;- getbb(&quot;Lagos&quot;) %&gt;%
+  opq() %&gt;%
+  add_osm_feature(&quot;amenity&quot;, &quot;hospital&quot;) %&gt;%
+  osmdata_sf()
+
+# retrieving map of lagos
+lagos_map &lt;- get_map(lagos_bb, maptype = &quot;roadmap&quot;)
+
+# visualising map of lagos overlayed by hospitals in lagos
+ggmap(lagos_map) +
+  geom_sf(data = lagos_hospitals$osm_polygons,
+          inherit.aes = FALSE,
+          colour = &quot;#08519c&quot;,
+          fill = &quot;#08306b&quot;,
+          alpha = .5,
+          size = 1)+
+  labs(x = &quot;&quot;, y = &quot;&quot;)</code></pre>
+<p><img src="osm_files/figure-html/lagos-hospitals-example-1.png" width="672" /></p>
+</div>
+</div>
+<div id="references" class="section level2">
+<h2>References</h2>
+<ul>
+<li>The <code>osmdata</code> repository : <a href="https://github.com/ropensci/osmdata" class="uri">https://github.com/ropensci/osmdata</a><br />
+</li>
+<li><code>osmdata</code> package vignette : <a href="https://cran.r-project.org/web/packages/osmdata/vignettes/osmdata.html" class="uri">https://cran.r-project.org/web/packages/osmdata/vignettes/osmdata.html</a></li>
+<li><code>ggmap</code> package documentation : <a href="https://www.rdocumentation.org/packages/ggmap/versions/3.0.0/topics/get_map" class="uri">https://www.rdocumentation.org/packages/ggmap/versions/3.0.0/topics/get_map</a></li>
+<li>‘Accessing Open Street Map data with R’ : <a href="https://dominicroye.github.io/en/2018/accessing-openstreetmap-data-with-r/" class="uri">https://dominicroye.github.io/en/2018/accessing-openstreetmap-data-with-r/</a></li>
+</ul>
+</div>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

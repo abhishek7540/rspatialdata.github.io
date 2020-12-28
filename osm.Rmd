@@ -16,7 +16,7 @@ knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
 This tutorial takes you through the steps of retrieving and visualising points of interest in defined geographical areas using R.
 
 
-## Installing and exploring the `osmdata` package
+## The `osmdata` package
 
 `osmdata` is an R package for downloading and using data from [OpenStreetMap (OSM)](https://www.openstreetmap.org/#map=2/-30.8/119.1)
 
@@ -177,7 +177,7 @@ The `ggmpap` package can be installed simply as follows
 install.packages("ggmap")
 ```
 
-### Visualising Hospitals in Lagos
+### Visualising Hospitals on a map of Lagos
 
 To get a map of Lagos, we use the `get_map()` function provided by the `ggmap` package. Here we have used the maptype "roadmap", but the function allows many more maptypes which can be found [here](https://www.rdocumentation.org/packages/ggmap/versions/3.0.0/topics/get_map).
 
@@ -199,6 +199,40 @@ ggmap(lagos_map) +
   labs(x = "", y = "")
 ```
 
+### Downloading other spatial features of Lagos
+
+The `osmdata` package can also be used to download other spatial features such as highways and rivers in Lagos, which can then be overlayed with the hospitals.
+
+For this we create multiple queries for each feature as follows.
+
+```{r get-lagos-other-features}
+lagos_streets <- lagos_bb %>%
+  opq() %>%
+  add_osm_feature("highway", c("motorway", "primary", "secondary", "tertiary")) %>%
+  osmdata_sf()
+
+lagos_small_streets <- lagos_bb %>%
+  opq() %>%
+  add_osm_feature(key = "highway", value = c("residential", "living_street", "unclassified", "service", "footway")) %>%
+  osmdata_sf()
+
+lagos_rivers <- lagos_bb %>%
+  opq() %>%
+  add_osm_feature(key = "waterway", value = "river") %>%
+  osmdata_sf()
+```
+
+Then we use the `ggplot2` package to visualise each of these features along with the hospitals in Lagos. Note how we have used different colours, line sizes(thicknesses) and opacities to differentiate among the features.
+
+```{r vis-lagos-features-and-hospitals}
+ggplot() +
+  geom_sf(data = lagos_streets$osm_lines, inherit.aes = FALSE, color = "#ffbe7f", size = .4, alpha = .8) +
+  geom_sf(data = lagos_small_streets$osm_lines, inherit.aes = FALSE, color = "#a6a6a6", size = .2, alpha = .8) +
+  geom_sf(data = lagos_rivers$osm_lines, inherit.aes = FALSE, color = "#7fc0ff", size = .8, alpha = .5) +
+  geom_sf(data = lagos_hospitals$osm_polygons, inherit.aes = FALSE, colour = "#08519c", fill = "#08306b",alpha = .5, size = 1) +
+  coord_sf(xlim = c(3.23, 3.56), ylim = c(6.4,6.629), expand = FALSE) +
+  theme_bw()
+```
 
 ## Examples
 
@@ -234,6 +268,50 @@ ggmap(lagos_map) +
   labs(x = "", y = "")
 ```
 
+We can also download different spatial attributes of Lagos using the `osmdata` package and overlay them on top of eachother using `ggplot2` to create a map of Lagos.
+
+```{r lagos-features-and-hospitals-example, eval=FALSE}
+library(osmdata)
+library(ggplot2)
+
+#creating bounding box for Lagos
+lagos_bb <- getbb("Lagos")
+
+# retrieving data of streets in Lagos
+lagos_streets <- lagos_bb %>%
+  opq() %>%
+  add_osm_feature("highway", c("motorway", "primary", "secondary", "tertiary")) %>%
+  osmdata_sf()
+
+# retrieving data of small streets in Lagos
+lagos_small_streets <- lagos_bb %>%
+  opq() %>%
+  add_osm_feature(key = "highway", value = c("residential", "living_street", "unclassified", "service", "footway")) %>%
+  osmdata_sf()
+
+# retrieving data of rivers in Lagos
+lagos_rivers <- lagos_bb %>%
+  opq() %>%
+  add_osm_feature(key = "waterway", value = "river") %>%
+  osmdata_sf()
+
+# retrieving data of hospitals in Lagos
+lagos_hospitals <- lagos_bb %>%
+  opq() %>%
+  add_osm_feature("amenity", "hospital") %>%
+  osmdata_sf()
+
+```
+```{r vis-lagos-features-and-hospitals-example}
+# visualising all retreived features over each other to form a map of Lagos
+ggplot() +
+  geom_sf(data = lagos_streets$osm_lines, inherit.aes = FALSE, color = "#ffbe7f", size = .4, alpha = .8) +
+  geom_sf(data = lagos_small_streets$osm_lines, inherit.aes = FALSE, color = "#a6a6a6", size = .2, alpha = .8) +
+  geom_sf(data = lagos_rivers$osm_lines, inherit.aes = FALSE, color = "#7fc0ff", size = .8, alpha = .5) +
+  geom_sf(data = lagos_hospitals$osm_polygons, inherit.aes = FALSE, colour = "#08519c", fill = "#08306b",alpha = .5, size = 1) +
+  coord_sf(xlim = c(3.23, 3.56), ylim = c(6.4,6.629), expand = FALSE) +
+  theme_bw()
+```
 
 
 ## References
@@ -242,4 +320,5 @@ ggmap(lagos_map) +
 - `osmdata` package vignette : https://cran.r-project.org/web/packages/osmdata/vignettes/osmdata.html
 - `ggmap` package documentation : https://www.rdocumentation.org/packages/ggmap/versions/3.0.0/topics/get_map
 - 'Accessing Open Street Map data with R' : https://dominicroye.github.io/en/2018/accessing-openstreetmap-data-with-r/
+- #30diasdegraphics https://github.com/danielredondo/30diasdegraficos/blob/master/scripts/18_mapa.R
 

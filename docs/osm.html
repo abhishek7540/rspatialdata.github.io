@@ -425,8 +425,8 @@ div.tocify {
 <div id="retrieving-and-visualising-points-of-interest-using-open-street-maps" class="section level1">
 <h1>Retrieving and Visualising points of interest using Open Street Maps</h1>
 <p>This tutorial takes you through the steps of retrieving and visualising points of interest in defined geographical areas using R.</p>
-<div id="installing-and-exploring-the-osmdata-package" class="section level2">
-<h2>Installing and exploring the <code>osmdata</code> package</h2>
+<div id="the-osmdata-package" class="section level2">
+<h2>The <code>osmdata</code> package</h2>
 <p><code>osmdata</code> is an R package for downloading and using data from <a href="https://www.openstreetmap.org/#map=2/-30.8/119.1">OpenStreetMap (OSM)</a></p>
 <div id="installing-the-osmdata-package" class="section level3">
 <h3>Installing the <code>osmdata</code> package</h3>
@@ -701,7 +701,7 @@ lagos_hospitals$bbox</code></pre>
 <pre class="r"><code># metadata
 lagos_hospitals$meta</code></pre>
 <pre><code>## $timestamp
-## [1] &quot;[ Mon 2 Dec 2020 03:57:03 ]&quot;
+## [1] &quot;[ Mon 2 Dec 2020 07:35:02 ]&quot;
 ## 
 ## $OSM_version
 ## [1] &quot;0.6&quot;
@@ -838,8 +838,8 @@ ggplot()+
 <p>The <code>ggmpap</code> package can be installed simply as follows</p>
 <pre class="r"><code>install.packages(&quot;ggmap&quot;)</code></pre>
 </div>
-<div id="visualising-hospitals-in-lagos-1" class="section level3">
-<h3>Visualising Hospitals in Lagos</h3>
+<div id="visualising-hospitals-on-a-map-of-lagos" class="section level3">
+<h3>Visualising Hospitals on a map of Lagos</h3>
 <p>To get a map of Lagos, we use the <code>get_map()</code> function provided by the <code>ggmap</code> package. Here we have used the maptype “roadmap”, but the function allows many more maptypes which can be found <a href="https://www.rdocumentation.org/packages/ggmap/versions/3.0.0/topics/get_map">here</a>.</p>
 <pre class="r"><code>library(ggmap)
 lagos_map &lt;- get_map(lagos_bb, maptype = &quot;roadmap&quot;)</code></pre>
@@ -854,18 +854,49 @@ lagos_map &lt;- get_map(lagos_bb, maptype = &quot;roadmap&quot;)</code></pre>
   labs(x = &quot;&quot;, y = &quot;&quot;)</code></pre>
 <p><img src="osm_files/figure-html/vis-lagos-hospitals-ggmap-1.png" width="672" /></p>
 </div>
+<div id="downloading-other-spatial-features-of-lagos" class="section level3">
+<h3>Downloading other spatial features of Lagos</h3>
+<p>The <code>osmdata</code> package can also be used to download other spatial features such as highways and rivers in Lagos, which can then be overlayed with the hospitals.</p>
+<p>For this we create multiple queries for each feature as follows.</p>
+<pre class="r"><code>lagos_streets &lt;- lagos_bb %&gt;%
+  opq() %&gt;%
+  add_osm_feature(&quot;highway&quot;, c(&quot;motorway&quot;, &quot;primary&quot;, &quot;secondary&quot;, &quot;tertiary&quot;)) %&gt;%
+  osmdata_sf()
+
+lagos_small_streets &lt;- lagos_bb %&gt;%
+  opq() %&gt;%
+  add_osm_feature(key = &quot;highway&quot;, value = c(&quot;residential&quot;, &quot;living_street&quot;, &quot;unclassified&quot;, &quot;service&quot;, &quot;footway&quot;)) %&gt;%
+  osmdata_sf()
+
+lagos_rivers &lt;- lagos_bb %&gt;%
+  opq() %&gt;%
+  add_osm_feature(key = &quot;waterway&quot;, value = &quot;river&quot;) %&gt;%
+  osmdata_sf()</code></pre>
+<p>Then we use the <code>ggplot2</code> package to visualise each of these features along with the hospitals in Lagos. Note how we have used different colours, line sizes(thicknesses) and opacities to differentiate among the features.</p>
+<pre class="r"><code>ggplot() +
+  geom_sf(data = lagos_streets$osm_lines, inherit.aes = FALSE, color = &quot;#ffbe7f&quot;, size = .4, alpha = .8) +
+  geom_sf(data = lagos_small_streets$osm_lines, inherit.aes = FALSE, color = &quot;#a6a6a6&quot;, size = .2, alpha = .8) +
+  geom_sf(data = lagos_rivers$osm_lines, inherit.aes = FALSE, color = &quot;#7fc0ff&quot;, size = .8, alpha = .5) +
+  geom_sf(data = lagos_hospitals$osm_polygons, inherit.aes = FALSE, colour = &quot;#08519c&quot;, fill = &quot;#08306b&quot;,alpha = .5, size = 1) +
+  coord_sf(xlim = c(3.23, 3.56), ylim = c(6.4,6.629), expand = FALSE) +
+  theme_bw()</code></pre>
+<p><img src="osm_files/figure-html/vis-lagos-features-and-hospitals-1.png" width="672" /></p>
+</div>
 </div>
 <div id="examples" class="section level2">
 <h2>Examples</h2>
-<div id="visualising-hospitals-in-lagos-2" class="section level3">
+<div id="visualising-hospitals-in-lagos-1" class="section level3">
 <h3>Visualising Hospitals in Lagos</h3>
 <p>The following is a complete example of using the <code>osmdata</code> package to retrieve data of hospitals in Lagos and <code>ggmap</code> to visualise it</p>
 <pre class="r"><code>library(osmdata)
 library(ggplot2)
 library(ggmap)
 
+#creating bounding box for Lagos
+lagos_bb &lt;- getbb(&quot;Lagos&quot;)
+
 # retrieving data of hospitals in Lagos
-lagos_hospitals &lt;- getbb(&quot;Lagos&quot;) %&gt;%
+lagos_hospitals &lt;- lagos_bb %&gt;%
   opq() %&gt;%
   add_osm_feature(&quot;amenity&quot;, &quot;hospital&quot;) %&gt;%
   osmdata_sf()
@@ -883,6 +914,45 @@ ggmap(lagos_map) +
           size = 1)+
   labs(x = &quot;&quot;, y = &quot;&quot;)</code></pre>
 <p><img src="osm_files/figure-html/lagos-hospitals-example-1.png" width="672" /></p>
+<p>We can also download different spatial attributes of Lagos using the <code>osmdata</code> package and overlay them on top of eachother using <code>ggplot2</code> to create a map of Lagos.</p>
+<pre class="r"><code>library(osmdata)
+library(ggplot2)
+
+#creating bounding box for Lagos
+lagos_bb &lt;- getbb(&quot;Lagos&quot;)
+
+# retrieving data of streets in Lagos
+lagos_streets &lt;- lagos_bb %&gt;%
+  opq() %&gt;%
+  add_osm_feature(&quot;highway&quot;, c(&quot;motorway&quot;, &quot;primary&quot;, &quot;secondary&quot;, &quot;tertiary&quot;)) %&gt;%
+  osmdata_sf()
+
+# retrieving data of small streets in Lagos
+lagos_small_streets &lt;- lagos_bb %&gt;%
+  opq() %&gt;%
+  add_osm_feature(key = &quot;highway&quot;, value = c(&quot;residential&quot;, &quot;living_street&quot;, &quot;unclassified&quot;, &quot;service&quot;, &quot;footway&quot;)) %&gt;%
+  osmdata_sf()
+
+# retrieving data of rivers in Lagos
+lagos_rivers &lt;- lagos_bb %&gt;%
+  opq() %&gt;%
+  add_osm_feature(key = &quot;waterway&quot;, value = &quot;river&quot;) %&gt;%
+  osmdata_sf()
+
+# retrieving data of hospitals in Lagos
+lagos_hospitals &lt;- lagos_bb %&gt;%
+  opq() %&gt;%
+  add_osm_feature(&quot;amenity&quot;, &quot;hospital&quot;) %&gt;%
+  osmdata_sf()</code></pre>
+<pre class="r"><code># visualising all retreived features over each other to form a map of Lagos
+ggplot() +
+  geom_sf(data = lagos_streets$osm_lines, inherit.aes = FALSE, color = &quot;#ffbe7f&quot;, size = .4, alpha = .8) +
+  geom_sf(data = lagos_small_streets$osm_lines, inherit.aes = FALSE, color = &quot;#a6a6a6&quot;, size = .2, alpha = .8) +
+  geom_sf(data = lagos_rivers$osm_lines, inherit.aes = FALSE, color = &quot;#7fc0ff&quot;, size = .8, alpha = .5) +
+  geom_sf(data = lagos_hospitals$osm_polygons, inherit.aes = FALSE, colour = &quot;#08519c&quot;, fill = &quot;#08306b&quot;,alpha = .5, size = 1) +
+  coord_sf(xlim = c(3.23, 3.56), ylim = c(6.4,6.629), expand = FALSE) +
+  theme_bw()</code></pre>
+<p><img src="osm_files/figure-html/vis-lagos-features-and-hospitals-example-1.png" width="672" /></p>
 </div>
 </div>
 <div id="references" class="section level2">
@@ -893,6 +963,7 @@ ggmap(lagos_map) +
 <li><code>osmdata</code> package vignette : <a href="https://cran.r-project.org/web/packages/osmdata/vignettes/osmdata.html" class="uri">https://cran.r-project.org/web/packages/osmdata/vignettes/osmdata.html</a></li>
 <li><code>ggmap</code> package documentation : <a href="https://www.rdocumentation.org/packages/ggmap/versions/3.0.0/topics/get_map" class="uri">https://www.rdocumentation.org/packages/ggmap/versions/3.0.0/topics/get_map</a></li>
 <li>‘Accessing Open Street Map data with R’ : <a href="https://dominicroye.github.io/en/2018/accessing-openstreetmap-data-with-r/" class="uri">https://dominicroye.github.io/en/2018/accessing-openstreetmap-data-with-r/</a></li>
+<li>#30diasdegraphics <a href="https://github.com/danielredondo/30diasdegraficos/blob/master/scripts/18_mapa.R" class="uri">https://github.com/danielredondo/30diasdegraficos/blob/master/scripts/18_mapa.R</a></li>
 </ul>
 </div>
 </div>

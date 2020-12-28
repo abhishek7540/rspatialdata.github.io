@@ -43,11 +43,10 @@ library(malariaAtlas)
 
 The data can be explored interactively at [data explorer](https://malariaatlas.org/explorer/#/). This can also be used for finding more information on raster data. It consists of a dashboard which the shows the spread of the parasite over time and also the option for downloading the data used.
 
-## List of data present in the package
+## List of datasets present in the package
 
-The `listData()` function from the `mapAtlas` package helps retrieve a list of all the available data to download.
+The `listData()` function from the `mapAtlas` package helps retrieve a list of all the available data which can be downloaded.
 
-We can download the data for any available country by using the function and passing values to its arguments.
 
 ```{r data-list,message = FALSE}
 listData(datatype = "pr points") 
@@ -188,21 +187,21 @@ ZMB_shp_data <- as.MAPshp(ZM_shp)
 autoplot(ZMB_Pf, shp_df = ZMB_shp_data)  
 ```
 
-## Combined Visuals
+## Complete Visualisation examples
 
 Using the above tools along with ggplot, simple comparison plots can be made.
 
 - Example for PR survey points :
 
 ```{r message = FALSE}
-ZMB_shp <- getShp(country = "Zimbabwe", admin_level = "admin0")
-ZMB_shp_df <- as.MAPshp(ZMB_shp)
-ZMB_PfPR2_10 <- getRaster(surface = "Plasmodium falciparum PR2-10", shp = ZMB_shp, year = 2013)
-ZMB_PfPR2_10_df <- as.MAPraster(ZMB_PfPR2_10)
+ZMB_shp <- getShp(country = "Zimbabwe", admin_level = "admin0") #get shapefile data
+ZMB_shp_df <- as.MAPshp(ZMB_shp) #convert the shapefile data
+ZMB_PfPR2_10 <- getRaster(surface = "Plasmodium falciparum PR2-10", shp = ZMB_shp, year = 2013) #get the raster data
+ZMB_PfPR2_10_df <- as.MAPraster(ZMB_PfPR2_10) #convert the raster data
 
-p <- autoplot(ZMB_PfPR2_10_df, shp_df = ZMB_shp_df, printed = FALSE)
+p <- autoplot(ZMB_PfPR2_10_df, shp_df = ZMB_shp_df, printed = FALSE) #plot the raster data for the country using shapefile data
 
-pr <- getPR(country = c("Zimbabwe"), species = "Pf")
+pr <- getPR(country = c("Zimbabwe"), species = "Pf") #get the PR data for the country
 p[[1]] +
 geom_point(data = pr[pr$year_start==2013,], aes(longitude, latitude, fill = positive / examined, size = examined), shape = 21)+
 scale_size_continuous(name = "Survey Size")+
@@ -215,14 +214,14 @@ scale_size_continuous(name = "Survey Size")+
 - Example for Vector points:
 
 ```{r message = FALSE}
-IND_shp <- getShp(country = "India", admin_level = "admin0")
-IND_shp_df <- as.MAPshp(IND_shp)
-IND_an_dirus <- getRaster(surface = "Anopheles dirus species complex", shp = IND_shp)
-IND_an_dirus_df <- as.MAPraster(IND_an_dirus)
+IND_shp <- getShp(country = "India", admin_level = "admin0") #get shapefile data
+IND_shp_df <- as.MAPshp(IND_shp) #convert shapefile data 
+IND_an_dirus <- getRaster(surface = "Anopheles dirus species complex", shp = IND_shp) #get raster data
+IND_an_dirus_df <- as.MAPraster(IND_an_dirus) #convert raster data
 
-p <- autoplot(IND_an_dirus_df, shp_df = IND_shp_df, printed = FALSE)
+p <- autoplot(IND_an_dirus_df, shp_df = IND_shp_df, printed = FALSE) # plot the raster data on maps using shapefile
 
-vec <- getVecOcc(country = c("India"), species = "Anopheles dirus")
+vec <- getVecOcc(country = c("India"), species = "Anopheles dirus") #get the vector point data for country
 p[[1]] +
 geom_point(data = vec, aes(longitude, latitude), shape = 21,  show.legend = TRUE)+
   scale_fill_distiller(name = "Predicted distribution", palette = "YlOrRd")+
@@ -248,4 +247,4 @@ div.blue { background-color:#e6f0ff; border-radius: 5px; padding: 20px;}
 
 ## References
 
-- The `malriaAtlas` package repository : https://github.com/malaria-atlas-project/malariaAtlas
+- The `malariaAtlas` package repository : https://github.com/malaria-atlas-project/malariaAtlas

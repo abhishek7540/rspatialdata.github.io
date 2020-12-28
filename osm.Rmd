@@ -211,8 +211,11 @@ library(osmdata)
 library(ggplot2)
 library(ggmap)
 
+#creating bounding box for Lagos
+lagos_bb <- getbb("Lagos")
+
 # retrieving data of hospitals in Lagos
-lagos_hospitals <- getbb("Lagos") %>%
+lagos_hospitals <- lagos_bb %>%
   opq() %>%
   add_osm_feature("amenity", "hospital") %>%
   osmdata_sf()

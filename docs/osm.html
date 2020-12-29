@@ -11,7 +11,7 @@
 
 
 
-<title>Open Street Maps</title>
+<title>Open Street Map data</title>
 
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -25,6 +25,17 @@
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
 <link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/anchor-sections-1.0/anchor-sections.css" rel="stylesheet" />
+<script src="site_libs/anchor-sections-1.0/anchor-sections.js"></script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
 
 <style type="text/css">code{white-space: pre;}</style>
 <style type="text/css">
@@ -344,7 +355,7 @@ div.tocify {
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="index.html">Rspatialdata</a>
+      <a class="navbar-brand" href="index.html">rspatialdata</a>
     </div>
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
@@ -359,46 +370,13 @@ div.tocify {
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="admin_boundaries.html">Administrative Boundaries</a>
+      <a href="admin_boundaries.html">Administrative boundaries</a>
     </li>
     <li>
-      <a href="population.html">Population</a>
-    </li>
-    <li>
-      <a href="elevation.html">Elevation</a>
-    </li>
-    <li>
-      <a href="temperature.html">Temperature</a>
-    </li>
-    <li>
-      <a href="rainfall.html">Rainfall</a>
-    </li>
-    <li>
-      <a href="humidity.html">Humidity</a>
-    </li>
-    <li>
-      <a href="vegetation.html">Vegetation</a>
-    </li>
-    <li>
-      <a href="land_cov.html">Land Cover</a>
+      <a href="osm.html">Open Street Map data</a>
     </li>
     <li>
       <a href="malaria.html">Malaria</a>
-    </li>
-    <li>
-      <a href="dhs.html">DHS</a>
-    </li>
-    <li>
-      <a href="mobility.html">Mobility</a>
-    </li>
-    <li>
-      <a href="air_pollution.html">Air Pollution</a>
-    </li>
-    <li>
-      <a href="socio_economic.html">Socio-economic</a>
-    </li>
-    <li>
-      <a href="osm.html">Points of Interest using Open Street Maps</a>
     </li>
   </ul>
 </li>
@@ -417,28 +395,23 @@ div.tocify {
 
 
 
-<h1 class="title toc-ignore">Open Street Maps</h1>
+<h1 class="title toc-ignore">Open Street Map data</h1>
 
 </div>
 
 
-<div id="retrieving-and-visualising-points-of-interest-using-open-street-maps" class="section level1">
-<h1>Retrieving and Visualising points of interest using Open Street Maps</h1>
-<p>This tutorial takes you through the steps of retrieving and visualising points of interest in defined geographical areas using R.</p>
-<div id="the-osmdata-package" class="section level2">
-<h2>The <code>osmdata</code> package</h2>
-<p><code>osmdata</code> is an R package for downloading and using data from <a href="https://www.openstreetmap.org/#map=2/-30.8/119.1">OpenStreetMap (OSM)</a></p>
-<div id="installing-the-osmdata-package" class="section level3">
-<h3>Installing the <code>osmdata</code> package</h3>
-<p>We can install the <code>osmdata</code> package from CRAN as follows</p>
+<div id="retrieving-open-street-map-data-using-the-osmdata-package" class="section level1">
+<h1>Retrieving Open Street Map data using the <code>osmdata</code> package</h1>
+<p><code>osmdata</code> is an R package for downloading data from <a href="https://www.openstreetmap.org/#map=2/-30.8/119.1">OpenStreetMap (OSM)</a>. This tutorial takes you through the steps of retrieving points of interest in defined geographical areas using the <code>osmdata</code> package, and visualising them using the <code>ggmap</code> and <code>ggplot2</code> packages.</p>
+<div id="installing-the-osmdata-package" class="section level2">
+<h2>Installing the <code>osmdata</code> package</h2>
+<p>We can install and load the <code>osmdata</code> package from CRAN as follows</p>
 <pre class="r"><code>install.packages(&quot;osmdata&quot;)</code></pre>
-<p>After loading it in, we are ready to use it</p>
 <pre class="r"><code>library(osmdata)</code></pre>
 </div>
-<div id="exploring-the-osmdata-package" class="section level3">
-<h3>Exploring the <code>osmdata</code> package</h3>
-<p>The <code>osmdata</code> package provides spatial data about a wide range of spatial properties and objects across the world.</p>
-<p>The <code>available_features()</code> function can be used to get the list of recognized features in OSM. A list of the available features can be found in the <a href="https://wiki.openstreetmap.org/wiki/Map_Features">OSM wiki</a>.</p>
+<div id="exploring-the-osmdata-package" class="section level2">
+<h2>Exploring the <code>osmdata</code> package</h2>
+<p>The <code>osmdata</code> package provides spatial data about a wide range of spatial properties and objects across the world. The <code>available_features()</code> function can be used to get the list of recognized features in OSM. A list of the available features can be found in the <a href="https://wiki.openstreetmap.org/wiki/Map_Features">OSM wiki</a>.</p>
 <pre class="r"><code>available_features()</code></pre>
 <pre style="max-height: 200px;"><code>##   [1] &quot;4wd_only&quot;                &quot;abandoned&quot;              
 ##   [3] &quot;abutters&quot;                &quot;access&quot;                 
@@ -548,7 +521,7 @@ div.tocify {
 ## [211] &quot;water&quot;                   &quot;wheelchair&quot;             
 ## [213] &quot;wholesale&quot;               &quot;width&quot;                  
 ## [215] &quot;winter_road&quot;             &quot;wood&quot;</code></pre>
-<p>The <code>available_tags()</code> function lists out the tags associated with each feature. The tags associated with the feature - “amenity” can be retrieved as follows.</p>
+<p>The <code>available_tags()</code> function lists out the tags associated with each feature. The tags associated with the feature &quot;amenity&quot; can be retrieved as follows.</p>
 <pre class="r"><code>available_tags(&quot;amenity&quot;)</code></pre>
 <pre style="max-height: 200px;"><code>##   [1] &quot;animal_boarding&quot;               &quot;animal_breeding&quot;              
 ##   [3] &quot;animal_shelter&quot;                &quot;arts_centre&quot;                  
@@ -610,14 +583,11 @@ div.tocify {
 ## [115] &quot;waste_transfer_station&quot;        &quot;water_point&quot;                  
 ## [117] &quot;watering_place&quot;</code></pre>
 </div>
-</div>
-<div id="creating-a-query" class="section level2">
-<h2>Creating a query</h2>
-<p>The first step in creating an <code>osmdata</code> query is defining the geographical area we want to include in the query. This can be done by defining a bounding box for the selected geographical area.</p>
+<div id="creating-a-query-to-download-data" class="section level2">
+<h2>Creating a query to download data</h2>
 <div id="defining-the-bounding-box" class="section level3">
 <h3>Defining the bounding box</h3>
-<p>A bounding box defines a geographical area by its bounding latitudes and longitudes. The <code>osmdata</code> package provides a function <code>getbb()</code> to retrieve the bounding box of a place using it’s name.</p>
-<p>We can now create the bounding box of Lagos, the largest city in Nigeria.</p>
+<p>The first step in creating an <code>osmdata</code> query is defining the geographical area we want to include in the query. This can be done by defining a bounding box that defines a geographical area by its bounding latitudes and longitudes. The <code>osmdata</code> package provides a function <code>getbb()</code> to retrieve the bounding box of a place using its name. We can now create the bounding box of Lagos, the largest city in Nigeria.</p>
 <pre class="r"><code>lagos_bb &lt;- getbb(&quot;Lagos&quot;)
 lagos_bb</code></pre>
 <pre><code>##        min      max
@@ -626,9 +596,7 @@ lagos_bb</code></pre>
 </div>
 <div id="creating-an-overpass-query" class="section level3">
 <h3>Creating an overpass query</h3>
-<p>The <code>osmdata</code> package retrieves data from the <a href="overpass-api.de">overpass API</a>, which is a read-only API that serves up custom selected parts of the OSM map data.</p>
-<p>To retrieve the required features of a place (defined by the bounding box), we have to then create an overpass query. This can be easily done using the <code>opq()</code> function of the <code>osmdata</code> package.</p>
-<p>Here we use the previously defined bounding box of Lagos to create the overpass query</p>
+<p>The <code>osmdata</code> package retrieves data from the <a href="overpass-api.de">overpass API</a>, which is a read-only API that serves up custom selected parts of the OSM map data. To retrieve the required features of a place (defined by the bounding box), we have to then create an overpass query. This can be easily done using the <code>opq()</code> function of the <code>osmdata</code> package. Here we use the previously defined bounding box of Lagos to create the overpass query</p>
 <pre class="r"><code>lagos_bb %&gt;%
   opq()</code></pre>
 <pre><code>## $bbox
@@ -647,38 +615,14 @@ lagos_bb</code></pre>
 ## [1] &quot;list&quot;           &quot;overpass_query&quot;
 ## attr(,&quot;nodes_only&quot;)
 ## [1] FALSE</code></pre>
-<p>Then the <code>add_osm_feature()</code> function can be used to add the required features to the query, using the features and tags we explored earlier in this tutorial.</p>
-<p>This query is used to retreive data on hospitals in Lagos</p>
-<pre class="r"><code>lagos_bb %&gt;%
-  opq() %&gt;%
-  add_osm_feature(&quot;amenity&quot;, &quot;hospital&quot;)</code></pre>
-<pre><code>## $bbox
-## [1] &quot;6.2950575,3.2341795,6.6150575,3.5541795&quot;
-## 
-## $prefix
-## [1] &quot;[out:xml][timeout:25];\n(\n&quot;
-## 
-## $suffix
-## [1] &quot;);\n(._;&gt;;);\nout body;&quot;
-## 
-## $features
-## [1] &quot; [\&quot;amenity\&quot;=\&quot;hospital\&quot;]&quot;
-## 
-## attr(,&quot;class&quot;)
-## [1] &quot;list&quot;           &quot;overpass_query&quot;
-## attr(,&quot;nodes_only&quot;)
-## [1] FALSE</code></pre>
 </div>
-</div>
-<div id="the-osmdata-object" class="section level2">
-<h2>The <code>osmdata</code> object</h2>
 <div id="retrieving-the-osmdata-object" class="section level3">
 <h3>Retrieving the <code>osmdata</code> object</h3>
-<p>There are two primary osmdata functions for obtaining data from a query: <code>osmdata_sf()</code> and <code>osmdata_sp()</code>, which return data in Simple Features (sf) and Spatial (sp) formats, respectively.</p>
-<p>In this tutorial, we will use the <code>osmdata_sf()</code> function to obtain a Simple Feature Object of the resultant query.</p>
+<p>Then, the <code>add_osm_feature()</code> function can be used to add the required features to the query, using the features and tags we explored earlier in this tutorial. This query specified in terms of key-value is used to retreive data on hospitals in Lagos.</p>
+<p>There are two primary osmdata functions for obtaining data from a query: <code>osmdata_sf()</code> and <code>osmdata_sp()</code>, which return data in simple features (sf) and spatial (sp) formats, respectively. Here, we use the <code>osmdata_sf()</code> function to obtain a simple feature object of the resultant query.</p>
 <pre class="r"><code>lagos_hospitals &lt;- lagos_bb %&gt;%
   opq() %&gt;%
-  add_osm_feature(&quot;amenity&quot;, &quot;hospital&quot;) %&gt;%
+  add_osm_feature(key = &quot;amenity&quot;, value = &quot;hospital&quot;) %&gt;%
   osmdata_sf()</code></pre>
 </div>
 <div id="understanding-the-osmdata-object" class="section level3">
@@ -693,21 +637,20 @@ lagos_bb</code></pre>
 </ul>
 <p>The following is the <code>osmdata</code> object retrieved by querying the hospitals in Lagos</p>
 <pre class="r"><code>lagos_hospitals</code></pre>
-<p>Note how each component of the <code>osmdata</code> objects is preceded by a $ symbol and some of them are NULL. This is expected, since we queried for hospitals in Lagos, and they are represented using points and polygons only.</p>
-<p>We can also print out each of these components and explore each of them for a better understanding of them.</p>
+<p>Note how each component of the <code>osmdata</code> objects is preceded by a $ symbol and some of them are NULL. This is expected, since we queried for hospitals in Lagos, and they are represented using points and polygons only. We can also print out each of these components and explore each of them for a better understanding of them.</p>
 <pre class="r"><code># bounding box used in query
 lagos_hospitals$bbox</code></pre>
 <pre><code>## [1] &quot;6.2950575,3.2341795,6.6150575,3.5541795&quot;</code></pre>
 <pre class="r"><code># metadata
 lagos_hospitals$meta</code></pre>
 <pre><code>## $timestamp
-## [1] &quot;[ Mon 2 Dec 2020 07:35:02 ]&quot;
+## [1] &quot;[ Tue 3 Dec 2020 11:51:03 ]&quot;
 ## 
 ## $OSM_version
 ## [1] &quot;0.6&quot;
 ## 
 ## $overpass_version
-## [1] &quot;Overpass API 0.7.56.7 b85c4387&quot;</code></pre>
+## [1] &quot;Overpass API 0.7.56.8 7d656e78&quot;</code></pre>
 <p>Note how the Spatial data returned by the query are Simple Feature objects as we requested using the<code>osmdata_sf()</code> function, and how the polygons also contain more details about the hospitals such as their names, websites, wikipedia pages etc. where available.</p>
 <pre class="r"><code># osm_points
 lagos_hospitals$osm_points</code></pre>
@@ -815,79 +758,32 @@ lagos_hospitals$osm_polygons</code></pre>
 ## 704991085 POLYGON ((3.344492 6.590988...</code></pre>
 </div>
 </div>
-<div id="visualising-queried-data" class="section level2">
-<h2>Visualising queried data</h2>
-<p>TO visualise the retrieved data about hospitals in Lagos, this tutorial uses the <code>ggplot2</code> package.</p>
-<div id="installing-the-ggplot2-package" class="section level3">
-<h3>Installing the <code>ggplot2</code> package</h3>
-<p>Installing the <code>ggplot2</code> package is very straightforward and can be done as follows.</p>
-<pre class="r"><code>install.packages(&quot;ggplot2&quot;)</code></pre>
-</div>
-<div id="visualising-hospitals-in-lagos" class="section level3">
-<h3>Visualising Hospitals in Lagos</h3>
-<p>The <code>ggplot2</code> package allows us to easily visualise simple feature objects using the <code>geom_sf()</code> function.</p>
-<pre class="r"><code>library(ggplot2)
+<div id="visualising-queried-data-with-ggplot2-and-ggmap" class="section level2">
+<h2>Visualising queried data with <code>ggplot2</code> and <code>ggmap</code></h2>
+<p>We can visualise the retrieved data about hospitals in Lagos using the <code>ggplot2</code> package. We can easily visualise simple feature objects using the <code>geom_sf()</code> function of <code>ggplot2</code>.</p>
+<pre class="r"><code># install.packages(&quot;ggplot2&quot;)
+library(ggplot2)
 
 ggplot()+
   geom_sf(data = lagos_hospitals$osm_polygons)</code></pre>
 <p><img src="osm_files/figure-html/vis-lagos-hospitals-ggplot2-1.png" width="672" /></p>
-<p>While the visualisation above provides useful information about the spread of hospitals in Lagos, it would be useful to plot the locations of hospitals overlayed on a map Of Lagos. For this we use the <code>ggmap</code> package.</p>
-</div>
-<div id="installing-the-ggmap-package" class="section level3">
-<h3>Installing the <code>ggmap</code> package</h3>
-<p>The <code>ggmpap</code> package can be installed simply as follows</p>
-<pre class="r"><code>install.packages(&quot;ggmap&quot;)</code></pre>
-</div>
-<div id="visualising-hospitals-on-a-map-of-lagos" class="section level3">
-<h3>Visualising Hospitals on a map of Lagos</h3>
-<p>To get a map of Lagos, we use the <code>get_map()</code> function provided by the <code>ggmap</code> package. Here we have used the maptype “roadmap”, but the function allows many more maptypes which can be found <a href="https://www.rdocumentation.org/packages/ggmap/versions/3.0.0/topics/get_map">here</a>.</p>
+<p>While the visualisation above provides useful information about the spread of hospitals in Lagos, it would be useful to plot the locations of hospitals overlayed on a map of Lagos. For this we use the <code>ggmap</code> package. To get a map of Lagos, we use the <code>get_map()</code> function provided by the <code>ggmap</code> package. Here we have used the maptype &quot;roadmap&quot;, but the function allows many more map types which can be found <a href="https://www.rdocumentation.org/packages/ggmap/versions/3.0.0/topics/get_map">here</a>.</p>
 <pre class="r"><code>library(ggmap)
 lagos_map &lt;- get_map(lagos_bb, maptype = &quot;roadmap&quot;)</code></pre>
-<p>Then we can use the reteived map using <code>ggmap</code> and overlay the spatial data of the hospitals on it. Note how we have changed the colour and outline line size of the polygons, filled them in and also changed the opacity to intriduce some transparency to the polygons.</p>
+<p>Then we call <code>ggmap()</code> with the background map retreived map using <code>get_map()</code>, and overlay the spatial data of the hospitals on it using <code>geom_sf()</code>. Note how we have changed the colour and outline line size of the polygons, filled them in and also changed the opacity to introduce some transparency to the polygons. We also set <code>inherit.aes = FALSE</code> to use the aesthetic mappings of the spatial object <code>lagos_hospitals$osm_polygons</code>.</p>
 <pre class="r"><code>ggmap(lagos_map) +
   geom_sf(data = lagos_hospitals$osm_polygons,
           inherit.aes = FALSE,
           colour = &quot;#08519c&quot;,
           fill = &quot;#08306b&quot;,
           alpha = .5,
-          size = 1)+
+          size = 1) +
   labs(x = &quot;&quot;, y = &quot;&quot;)</code></pre>
 <p><img src="osm_files/figure-html/vis-lagos-hospitals-ggmap-1.png" width="672" /></p>
 </div>
-<div id="downloading-other-spatial-features-of-lagos" class="section level3">
-<h3>Downloading other spatial features of Lagos</h3>
-<p>The <code>osmdata</code> package can also be used to download other spatial features such as highways and rivers in Lagos, which can then be overlayed with the hospitals.</p>
-<p>For this we create multiple queries for each feature as follows.</p>
-<pre class="r"><code>lagos_streets &lt;- lagos_bb %&gt;%
-  opq() %&gt;%
-  add_osm_feature(&quot;highway&quot;, c(&quot;motorway&quot;, &quot;primary&quot;, &quot;secondary&quot;, &quot;tertiary&quot;)) %&gt;%
-  osmdata_sf()
-
-lagos_small_streets &lt;- lagos_bb %&gt;%
-  opq() %&gt;%
-  add_osm_feature(key = &quot;highway&quot;, value = c(&quot;residential&quot;, &quot;living_street&quot;, &quot;unclassified&quot;, &quot;service&quot;, &quot;footway&quot;)) %&gt;%
-  osmdata_sf()
-
-lagos_rivers &lt;- lagos_bb %&gt;%
-  opq() %&gt;%
-  add_osm_feature(key = &quot;waterway&quot;, value = &quot;river&quot;) %&gt;%
-  osmdata_sf()</code></pre>
-<p>Then we use the <code>ggplot2</code> package to visualise each of these features along with the hospitals in Lagos. Note how we have used different colours, line sizes(thicknesses) and opacities to differentiate among the features.</p>
-<pre class="r"><code>ggplot() +
-  geom_sf(data = lagos_streets$osm_lines, inherit.aes = FALSE, color = &quot;#ffbe7f&quot;, size = .4, alpha = .8) +
-  geom_sf(data = lagos_small_streets$osm_lines, inherit.aes = FALSE, color = &quot;#a6a6a6&quot;, size = .2, alpha = .8) +
-  geom_sf(data = lagos_rivers$osm_lines, inherit.aes = FALSE, color = &quot;#7fc0ff&quot;, size = .8, alpha = .5) +
-  geom_sf(data = lagos_hospitals$osm_polygons, inherit.aes = FALSE, colour = &quot;#08519c&quot;, fill = &quot;#08306b&quot;,alpha = .5, size = 1) +
-  coord_sf(xlim = c(3.23, 3.56), ylim = c(6.4,6.629), expand = FALSE) +
-  theme_bw()</code></pre>
-<p><img src="osm_files/figure-html/vis-lagos-features-and-hospitals-1.png" width="672" /></p>
-</div>
-</div>
 <div id="examples" class="section level2">
 <h2>Examples</h2>
-<div id="visualising-hospitals-in-lagos-1" class="section level3">
-<h3>Visualising Hospitals in Lagos</h3>
-<p>The following is a complete example of using the <code>osmdata</code> package to retrieve data of hospitals in Lagos and <code>ggmap</code> to visualise it</p>
+<p>The following is a complete example of using the <code>osmdata</code> package to retrieve data of hospitals in Lagos and <code>ggmap</code> to visualise them.</p>
 <pre class="r"><code>library(osmdata)
 library(ggplot2)
 library(ggmap)
@@ -898,7 +794,7 @@ lagos_bb &lt;- getbb(&quot;Lagos&quot;)
 # retrieving data of hospitals in Lagos
 lagos_hospitals &lt;- lagos_bb %&gt;%
   opq() %&gt;%
-  add_osm_feature(&quot;amenity&quot;, &quot;hospital&quot;) %&gt;%
+  add_osm_feature(key = &quot;amenity&quot;, value = &quot;hospital&quot;) %&gt;%
   osmdata_sf()
 
 # retrieving map of lagos
@@ -914,11 +810,11 @@ ggmap(lagos_map) +
           size = 1)+
   labs(x = &quot;&quot;, y = &quot;&quot;)</code></pre>
 <p><img src="osm_files/figure-html/lagos-hospitals-example-1.png" width="672" /></p>
-<p>We can also download different spatial attributes of Lagos using the <code>osmdata</code> package and overlay them on top of eachother using <code>ggplot2</code> to create a map of Lagos.</p>
+<p>The <code>osmdata</code> package can also be used to download other spatial features such as highways and rivers in Lagos, and overlay them on top of each other using <code>ggplot2</code> to create a map of Lagos. For this we create multiple queries for each feature as follows.</p>
 <pre class="r"><code>library(osmdata)
 library(ggplot2)
 
-#creating bounding box for Lagos
+# creating bounding box for Lagos
 lagos_bb &lt;- getbb(&quot;Lagos&quot;)
 
 # retrieving data of streets in Lagos
@@ -944,6 +840,7 @@ lagos_hospitals &lt;- lagos_bb %&gt;%
   opq() %&gt;%
   add_osm_feature(&quot;amenity&quot;, &quot;hospital&quot;) %&gt;%
   osmdata_sf()</code></pre>
+<p>Then we use the <code>ggplot2</code> package to visualise each of these features along with the hospitals in Lagos. Note how we have used different colours, line sizes (thicknesses) and opacities to differentiate among the features.</p>
 <pre class="r"><code># visualising all retreived features over each other to form a map of Lagos
 ggplot() +
   geom_sf(data = lagos_streets$osm_lines, inherit.aes = FALSE, color = &quot;#ffbe7f&quot;, size = .4, alpha = .8) +
@@ -954,16 +851,16 @@ ggplot() +
   theme_bw()</code></pre>
 <p><img src="osm_files/figure-html/vis-lagos-features-and-hospitals-example-1.png" width="672" /></p>
 </div>
-</div>
 <div id="references" class="section level2">
 <h2>References</h2>
 <ul>
-<li>The <code>osmdata</code> repository : <a href="https://github.com/ropensci/osmdata" class="uri">https://github.com/ropensci/osmdata</a><br />
+<li><code>osmdata</code> repository : <a href="https://github.com/ropensci/osmdata" class="uri">https://github.com/ropensci/osmdata</a><br />
 </li>
 <li><code>osmdata</code> package vignette : <a href="https://cran.r-project.org/web/packages/osmdata/vignettes/osmdata.html" class="uri">https://cran.r-project.org/web/packages/osmdata/vignettes/osmdata.html</a></li>
+<li><code>ggplot2</code> package: <a href="https://ggplot2.tidyverse.org/" class="uri">https://ggplot2.tidyverse.org/</a></li>
 <li><code>ggmap</code> package documentation : <a href="https://www.rdocumentation.org/packages/ggmap/versions/3.0.0/topics/get_map" class="uri">https://www.rdocumentation.org/packages/ggmap/versions/3.0.0/topics/get_map</a></li>
-<li>‘Accessing Open Street Map data with R’ : <a href="https://dominicroye.github.io/en/2018/accessing-openstreetmap-data-with-r/" class="uri">https://dominicroye.github.io/en/2018/accessing-openstreetmap-data-with-r/</a></li>
-<li>#30diasdegraphics <a href="https://github.com/danielredondo/30diasdegraficos/blob/master/scripts/18_mapa.R" class="uri">https://github.com/danielredondo/30diasdegraficos/blob/master/scripts/18_mapa.R</a></li>
+<li>'Accessing Open Street Map data with R': <a href="https://dominicroye.github.io/en/2018/accessing-openstreetmap-data-with-r/" class="uri">https://dominicroye.github.io/en/2018/accessing-openstreetmap-data-with-r/</a></li>
+<li><code>#30diasdegraphics</code> <a href="https://github.com/danielredondo/30diasdegraficos/blob/master/scripts/18_mapa.R" class="uri">https://github.com/danielredondo/30diasdegraficos/blob/master/scripts/18_mapa.R</a></li>
 </ul>
 </div>
 </div>
@@ -979,7 +876,7 @@ ggplot() +
 
 // add bootstrap table styles to pandoc tables
 function bootstrapStylePandocTables() {
-  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
 }
 $(document).ready(function () {
   bootstrapStylePandocTables();

@@ -2,13 +2,9 @@
 title: "Malaria"
 output:
   html_document:
-    theme: journal 
-    fig_width: 7
-    fig_height: 6
     toc: true
     toc_float: true
     number_sections: false
-    css: "malaria-css.css"
 ---
 
 ```{r setup, include=FALSE}
@@ -19,105 +15,64 @@ library(ggthemes)
 ```
 
 
-## Downloading and visualising parasite rate data
+# Downloading and visualising malaria data with `malariaAtlas`
 
-This is a tutorial for the `mapAtlas` package which allows users to download, visualise and manipulate global parasite rate survey data(Plasmodium and P.vivax) and modeled raster outputs. This package is to provide users with a convenient API to interact with the publicly available parasite data.
+This tutorial shows how to use the `malariaAtlas` package to download, visualise and manipulate global malaria data hosted by the [Malaria Atlas Project](https://malariaatlas.org/). These data can be explored and downladed interactively at [data explorer](https://malariaatlas.org/explorer/#/).
 
+The `malariaAtlas` package enables users to download three types of data:
 
+- parasite rate (PR) survey data (*Plasmodium falciparum* and *Plasmodium vivax*)
+- vector occurrence data
+- administrative boundary shapefiles to visualise data
+- rasters covering a range of modelled outputs related to malaria research such as predicted malaria parasite prevalence
+
+ 
 ## Installation of `malariaAtlas` package
 
-To download the data and the other functions required to visualise the same, you need the `malarisAtlas` package, which can be downloaded from CRAN using
+The `malariaAtlas` package can be installed from CRAN and loaded as follows:
 
 ```{r install-malariaAtlas, eval=FALSE}
 install.packages("malariaAtlas")
 ```
-
-And the package can be loaded for usage of its functionalities as follows:
 
 ```{r load-lib}
 library(malariaAtlas)
 ```
 
 
-## Available Data
+## Checking available data
 
-The data can be explored interactively at [data explorer](https://malariaatlas.org/explorer/#/). This can also be used for finding more information on raster data. It consists of a dashboard which the shows the spread of the parasite over time and also the option for downloading the data used.
-
-## List of datasets present in the package
-
-The `listData()` function from the `mapAtlas` package helps retrieve a list of all the available data which can be downloaded.
-
-
-```{r data-list,message = FALSE}
-listData(datatype = "pr points") 
-```
-
-The above syntax helps find all the countries that have **PR survey points data**, that can be downloaded. Or if you need the vector survey data for the countries that have **raster data** ,there are two ways you can do so:
-
-```{r listrasters,message = FALSE}
-listData(datatype = "raster") 
-#or
-listRaster()
-```
-
-If you need the list of all the countries that have the **shapefiles data**, there are two ways you can do so:
-
-```{r message = FALSE}
-listData(datatype = "shape") 
-#or 
-listShp()
-```
+The `malariaAtlas` package provides users with a convenient API to interact with the publicly available malaria data hosted by the Malaria Atlas Project.
+The `listData()` function helps retrieve a list of all the available data which can be downloaded, and is a wrapper for `listPoints()`, `listRaster()` and `listShp()`.
+We can find all countries that have PR survey points data with `listData(datatype = "pr points")`,
+and all countries with vector occurrence data with `listData(datatype = "vector points")`.
+We can also see raster data available with `listData(datatype = "raster")`,
+and shapefiles available with `listData(datatype = "shape")`.
 
 
-## Functions to check data availability
+The `isAvailable_pr()` function can be used to check whether a specified country or location has PR survey points.
+Similarly, `isAvailable_vec()` checks whether a specified country or location has vector occurrence data.
+For example, we can check whether Zimbabwe has PR survey points and India has vector occurrence data as follows:
 
-1. `isAvaiilable_pr` is a function which confirms whether a specified country has a *PR survey points* for downloading or not. It can be used like thus,
-
-```{r func_pr,message = FALSE}
+```{r func_pr, message = FALSE}
 isAvailable_pr(country = "Zimbabwe")
-```
-
-For a country where the **pr survey points** are not available the following message will be displayed: 
-
-```{r notfunc_pr,message = FALSE}
-isAvailable_pr(ISO = "USA")
-```
-
-2. `isAvailable_vec`is a function which confirms whether a specified country has *vector occurrences data* for downloading or not. This function can be used thus,
-
-```{r func_vec,message = FALSE}
 isAvailable_vec(country = "India")
 ```
 
-For a country where the **vector survey points** are not available the following message will be displayed:
 
-```{r notfunc_vec,message = FALSE}
-isAvailable_vec(ISO = "USA")
-```
+## Dowloading and visualising data
 
 
-## Available functions for dowloading and visualising data
+### PR survey data
 
- - **get* functions** and **autoplot methods**
- 
-1. `getPR()` : downloads all the publicly available PR points for the country and returns it as a dataframe. The arguments included in this are *country, ISO, continent,species*. The species is string specifying the Plasmodium species for which we need to find the PR points,the options include: *Pf*or *Pv* or *both*. It can be used as thus
+The `getPR()` function downloads all the publicly available PR points for a country (or countries) and returns it as a dataframe. The `species` argument is a string specifying the Plasmodium species and can be `Pf`, `Pv` or `BOTH`.
  
 ```{r get-pr,message = FALSE,warning=FALSE}
-getPR(country = "Zimbabwe", species = "both") %>% 
-  datatable(extensions = c('Scroller','FixedColumns'), options = list(
-  deferRender = TRUE,
-  scrollY = 350,
-  scrollX = 350,
-  dom = 't',
-  scroller = TRUE,
-  fixedColumns = list(leftColumns = 4)
-))
+ZM_PR_data  <- getPR(country = "Zimbabwe", species = "BOTH") 
 ```
- 
-2. `getVecOcc()`: downloads all publicly available vector points for the country and returns it as a dataframe. The arguments included in this are *country, ISO, continent, species*. The species argument is a strong specifying the Anopheles species for finding the vector occurrences points, the options are: *Anopheles....(specific species of Anopheles)* or *ALL*.
- 
-```{r get-vec,message = FALSE,warning=FALSE}
-getVecOcc(country = "India", species = "ALL") %>% 
+
+```{r, echo=FALSE}
+ZM_PR_data %>% 
   datatable(extensions = c('Scroller','FixedColumns'), options = list(
   deferRender = TRUE,
   scrollY = 350,
@@ -128,102 +83,106 @@ getVecOcc(country = "India", species = "ALL") %>%
 ))
 ```
 
-
-3. `autoplot.pr.points` is an autoplot method to enable quick visualising of the locations of downloaded PR points. It can be used thus:
+`autoplot()` can be used to quickly and easily visualise the downloaded PR survey points.
  
 ```{r viz-PR, message=FALSE,warning=FALSE}
-ZM_PR_data <- getPR(country = "Zimbabwe", species = "both")
 autoplot(ZM_PR_data)
 ```
+
+
+### Vector data
+
  
-3. `autoplot.vector.points`: is an autoplot method to quickly and easily visualise the vector occurrence data for a specific country.It can be used thus:
+The `getVecOcc()` function downloads all publicly available vector points for a country (or countries) and returns it as a dataframe. The `species` argument is a string specifying the Anopheles species for finding the vector occurrences points, the options are `Anopheles....` or `ALL`.
+ 
+```{r get-vec,message = FALSE,warning=FALSE}
+IN_VEC_data <- getVecOcc(country = "India", species = "ALL")
+```
+
+```{r, echo=FALSE}
+IN_VEC_data %>% 
+  datatable(extensions = c('Scroller','FixedColumns'), options = list(
+  deferRender = TRUE,
+  scrollY = 350,
+  scrollX = 350,
+  dom = 't',
+  scroller = TRUE,
+  fixedColumns = list(leftColumns = 4)
+))
+```
+
+`autoplot()` uses `ggplot2` to visualise vector occurrence data.
 
 ```{r message = FALSE}
-IN_VEC_data <- getVecOcc(ISO = "IND", species = "ALL")
 autoplot(IN_VEC_data)
 ```
 
-Since the package, when loaded also loads `ggplot2` as its dependency, the functionalities of ggplot2 can be used to the above ggplot2 plots for more appeal and options.
 
-```{r ggplot2-info,message = FALSE}
-p <- autoplot(ZM_PR_data,printed = FALSE)
+### Shapefiles
 
-p + theme_solarized()+
-  labs(x = "Longitude",
-       y = "Latitude")
-```
-
-- **Modelled Shapefiles**
-
- `getShp`: downloads a shapefile for a specified country(or countries) and returns this as either a spatial Polygon or data.frame object.
+The `getShp()` function downloads a shapefile for a specified country (or countries).
+The `as.MAPshp()` function converts the SpatialPolygon downloaded using `getShp()` into a `MAPshp` object (data.frame) for easy plotting with `autoplot()`.
 
 ```{r message = FALSE}
-IN_shp <- getShp(ISO = "IND", admin_level = c("admin1","admin2"))
-```
-
- `autoplot.MAPshp`: builds autoplot method to enable quick mapping of downloaded shapefiles.
- 
-```{r message = FALSE}
+IN_shp <- getShp(ISO = "IND", admin_level = c("admin1"))
 IN_shp <- as.MAPshp(IN_shp)
 autoplot(IN_shp)
 ```
 
-- **Modelled Rasters**
+### Modelled Rasters
 
- `getRaster()` : downloads publicly available MAP rasters for a specific surface and year, clipped to a given bounding box or shapefile. For example for Zimbabwe, we use the `getRaster` function as:
+The `getRaster()` function downloads publicly available rasters for a specific surface and year, clipped to a given bounding box or shapefile. For example we can download Plasmodium falciparum PR2-10 for Zimbabwe in 2010 as follows:
  
 ```{r message = FALSE}
 ZM_shp <- getShp(country = "Zimbabwe", admin_level = "admin0")
 ZMB_Pf <- getRaster(surface = "Plasmodium falciparum PR2-10", shp = ZM_shp, year = 2010)
 ```
  
-Note that to use downloaded rasters and shapefiles directly with autoplot, it must first be converted to the usable raster and shapefiles data.frames, hence we use the `as.MAPraster()` and `as.MAPShp()` respectively.
+Note that to use downloaded rasters and shapefiles directly with `autoplot()`, they must first be converted to usable rasters and shapefiles data frames, hence we use the `as.MAPraster()` and `as.MAPShp()` respectively.
 
- `autoplot.MAPraster` or `autoplot_MAPraster`: are autoplot methods to enable quick and easy mapping of all the downloaded rasters.
- 
+
 ```{r message = FALSE}
 ZMB_Pf <- as.MAPraster(ZMB_Pf)
 ZMB_shp_data <- as.MAPshp(ZM_shp)
 autoplot(ZMB_Pf, shp_df = ZMB_shp_data)  
 ```
 
-## Complete Visualisation examples
+## Complete visualisation examples
 
-Using the above tools along with ggplot, simple comparison plots can be made.
 
-- Example for PR survey points :
+Since the `ggplot2` is loaded as dependency when the `malariaAtlas` package is loaded, the functionalities of `ggplot2` can also be used for more appeal and options.
+
+
+### PR survey points
 
 ```{r message = FALSE}
-ZMB_shp <- getShp(country = "Zimbabwe", admin_level = "admin0") #get shapefile data
-ZMB_shp_df <- as.MAPshp(ZMB_shp) #convert the shapefile data
-ZMB_PfPR2_10 <- getRaster(surface = "Plasmodium falciparum PR2-10", shp = ZMB_shp, year = 2013) #get the raster data
-ZMB_PfPR2_10_df <- as.MAPraster(ZMB_PfPR2_10) #convert the raster data
+ZMB_shp <- getShp(country = "Zimbabwe", admin_level = "admin0") # get shapefile
+ZMB_shp_df <- as.MAPshp(ZMB_shp) # convert shapefile
+ZMB_PfPR2_10 <- getRaster(surface = "Plasmodium falciparum PR2-10", shp = ZMB_shp, year = 2013) # get raster
+ZMB_PfPR2_10_df <- as.MAPraster(ZMB_PfPR2_10) # convert raster
+pr <- getPR(country = c("Zimbabwe"), species = "Pf") # get PR data
 
-p <- autoplot(ZMB_PfPR2_10_df, shp_df = ZMB_shp_df, printed = FALSE) #plot the raster data for the country using shapefile data
-
-pr <- getPR(country = c("Zimbabwe"), species = "Pf") #get the PR data for the country
-p[[1]] +
-geom_point(data = pr[pr$year_start==2013,], aes(longitude, latitude, fill = positive / examined, size = examined), shape = 21)+
-scale_size_continuous(name = "Survey Size")+
- scale_fill_distiller(name = "PfPR", palette = "RdYlBu")+
- ggtitle("Raw PfPR Survey points\n + Plasmodium falciparum PR2-10 in Zimbabwe in 2013")+
-  theme_solarized()+
+p <- autoplot(ZMB_PfPR2_10_df, shp_df = ZMB_shp_df, printed = FALSE) # plot raster and shapefile
+p[[1]] + geom_point(data = pr[pr$year_start > 2000, ], 
+                    aes(longitude, latitude, fill = positive / examined, size = examined), shape = 21) +
+  scale_size_continuous(name = "Survey Size") +
+  scale_fill_distiller(name = "PfPR", palette = "RdYlBu") + 
+  ggtitle("Raw PfPR Survey points\n + Plasmodium falciparum PR2-10 in Zimbabwe in 2013") +
+  theme_solarized() +
   labs(x = "Longitude", y = "Latitude")
 ```
 
-- Example for Vector points:
+### Vector points
 
 ```{r message = FALSE}
-IND_shp <- getShp(country = "India", admin_level = "admin0") #get shapefile data
-IND_shp_df <- as.MAPshp(IND_shp) #convert shapefile data 
-IND_an_dirus <- getRaster(surface = "Anopheles dirus species complex", shp = IND_shp) #get raster data
-IND_an_dirus_df <- as.MAPraster(IND_an_dirus) #convert raster data
+IND_shp <- getShp(country = "India", admin_level = "admin0") # get shapefile
+IND_shp_df <- as.MAPshp(IND_shp) # convert shapefile 
+IND_an_dirus <- getRaster(surface = "Anopheles dirus species complex", shp = IND_shp) # get raster
+IND_an_dirus_df <- as.MAPraster(IND_an_dirus) # convert raster
+vec <- getVecOcc(country = c("India"), species = "Anopheles dirus") # get vector point data
 
-p <- autoplot(IND_an_dirus_df, shp_df = IND_shp_df, printed = FALSE) # plot the raster data on maps using shapefile
-
-vec <- getVecOcc(country = c("India"), species = "Anopheles dirus") #get the vector point data for country
-p[[1]] +
-geom_point(data = vec, aes(longitude, latitude), shape = 21,  show.legend = TRUE)+
+p <- autoplot(IND_an_dirus_df, shp_df = IND_shp_df, printed = FALSE) # plot raster and shapefile
+p[[1]] + geom_point(data = vec, aes(longitude, latitude), shape = 21,  show.legend = TRUE)+
   scale_fill_distiller(name = "Predicted distribution", palette = "YlOrRd")+
   ggtitle("Raw Vector Survey points + \nThe predicted distribution of Anohpeles dirus species complex")+
   theme(legend.position = "bottom")+
@@ -232,19 +191,9 @@ geom_point(data = vec, aes(longitude, latitude), shape = 21,  show.legend = TRUE
 ```
 
 
-<style>
-div.blue { background-color:#e6f0ff; border-radius: 5px; padding: 20px;}
-</style>
-<div class = "blue">
-
-- Raster data is stored as a grid of values which are rendered on a map as pixels. 
-
-- Each pixel value represents an area on the Earth's surface. 
-
-- Vector data structures represent specific features on the Earth's surface, and assign attributes to those features.
-
-</div>
 
 ## References
 
 - The `malariaAtlas` package repository : https://github.com/malaria-atlas-project/malariaAtlas
+- Malaria Atlas Project: https://malariaatlas.org/
+- Malria data explorer: https://malariaatlas.org/explorer/#/

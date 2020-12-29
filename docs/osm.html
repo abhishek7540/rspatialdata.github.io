@@ -644,17 +644,17 @@ lagos_hospitals$bbox</code></pre>
 <pre class="r"><code># metadata
 lagos_hospitals$meta</code></pre>
 <pre><code>## $timestamp
-## [1] &quot;[ Tue 3 Dec 2020 11:51:03 ]&quot;
+## [1] &quot;[ Thu 5 Dec 2020 10:12:03 ]&quot;
 ## 
 ## $OSM_version
 ## [1] &quot;0.6&quot;
 ## 
 ## $overpass_version
-## [1] &quot;Overpass API 0.7.56.8 7d656e78&quot;</code></pre>
+## [1] &quot;Overpass API 0.7.56.3 eb200aeb&quot;</code></pre>
 <p>Note how the Spatial data returned by the query are Simple Feature objects as we requested using the<code>osmdata_sf()</code> function, and how the polygons also contain more details about the hospitals such as their names, websites, wikipedia pages etc. where available.</p>
 <pre class="r"><code># osm_points
 lagos_hospitals$osm_points</code></pre>
-<pre style="max-height: 100px;"><code>## Simple feature collection with 403 features and 5 fields
+<pre style="max-height: 100px;"><code>## Simple feature collection with 399 features and 5 fields
 ## geometry type:  POINT
 ## dimension:      XY
 ## bbox:           xmin: 3.250371 ymin: 6.427682 xmax: 3.522714 ymax: 6.610555
@@ -673,7 +673,7 @@ lagos_hospitals$osm_points</code></pre>
 ## 3971452305 3971452305 &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;  &lt;NA&gt; POINT (3.386569 6.551142)</code></pre>
 <pre class="r"><code># osm_polyogns
 lagos_hospitals$osm_polygons</code></pre>
-<pre style="max-height: 100px;"><code>## Simple feature collection with 34 features and 21 fields
+<pre style="max-height: 100px;"><code>## Simple feature collection with 33 features and 20 fields
 ## geometry type:  POLYGON
 ## dimension:      XY
 ## bbox:           xmin: 3.250371 ymin: 6.427682 xmax: 3.522714 ymax: 6.610555
@@ -712,17 +712,17 @@ lagos_hospitals$osm_polygons</code></pre>
 ## 659370489      &lt;NA&gt;                 &lt;NA&gt;   hospital                  &lt;NA&gt;  &lt;NA&gt;
 ## 672092174      &lt;NA&gt;                 &lt;NA&gt;   hospital                  &lt;NA&gt;  &lt;NA&gt;
 ## 704991085      &lt;NA&gt;                 &lt;NA&gt;   hospital                  &lt;NA&gt;  &lt;NA&gt;
-##           opening_hours operator short_name source start_date
-## 394119616          &lt;NA&gt;     &lt;NA&gt;       &lt;NA&gt;   &lt;NA&gt;       &lt;NA&gt;
-## 525043228          &lt;NA&gt;     &lt;NA&gt;      NOHIL   &lt;NA&gt;       &lt;NA&gt;
-## 556508170          &lt;NA&gt;     &lt;NA&gt;       &lt;NA&gt;   &lt;NA&gt;       &lt;NA&gt;
-## 568367654          &lt;NA&gt;     &lt;NA&gt;       &lt;NA&gt;   &lt;NA&gt;       &lt;NA&gt;
-## 594743340          &lt;NA&gt;     &lt;NA&gt;       &lt;NA&gt;   &lt;NA&gt;       &lt;NA&gt;
-## 595195260          &lt;NA&gt;     &lt;NA&gt;       &lt;NA&gt;   &lt;NA&gt;       &lt;NA&gt;
-## 643481485          &lt;NA&gt;     &lt;NA&gt;       &lt;NA&gt;   &lt;NA&gt;       &lt;NA&gt;
-## 659370489          &lt;NA&gt;     &lt;NA&gt;       &lt;NA&gt;   &lt;NA&gt;       &lt;NA&gt;
-## 672092174          &lt;NA&gt;     &lt;NA&gt;       &lt;NA&gt;   &lt;NA&gt;       1893
-## 704991085          &lt;NA&gt;     &lt;NA&gt;     LASUTH   &lt;NA&gt;       &lt;NA&gt;
+##           opening_hours operator short_name start_date
+## 394119616          &lt;NA&gt;     &lt;NA&gt;       &lt;NA&gt;       &lt;NA&gt;
+## 525043228          &lt;NA&gt;     &lt;NA&gt;      NOHIL       &lt;NA&gt;
+## 556508170          &lt;NA&gt;     &lt;NA&gt;       &lt;NA&gt;       &lt;NA&gt;
+## 568367654          &lt;NA&gt;     &lt;NA&gt;       &lt;NA&gt;       &lt;NA&gt;
+## 594743340          &lt;NA&gt;     &lt;NA&gt;       &lt;NA&gt;       &lt;NA&gt;
+## 595195260          &lt;NA&gt;     &lt;NA&gt;       &lt;NA&gt;       &lt;NA&gt;
+## 643481485          &lt;NA&gt;     &lt;NA&gt;       &lt;NA&gt;       &lt;NA&gt;
+## 659370489          &lt;NA&gt;     &lt;NA&gt;       &lt;NA&gt;       &lt;NA&gt;
+## 672092174          &lt;NA&gt;     &lt;NA&gt;       &lt;NA&gt;       1893
+## 704991085          &lt;NA&gt;     &lt;NA&gt;     LASUTH       &lt;NA&gt;
 ##                               website  wikidata
 ## 394119616                        &lt;NA&gt; Q48743188
 ## 525043228 http://www.nohlagos.gov.ng/ Q23023017

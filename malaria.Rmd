@@ -163,7 +163,7 @@ ZMB_PfPR2_10_df <- as.MAPraster(ZMB_PfPR2_10) # convert raster
 pr <- getPR(country = c("Zimbabwe"), species = "Pf") # get PR data
 
 p <- autoplot(ZMB_PfPR2_10_df, shp_df = ZMB_shp_df, printed = FALSE) # plot raster and shapefile
-p[[1]] + geom_point(data = pr[pr$year_start > 2000, ], 
+p[[1]] + geom_point(data = pr[pr$year_start == 2013, ], 
                     aes(longitude, latitude, fill = positive / examined, size = examined), shape = 21) +
   scale_size_continuous(name = "Survey Size") +
   scale_fill_distiller(name = "PfPR", palette = "RdYlBu") + 

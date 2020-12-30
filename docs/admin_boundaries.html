@@ -25,17 +25,6 @@
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
 <link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
-<link href="site_libs/anchor-sections-1.0/anchor-sections.css" rel="stylesheet" />
-<script src="site_libs/anchor-sections-1.0/anchor-sections.js"></script>
-
-<style type="text/css">
-  code{white-space: pre-wrap;}
-  span.smallcaps{font-variant: small-caps;}
-  span.underline{text-decoration: underline;}
-  div.column{display: inline-block; vertical-align: top; width: 50%;}
-  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
-  ul.task-list{list-style: none;}
-    </style>
 
 <style type="text/css">code{white-space: pre;}</style>
 <style type="text/css">
@@ -432,7 +421,7 @@ ggplot(data = nigeria_boundary) +
 </div>
 <div id="different-levels-of-administrative-boundaries" class="section level2">
 <h2>Different levels of administrative boundaries</h2>
-<p>If available, lower levels of administrative boundaries in countries can be downloaded too. We just have to pass the administrative level as an argument in the <code>geoboundaries()</code> function. Administrative level 1 (&quot;adm1&quot;) is the highest level, while administrative level 5 (&quot;adm5&quot;) is the lowest. This means the country will be further sub-divided into administrative divisions as the Administrative level progresses from 1 to 5. See how the first and second administrative level boundaries of Nigeria and Chad are downloaded below.</p>
+<p>If available, lower levels of administrative boundaries in countries can be downloaded too. We just have to pass the administrative level as an argument in the <code>geoboundaries()</code> function. Administrative level 1 (“adm1”) is the highest level, while administrative level 5 (“adm5”) is the lowest. This means the country will be further sub-divided into administrative divisions as the Administrative level progresses from 1 to 5. See how the first and second administrative level boundaries of Nigeria and Chad are downloaded below.</p>
 <pre class="r"><code>#downloading administrative level 1 boundaries
 nigeria_chad_admlvl1_boundaries &lt;- geoboundaries(c(&quot;Nigeria&quot;, &quot;Chad&quot;), &quot;adm1&quot;)
 
@@ -459,7 +448,7 @@ ggplot(data = nigeria_chad_admlvl2_boundaries) +
 ## 1   Nigeria      NGA NGA-ADM0-1590546715-B1        NGA      ADM0
 ##                         geometry
 ## 1 MULTIPOLYGON (((5.746892 4....</code></pre>
-<p>The simple feature object retreived with the boundaries of Nigeria and Chad is a simple feature collection with 2 features and 5 fields. The 2 features will refer to the two countries (Nigeria and Chad), and the features will be the geometrical attributes of each feature.</p>
+<p>The simple feature object retrieved with the boundaries of Nigeria and Chad is a simple feature collection with 2 features and 5 fields. The 2 features will refer to the two countries (Nigeria and Chad), and the features will be the geometrical attributes of each feature.</p>
 <pre class="r"><code>nigeria_chad_boundaries</code></pre>
 <pre><code>## Simple feature collection with 2 features and 5 fields
 ## geometry type:  GEOMETRY
@@ -575,7 +564,7 @@ ggplot(data = nigeria_chad_rnaturalearth_admlvl1) +
 
 // add bootstrap table styles to pandoc tables
 function bootstrapStylePandocTables() {
-  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
 }
 $(document).ready(function () {
   bootstrapStylePandocTables();

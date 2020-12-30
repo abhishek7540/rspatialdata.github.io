@@ -93,7 +93,7 @@ A feature is thought of as a single object, Nigeria in this case. The fields are
 nigeria_boundary
 ```
 
-The simple feature object retreived with the boundaries of Nigeria and Chad is a simple feature collection with 2 features and 5 fields.
+The simple feature object retrieved with the boundaries of Nigeria and Chad is a simple feature collection with 2 features and 5 fields.
 The 2 features will refer to the two countries (Nigeria and Chad), and the features will be the geometrical attributes of each feature.
 
 ```{r print-nigeria-chad-boundary}

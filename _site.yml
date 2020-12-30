@@ -1,44 +1,23 @@
 name: "rspatialdata"
 output_dir: "docs"
 navbar:
-  title: "Rspatialdata"
+  title: "rspatialdata"
   left:
     - text: "Home"
       href: index.html
     - text: "Tutorials"
       menu:
-        - text: "Administrative Boundaries"
+        - text: "Administrative boundaries"
           href: admin_boundaries.html
-        - text: "Population"
-          href: population.html
-        - text: "Elevation"
-          href: elevation.html
-        - text: "Temperature"
-          href: temperature.html
-        - text: "Rainfall"
-          href: rainfall.html
-        - text: "Humidity"
-          href: humidity.html
-        - text: "Vegetation"
-          href: vegetation.html
-        - text: "Land Cover"
-          href: land_cov.html
+        - text: "Open Street Map data"
+          href: osm.html
         - text: "Malaria"
           href: malaria.html
-        - text: "DHS"
-          href: dhs.html
-        - text: "Mobility"
-          href: mobility.html
-        - text: "Air Pollution"
-          href: air_pollution.html
-        - text: "Socio-economic"
-          href: socio_economic.html
-        - text: "Points of Interest using Open Street Maps"
-          href: osm.html
     - text: "Contributors"
       href: contributors.html
 output:
   html_document:
     theme: cosmo
     css: 'styles.css'
+
     

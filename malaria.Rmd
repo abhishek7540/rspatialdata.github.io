@@ -191,29 +191,6 @@ p[[1]] + geom_point(data = vec, aes(longitude, latitude), shape = 21,  show.lege
 ```
 
 
-We can also make the maps using the leaflet package and it can be used as follows:
-
-```{r}
-library(leaflet)
-
-leaflet() %>% 
-  addTiles() %>% 
-  addPolygons(lng = ZMB_shp_df1$long,lat = ZMB_shp_df1$lat) %>%  
-  addMarkers(lng = ZM_PR_data$longitude, lat = ZM_PR_data$latitude,clusterOptions = markerClusterOptions()) 
-```
-
-
-The leaflet package takes an open street map view of the country and the world and places the data set containing the longitude and latitude to locate the place on the map. Using our data set for Zimbabwe PR survey points (ZM_PR_data) for the number of times an area was reported to have malaria case/s and the shapefiles of the country(ZMB_shp_df),from which the boundaries of each area can be represented on the map. 
-
-```{r}
-leaflet() %>% 
-  addTiles() %>% 
-  addPolylines(lng = IND_shp_df$long,lat = IND_shp_df$lat) %>% 
-  addMarkers(lng = IN_VEC_data$longitude,lat = IN_VEC_data$latitude,clusterOptions = markerClusterOptions())
-```
-
-The same can be done for the Vector occurrences data set in our case, it would be for India, the vector occurrences data set(IN_VEC_data) is used to find the number of occurrences a particular state was reported to have a malaria count and the shapefile data set(IN_shp_df) gives us the boundaries and states within the country.
-
 
 ## References
 

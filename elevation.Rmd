@@ -1,0 +1,164 @@
+---
+title: "Elevation data"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    number_sections: false
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
+library(tidyverse)
+library(kableExtra)
+```
+
+# `elevatr` package
+
+This tutorial gives you a brief understanding of how to use the `elevatr` package for a standardized access to the elevation data from the web. 
+
+It uses two endpoints to access its data from. 
+
+- **USGS Elevation Point Query Service** for point elevation data.
+
+- **Amazon Web Services Terrain Tiles** is for the raster elevation data such as DEM (digital elevation model).
+
+## Installing the package
+
+To install the `elevatr` package from CRAN use:
+
+```{r install-cran, eval=FALSE}
+install.packages("elevatr")
+```
+
+And for the development version, it maybe installed with devtools:
+
+```{r install-git, eval=FALSE}
+install.packages("devtools")
+library(devtools)
+install_github("jhollist/elevatr")
+```
+
+Loading the `elevatr` package:
+
+```{r}
+library(elevatr)
+```
+
+## Datasets available 
+
+The package has three different data sets already within it, they are namely **lake**, **pt_df**, **sp_big** , all of which are .rda files. It can be accessed by using the code `elevatr`, from which you can work with any of the above data sets and these can be saved into the working environment by assigning it to an object for further analysis and visualisation. 
+
+You can also use other packages or own downloaded data set for showing elevation of a certain area.   
+
+
+```{r data,eval=FALSE}
+elevatr::lake #SpatialPolygons Dataframe of lake Sunapee
+elevatr::pt_df #small data frame of x & y locations
+elevatr::sp_big #SpatialPoints of random points
+```
+
+## Functions available
+
+Currently, there are two functions in this package which help users access elevation web services:
+
+1. `get_elev_point()` : This function gets the point elevations using the USGS Elevation Point Query Services (for United states only) and AWS Terrain Tiles (for all global elevation data). 
+  
+  - **Input**: This accepts a data frame of *longitude(x) and latitude(y), a SpatialPoints/SpatialPointsDataFrame, or a Simple feature(sf) object*. It has a source(src) argument which indicates which API to use, either "eqps" or "aws".  
+  
+  - **Output**: produces either a *SpatialPointsDataFrame* or *Simple Feature object*, depending on the class of input locations.
+  
+The `get_elev_point()` function can be used as thus:
+
+
+```{r}
+ll_proj <- "+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs"
+elev <- get_elev_point(pt_df, prj = ll_proj)
+elev %>% kable() %>% kable_styling(bootstrap_options = c("striped","hover"))
+```
+
+  
+2. `get_elev_raster()` : This function helps user get elevation data as a raster from the AWS Open Data Terrain Tiles. 
+
+  - **Input**: This takes in a data frame of longitude(x) and latitude(y) or any **sp** or **raster** object.
+  
+  - **Output**: Returns a **raster** object of the elevation tiles that cover the bounding box of the input spatial data.
+
+- The source data are global and also contain the estimations for depth for oceans.
+
+- When this function is used an additional column will be added to the data slot of a SpatialPointsDataFrame called **elevation**.
+
+- To access data from the services you will need to set the argument `src` = `eqps`
+
+
+The `get_elev_raster()` function can be used as thus:
+
+
+```{r raster-elev}
+library(ggplot2)
+library(raster)
+library(elevatr)
+library(rgeoboundaries)
+library(sf)
+
+swiss_bound <- geoboundaries("Switzerland")
+
+elevation_data <- get_elev_raster(locations = swiss_bound, z = 9)
+
+ele <- as.data.frame(elevation_data,xy=TRUE)
+
+colnames(ele)[3] = "elevation" 
+
+ggplot() +
+  geom_raster(data = ele , aes(x = x, y = y, fill = elevation)) + 
+  geom_sf(data = swiss_bound, color = "black", fill = NA)+
+  ggtitle("Elevation data of Switzerland")
+```
+
+The above map shows the boundaries of the country "Switzerland" and this is obtained by using the `rgeoboundaries` package. And the elevation data of the country is determined by using the `get_elev_raster()` function as shown in the above code.
+
+We can also get the different administrative areas of the country Switzerland, by using the `ne_states` function from the `rnaturalearth` package. And the `get_elev_raster` function, you can get the elevation data. The following code does the same:
+
+!! NOTE: increasing or decreasing the `z` argument will make the map zoom in and out on the country by setting the appropriate z-axis value.
+
+```{r}
+library(rnaturalearth)
+library(rnaturalearthhires)
+sf_swiss <- ne_states(country = 'switzerland', returnclass='sf')
+
+elevation_1 <- elevatr::get_elev_raster(locations = sf_swiss, z = 7)
+
+elevate <- as.data.frame(elevation_1,xy = TRUE)
+
+colnames(elevate)[3] = "elevation_value" 
+
+ggplot() +
+  geom_raster(data = elevate , aes(x = x, y = y,fill = elevation_value )) + 
+  geom_sf(data = sf_swiss, color = "white", fill = NA) +
+  ggtitle("Elevation data of Switzerland admininstrative areas")
+```
+
+We can also use boundary boxes for the visualisation of the elevation and can be done as thus:
+
+
+```{r}
+df <- data.frame(x = sp::bbox(lake)[1,1],
+           sp::bbox(lake)[1,2],
+           y = sp::bbox(lake)[2,1],
+           sp::bbox(lake)[2,2])
+x <- get_elev_raster(locations = df,prj = sp::proj4string(lake),z = 10)
+
+x <- get_elev_raster(lake, z = 12)
+x <- get_elev_raster(lake,src = "aws",z = 12,expand = 1300)
+
+plot(x)
+```
+
+
+## References
+
+- `elevatr` repository: https://github.com/jhollist/elevatr
+
+- `ggplot2` package: https://ggplot2.tidyverse.org/
+
+- `rgeoboundaries` package: https://gitlab.com/dickoa/rgeoboundaries

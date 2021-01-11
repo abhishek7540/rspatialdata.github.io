@@ -127,9 +127,10 @@ ggplot(data = nigeria_chad_boundaries) +
 
 ## Examples
 
-The following code show examples on how to use the `rgeoboundaries` package to download administrative boundaries and `ggplot2` to visualise them.
+The following is an example on how to use the `rgeoboundaries` package to download administrative boundaries and `ggplot2` to visualise them.
 
 ```{r rgeoboundaries-example}
+#install.packages(c("rgeoboundaries", "ggplot2"))
 library(rgeoboundaries)
 library(ggplot2)
 
@@ -155,7 +156,37 @@ ggplot(data = nigeria_chad_admlvl2_boundaries) +
   ggtitle("Administrative Level 2 boundaries")
 ```
 
+The next example uses the `rgeoboundaries` package to download administrative boundaries and `leaflet` to visualise them interactively.
 
+
+```{r}
+#install.packages(c("rgeoboundaries", "leaflet"))
+library(rgeoboundaries)
+library(leaflet)
+
+# Country boundaries of Nigeria and Chad
+nigeria_chad_boundaries <- geoboundaries(c("Nigeria", "Chad"))
+
+nigeria_chad_boundaries %>% leaflet() %>% 
+  addTiles() %>% 
+  addPolygons(label = nigeria_chad_boundaries$shapeName)
+
+
+# Administrative Level 1 boundaries of Nigeria and Chad
+nigeria_chad_admlvl1_boundaries <- geoboundaries(c("Nigeria", "Chad"), "adm1")
+
+nigeria_chad_admlvl1_boundaries %>% leaflet() %>% 
+  addTiles() %>% 
+  addPolygons(label = nigeria_chad_admlvl1_boundaries$shapeName)
+
+# Administrative Level 2 boundaries of Nigeria and Chad
+nigeria_chad_admlvl2_boundaries <- geoboundaries(c("Nigeria", "Chad"), "adm2")
+
+nigeria_chad_admlvl2_boundaries %>% leaflet() %>% 
+  addTiles() %>% 
+  addPolygons(label = nigeria_chad_admlvl2_boundaries$shapeName)
+
+```
 <!---
 
 # When do we want to use `rnaturalearth` and when rgeoboundaries?

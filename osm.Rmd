@@ -166,6 +166,7 @@ ggmap(lagos_map) +
 The following is a complete example of using the `osmdata` package to retrieve data of hospitals in Lagos and `ggmap` to visualise them.
 
 ```{r lagos-hospitals-example}
+#install.packages(c("osmdata", "ggplot2", "ggmap"))
 library(osmdata)
 library(ggplot2)
 library(ggmap)
@@ -231,8 +232,6 @@ lagos_hospitals <- lagos_bb %>%
 
 ```
 
-
-
 Then we use the `ggplot2` package to visualise each of these features along with the hospitals in Lagos. Note how we have used different colours, line sizes (thicknesses) and opacities to differentiate among the features.
 
 
@@ -247,9 +246,18 @@ ggplot() +
   theme_bw()
 ```
 
+We can also use the `leaflet` package to visualise an interactive map of the hospitals in Lagos.
 
+```{r}
+#install.packages("leaflet")
+library(leaflet)
 
+leaflet() %>% 
+  addTiles() %>% 
+  addPolygons(data = lagos_hospitals$osm_polygons,
+              label = lagos_hospitals$osm_polygons$name)
 
+```
 
 
 

@@ -27,9 +27,7 @@ remotes::install_github('wpgp/wopr')
 
 ## Downloading data
 
-To download the population data we first retrieve the WOPR data catalogue and then subset the data frame for the country we are interested in.
-
-To see a list of currently available databases in the catlogue we can use the `getCatalogue()` function.
+To download the population data we first retrieve the WOPR data catalogue to see a list of currently available databases. For this we can use the `getCatalogue()` function.
 
 ```{r print-catalogue}
 library(wopr)

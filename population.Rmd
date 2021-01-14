@@ -13,7 +13,7 @@ knitr::opts_chunk$set(echo = TRUE, error=FALSE, message = FALSE, warning = FALSE
 
 # Downloading Population data using `wopr`
 
-[`wopr`](https://github.com/wpgp/wopr) is an R package that provides access to the [WorldPop Open Population Repository](https://wopr.worldpop.org/) and gets estimates of population sizes for specific demographic groups.
+[`wopr`](https://github.com/wpgp/wopr) is an R package that provides access to the [WorldPop Open Population Repository](https://wopr.worldpop.org/) and gets estimates of population sizes for specific geographic areas
 
 ## Installing `wopr`
 
@@ -27,15 +27,23 @@ remotes::install_github('wpgp/wopr')
 
 ## Downloading data
 
-To download the population data we first retrieve the WOPR data catalogue and then subset the data frame for the country we are interested in. In this tutorial we use 'NGA' which refers to Nigeria. WOPR uses [ISO country codes](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-3) to abbreviate country names.
+To download the population data we first retrieve the WOPR data catalogue and then subset the data frame for the country we are interested in.
 
-Then we simply download the data for the subsetted catalogue selection using the `downloadData()` function. Note that `downloadData()` will not download files larger than 100MB by default unless the `maxsize` argument is changed (see `?downloadData`)
+To see a list of currently available databases in the catlogue we can use the `getCatalogue()` function.
+
+```{r print-catalogue}
+library(wopr)
+
+# Retrieve the WOPR data catalogue
+catalogue <- getCatalogue(spatial_query=T)
+catalogue
+```
+
+WOPR uses [ISO country codes](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-3) to abbreviate country names. In this tutorial we use 'NGA' which refers to Nigeria.
+
+Then we simply subset the catalogue for Nigeria(NGA) and download the data for the subsetted catalogue selection using the `downloadData()` function. Note that `downloadData()` will not download files larger than 100MB by default unless the `maxsize` argument is changed (see `?downloadData`)
 
 ```{r, download-pop-data, eval=FALSE}
-library(wopr)
-# Retrieve the WOPR data catalogue
-catalogue <- getCatalogue()
-
 # Select files from the catalogue by subsetting the data frame
 selection <- subset(catalogue,
                     country == 'NGA' &
@@ -48,11 +56,11 @@ downloadData(selection)
 
 ## Understanding the downloaded data
 
-The download will create a folder named `./wopr` in the R working directory for the downloaded files and a spreadsheet with information on the downloaded files will be available at `./wopr/wopr_catalogue.csv`
+The download will create a folder named `./wopr` in your R working directory for the downloaded files, and a spreadsheet with information on the downloaded files will be available at `./wopr/wopr_catalogue.csv`
 
 Since we downloaded the population estimates of Nigeria(NGA), zipped data files will be available at `./wopr/NGA/population/v1.2` which will then have to be manually unzipped.
 
-The folder structure will look as follows
+The folder structure will look like this
 
 ```
 working directory
@@ -68,7 +76,7 @@ working directory
                 └── NGA_population_v1_2_README.pdf
 ```
 
-Since the zipped file `./wopr/NGA/population/v1.2/NGA_population_v1_2_admin.zip` contains population totals for administrative units in Nigeria (i.e. states and local government areas) and shapefiles for the administrative boundaries, we unzip this file and place it in the same directory. The folder structure will now look as follows
+Since the zipped file `./wopr/NGA/population/v1.2/NGA_population_v1_2_admin.zip` contains population totals for administrative units in Nigeria (i.e. states and local government areas) and shapefiles for the administrative boundaries, we unzip this file and place it in the same directory - after which the folder structure will look like this
 
 ```
 working directory
@@ -92,7 +100,7 @@ The `.csv` files contain a summary of the distributions of the population estima
 
 In this tutorial we use the `rgdal` package to read in the downloaded shapefiles into R. The `rgdal` package provides bindings for the [Geospatial Data Abstraction Library](https://gdal.org/) allowing us to read in raster and vector geospatial data formats.
 
-We will also use the `here` package to get file paths to the working directory so that we can simply use relative paths to import files.
+We will also use the `here` package to get file paths to the working directory, so that we can simply use relative paths to import files placed within the working directory.
 
 First we read in the administrative level 2 data of Nigeria as follows
 
@@ -104,32 +112,148 @@ library(here)
 admin_level2_shape <- readOGR(dsn=here::here("wopr/NGA/population/v1.2/NGA_population_v1_2_admin/NGA_population_v1_2_admin_level2_boundaries.shp"), verbose=FALSE)
 ```
 
-The `ggplot2` package can be used to plot the administrative boundaries and visualise the population. `ggplot2` allows us to easily visualise simple feature objects using the `geom_sf()` function, but we will need to convert the shapefile we have into a simple feature object. This can be done using the `st_as_sf()` function in the `sf` package.
+Then the `ggplot2` package can be used to plot the administrative boundaries and visualise the population. The `geom_sf()` function in the `ggplot2` package allows us to easily visualise simple feature objects. But for this, we will have to convert the shapefile we have into a simple feature object. We can do this by using the `st_as_sf()` function in the `sf` package.
+
+We also color the administrative divisions in proportion to its population as follows. Note how we have used the variable 'mean' to fill in the divisions, and how the legend on the right of the map describes the color scale used.
 
 ```{r vis-admlvl2-data}
 # install.packages(c("sf", "ggplot2"))
 library(sf)
 library(ggplot2)
 admin_level2_shape %>% 
-  sf::st_as_sf() %>% 
+  st_as_sf() %>% 
   ggplot(aes(fill = mean)) +
   geom_sf()
 ```
 
 
+## Examples
+
+### Choropleth Maps
+
+One of the most common methods of visualising population is through **Choropleth maps** - which is simply a map with divided geographical areas colored in proportion to a specific variable.
+
+To visualise the population of Nigeria, follow the first few steps of this tutorial to download the population data using the `wopr` package, unzip the downloaded files and place the files within the working directory. Don't forget to update the filepaths used in the examples below, to the locations of your data files.
+
+The following example uses the downloaded the population of Nigeria and the `sf` and `ggplot2` packages to visualise the population using a choropleth map. Note how each administrative division in Nigeria has been colored in proportion to its population.
+
+```{r choropleth-adm-lvl2-example}
+#install.packages(c("rgdal", "here", "sf", "ggplot2"))
+library(rgdal)
+library(here)
+library(sf)
+library(ggplot2)
+
+
+admin_level2_shape <- readOGR(dsn=here::here("wopr/NGA/population/v1.2/NGA_population_v1_2_admin/NGA_population_v1_2_admin_level2_boundaries.shp"), verbose=FALSE)
+
+admin_level2_shape %>% 
+  st_as_sf() %>% 
+  ggplot(aes(fill = mean)) +
+  geom_sf() +
+  labs(title = "Choropleth map of population in Nigeria",
+       subtitle = "Administrative level 2 divisions") +
+  xlab("Longitude") +
+  ylab("Latitude") +
+  scale_fill_continuous(name = "Population")
+```
+
 Similarly the administrative level 3 data can also be visualised as follows
 
 
-```{r vis-admlvl3-data}
+```{r choropleth-adm-lvl3-example}
+#install.packages(c("rgdal", "here", "sf", "ggplot2"))
+library(rgdal)
+library(here)
+library(sf)
+library(ggplot2)
+
 admin_level3_shape <- readOGR(here::here("wopr/NGA/population/v1.2/NGA_population_v1_2_admin/NGA_population_v1_2_admin_level3_boundaries.shp"), verbose=FALSE)
 
 admin_level3_shape %>% 
-  sf::st_as_sf() %>% 
+  st_as_sf() %>% 
   ggplot(aes(fill = mean)) +
-  geom_sf()
+  geom_sf() +
+  labs(title = "Choropleth map of population in Nigeria",
+       subtitle = "Administrative level 3 divisions") +
+  xlab("Longitude") +
+  ylab("Latitude") +
+  scale_fill_continuous(name = "Population")
+```
+
+Interactive choropleth maps can also be visualised using the `leaflet` package.
+
+```{r choropleth-adm-lvl2-interactive-example}
+#install.packages(c("rgdal", "here", "leaflet"))
+library(rgdal)
+library(here)
+library(leaflet)
+
+admin_level2_shape <- readOGR(dsn=here::here("wopr/NGA/population/v1.2/NGA_population_v1_2_admin/NGA_population_v1_2_admin_level2_boundaries.shp"), verbose=FALSE)
+
+color_palette <- colorBin("Blues", domain = admin_level2_shape$mean)
+
+admin_level2_shape %>% leaflet() %>% 
+  addTiles() %>% 
+  addPolygons(
+    fillColor = ~color_palette(mean),
+    weight = 2,
+    opacity = 1,
+    color = "white",
+    fillOpacity = 0.7,
+    label = admin_level2_shape$statename) %>%
+  addLegend(
+    pal = color_palette,
+    values = ~mean,
+    opacity = 0.7,
+    title = "Population",
+    position = "bottomright")
+```
+
+A downside of choropleth maps is that geographical areas which are bigger in size tend to have a bigger weight on the map, and creates a bias towards that geographical area. To prevent this bias, we use cartograms.
+
+### Cartograms
+
+Another method that can be used to visualise population is by using a **cartogram**. A cartogram is a map with its geographical regions distorted based on an alternate variable. In a cartogram the area of the geographical regions will be inflated or deflated according to the numeric value of the variable it's based on.
+
+To visualise the population of Nigeria, follow the first few steps of this tutorial to download the population data using the `wopr` package, unzip the downloaded files and place the files within the working directory. Don't forget to update the filepaths used in the examples below, to the locations of your data files.
+
+The following example uses the downloaded population of Nigeria, the `cartogram` package to create a cartogram based on the population, and the `sf` and `ggplot2` packages to visualise the created cartogram. Note how each administrative division in Nigeria has been colored and resized in proportion to its population.
+
+```{r cartogram-adm-lvl2-example}
+#install.packages(c("rgdal", "here", "cartogram", "sf", "ggplot2"))
+library(rgdal)
+library(here)
+library(cartogram)
+library(sf)
+library(ggplot2)
+
+admin_level2_shape <- readOGR(dsn=here::here("wopr/NGA/population/v1.2/NGA_population_v1_2_admin/NGA_population_v1_2_admin_level2_boundaries.shp"), verbose=FALSE)
+
+# converting the admin_level2_shape object to an object class sf
+admin_level2_sf <- st_as_sf(admin_level2_shape)
+
+# transforming the coordinates of the object to a new reference system.
+# while we have used a tranformation with EPSG code 2311, specific for Nigeria, codes for other countries can be found at https://epsg.io/
+admin_level2_transformed <- st_transform(admin_level2_sf, crs = 2311)
+
+# creating the cartogram
+admin_level2_cartogram <- cartogram_cont(admin_level2_transformed, "mean", itermax=5)
+
+# visualising the created cartogram
+ggplot() +
+  geom_sf(data = admin_level2_cartogram, aes(fill = mean)) +
+  labs(title = "Cartogram of population in Nigeria",
+       subtitle = "Administrative level 2 divisions") +
+  xlab("Longitude") +
+  ylab("Latitude") +
+  scale_fill_continuous(name = "Population")
+
 ```
 
 ## References
 
 - `wopr` repository: https://github.com/wpgp/wopr  
 - `ggplot2` package: https://ggplot2.tidyverse.org/
+- `Choropleth maps`: https://www.data-to-viz.com/graph/choropleth.html
+- `Cartograms` : https://www.data-to-viz.com/graph/cartogram.html

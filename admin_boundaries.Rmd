@@ -149,11 +149,6 @@ ggplot(data = nigeria_chad_admlvl1_boundaries) +
   geom_sf() +
   ggtitle("Administrative Level 1 boundaries")
 
-# Administrative Level 2 boundaries of Nigeria and Chad
-nigeria_chad_admlvl2_boundaries <- geoboundaries(c("Nigeria", "Chad"), "adm2")
-ggplot(data = nigeria_chad_admlvl2_boundaries) +
-  geom_sf() +
-  ggtitle("Administrative Level 2 boundaries")
 ```
 
 The next example uses the `rgeoboundaries` package to download administrative boundaries and `leaflet` to visualise them interactively.
@@ -178,13 +173,6 @@ nigeria_chad_admlvl1_boundaries <- geoboundaries(c("Nigeria", "Chad"), "adm1")
 nigeria_chad_admlvl1_boundaries %>% leaflet() %>% 
   addTiles() %>% 
   addPolygons(label = nigeria_chad_admlvl1_boundaries$shapeName)
-
-# Administrative Level 2 boundaries of Nigeria and Chad
-nigeria_chad_admlvl2_boundaries <- geoboundaries(c("Nigeria", "Chad"), "adm2")
-
-nigeria_chad_admlvl2_boundaries %>% leaflet() %>% 
-  addTiles() %>% 
-  addPolygons(label = nigeria_chad_admlvl2_boundaries$shapeName)
 
 ```
 <!---

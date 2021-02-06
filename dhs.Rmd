@@ -1,0 +1,218 @@
+---
+title: "Demographic and Health Survey(DHS)"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    number_sections: false
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
+library(tidyverse)
+library(DT)
+```
+
+# `rdhs` package
+
+This package gives the users the ability to access and make analysis on the [Demographic and Health Survey(DHS)](https://www.dhsprogram.com/) data. There are many functionalities that are useful in this package and they can be looked at one after another in more depth in the following sections.
+
+## Installation of the package `rdhs`
+
+You can install the package from github with `devtools`: 
+
+```{r install, eval = FALSE}
+install.packages("devtools") 
+devtools::install_github("ropensci/rdhs")
+```
+
+```{r load-lib}
+library(rdhs)
+```
+
+
+> **!!!NOTE:** If you wish to download survey datasets from DHS website, you will need to set up an account with the DHS website, which will enable you to request for access and use of the datasets. Instructions on how to download the data can be found [here](https://dhsprogram.com/data/Access-Instructions.cfm).
+
+> You can also find the model datasets which are not the accurate data of each country and can be used to just practice the working of the package `rdhs`. But if you want the survey datasets, then you would need to sign up and apply for access. 
+> The email, password and the project name that were used to create the account will then need to be provided to `rdhs` when attempting to download datasets. 
+
+## Access standard indicator data  in R via the [DHS API](https://api.dhsprogram.com/#/index.html)
+
+The DHS program has published an API that gives access to a number of different data sets, where each represent one of the DHS API endpoints. The datasets include the standard health indicators and also a series of meta data sets that describe the types of surveys that have been conducted. 
+
+There are currently 12 different datasets available from these API, which can be accessed using any of the `dhs_{}()` functions. One such function is the `dhs_data()`, which interacts with the published set of standard health indicator data calculated by DHS. We can either search for specific indicators, or by querying for indicators.
+
+```{r indicators}
+indicators <- dhs_indicators() #determines the indicators
+
+# Take a look at the first 7 values within the indicator list
+indicators[order(indicators$IndicatorId),][1:7, c("IndicatorId","Definition")]
+```
+As there are many indicators that can be used for querying and you cannot remember every one of them, using tags for searching will be much easier. The DHS tags the indicators depending on what areas of demography and health they relate to. This can be done by using the `dhs_tags()` function. 
+
+```{r tags}
+tags <- dhs_tags() #search by tags 
+#search for 'HIV' within the column tagName using the grepl function
+tags[grepl("HIV",tags$TagName),]
+```
+
+Now that we have the tag we are looking for analysis "HIV", next we can concentrate on the geographic regions we are looking to work on , here I have taken as example for *Brazil* and *Tanzania* in the year 2005 by using a specific study of tags , in our case we chose, `TagId` 28:
+
+```{r country-data}
+data_BT <- dhs_data(tagIds = 28,countryIds = c("BR","TZ"),breakdown = "subnational",surveyYearStart = 2005)
+
+# displaying the first 5 outputs for tanzania and brazil in the year 2005 for HIV attitudes
+data_BT %>% datatable(extensions = c('Scroller','FixedColumns'), options = list(
+  deferRender = TRUE,
+  scrollY = 350,
+  scrollX = 350,
+  dom = 't',
+  scroller = TRUE,
+  fixedColumns = list(leftColumns = 3)
+))
+```
+
+You can also use the [DHS STATcompiler](https://www.statcompiler.com/en/) for a click and collect datasets. It is easier to use the `rdhs` API interaction to find out about the data for multiple countries an their breakdowns using the `dhs_data()` function.
+
+```{r indicator-data}
+#finding the data for percentage of women who have never been tested for HIV in the year 2010 by regions(subntaional)
+resp <- dhs_data(indicatorIds = "HA_CPHT_W_NEV", surveyYearStart = 2010, breakdown = "subnational")
+```
+
+```{r regions}
+#regions we are interested in
+country <- c("Ghana","Ethiopia","Tanzania","Zambia","Rwanda","Mali") 
+
+ggplot(resp[resp$CountryName %in% country,], 
+       aes(x = SurveyYear, 
+           y = Value, 
+           color = CountryName)) + 
+  geom_line() +
+  geom_point()+
+  geom_smooth(method = "lm") +
+  labs(y = "Number of women who never tested for HIV", color = "Country")+
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5))+
+  facet_wrap(~CountryName)
+```
+
+## Determine datasets and their surveys for analysis
+
+Let's say we want to get all the DHS survey data for Brazil and Tanzania for the HIV survey, We begin with the DHS API interaction to determine our datasets.
+
+```{r survey}
+charac <- dhs_survey_characteristics()
+charac[grepl("HIV",charac$SurveyCharacteristicName),] 
+```
+
+The DHS allows for countries to be filtered using their *countryIds*, which is one of the arguments in the `dhs_survey()` functions. To have a look at the different *countryIds* we have a function to find the same.
+
+```{r countryid}
+countryid <- dhs_countries(returnFields = c("CountryName","DHS_CountryCode"))
+
+countryid %>% head()
+```
+
+```{r survey-data}
+# finding all the surveys available for our search criteria
+survey <- dhs_surveys(surveyCharacteristicIds = 87,
+                     countryIds = c("BR","TZ"),
+                     surveyType = "DHS",
+                     surveyYearStart = 2010)
+
+#finally use this information to find the datasets we will want to download and specific file format can be used flat file in our case 
+datasets <- dhs_datasets(surveyIds = survey$SurveyId,
+             fileFormat = "flat")
+
+datasets %>% datatable(extensions = c('Scroller','FixedColumns'), options = list(
+  deferRender = TRUE,
+  #scrollY = 350,
+  scrollX = 350,
+  dom = 't',
+  scroller = TRUE
+))
+```
+
+Recommended  file formats which can be downloaded are spss (.sav), which can be given as an argument as `fileFormat = "SV"` or the other option would be flat file format (.dat), which can be given as `fileFormat = "FL"`. The flat files are quicker but some datasets cannot be read in correctly, whereas the .sav files are slower to read but so far no datasets have been found that do not read in correctly.   
+
+
+## Download survey datasets from the [DHS website](https://dhsprogram.com/data/available-datasets.cfm).
+
+Now we can download our desired datasets from the website. For doing this, we would need to set up an account within the DHS website, and the given credentials need to be supplied to `rdhs` when attempting to download datasets.
+
+Once we have created an account, we need to set up our credentials using the function `set_rdhs_config()`. This will require providing as arguments your `email` and `project` for which you want to download datasets from. Later for which you will be prompted for your password. 
+
+The process for downloading of the datasets are as follows:
+
+If you specify a directory for datasets and API calls to be cached using `cache_path`. If you do not specify or provide an argument for `cache_path` you will be prompted to provide `rdhs` permission to save the downloaded datasets and API calls within your user cache directory of your operating system. If you do not grant permission, these will be written in your R temporary directory. 
+
+Similarly, if you do not also provide an argument for `congif_path`, this will be saved within your temp directory unless permission is granted. Your config files will always be called "rdhs.json", so that `rdhs` can find them easily.
+
+```{r config, eval=FALSE}
+set_rdhs_config(email = "abcd@gmail.com",
+                project = "project_name",
+                config_path = "~/.rdhs.json",
+                global = TRUE)
+```
+
+
+To see what config is being used by `rdhs` at any point, then use `get_rdhs_config()` to view the config settings. 
+
+```{r data-down,eval=FALSE}
+downloads <- get_datasets(datasets$FileName)
+```
+
+
+## Loading datasets and associating its metadata into R
+
+We can now examine what it is we have actually downloaded, by reading in one of these dataset:
+
+> For purposes of this tutorial, some model datasets are used and are not accurate values of any country survey data.
+
+```{r read-data}
+library(foreign)
+data <- read.dta("ZZAR61FL.DTA")
+```
+
+
+```{r}
+head(data)
+```
+
+This dataset contains the records of HIV patients, with their record type (Clusters*(hivclust)*, Household*(hivnumb)*, Line*(hivline)*), barcodes*(hiv01)*, lab numbers*(hiv02)*, blood test results*(hiv03)* and sample weight*(hiv05)*. 
+
+The code for getting dataset from the DHS website, if the permission is granted after creating an account is 
+
+```{r eval=FALSE}
+get_datasets(dataset$FileName)
+```
+
+The main reason for reading the dataset using the default option is that `rdhs` will also create a table of all the survey variables and their labels and cache them for you.
+
+The default behavior for the function is to download the datasets, read them in and save the resultant data.frame as a .rds object within the cache directory. You can also control this behavior using the `download.options` argument:
+
+- `get_datasets(download.options = "zip")`: only the downloaded zip will be saved.
+
+- `get_datasets(download.options = "rds")`: only the read in rds will be saved. 
+
+- `get_datasets(download.options = "both")`: both the zip is downloaded as well as the read in rds and saved.
+
+Now let us try querying for a particular search terms or survey variables, and they can be done thus:
+
+```{r eval=FALSE}
+questions <- search_variable_labels(datasets$FileName, search_terms = "HIV")
+```
+
+
+Another function that is available for use in this package `rdhs` is `extract_dhs()`, it extracts data from your downloaded datasets according to a data.frame of requested survey variables or survey definitions.
+
+```{r eval=FALSE}
+extract_dhs(questions, add_geo = FALSE)
+```
+
+
+## References
+
+- `rdhs` package: https://cran.r-project.org/web/packages/rdhs/index.html
+
+- `DT` package: https://rstudio.github.io/DT/

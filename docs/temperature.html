@@ -454,9 +454,9 @@ ggplot(data = tmax_data_may_df,
        subtitle = &quot;For the years 1970-2000&quot;) +
   xlab(&quot;Longitude&quot;) +
   ylab(&quot;Latitude&quot;) +
-  scale_fill_gradient(name = &quot;Temperature (°C)&quot;,
-                      low = &quot;#FEED99&quot;,
-                      high = &quot;#AF3301&quot;)</code></pre>
+  scale_fill_gradientn(name = &quot;Temperature (°C)&quot;,
+                       colours=c(&quot;#0094D1&quot;,&quot;#68C1E6&quot;, &quot;#FEED99&quot;,&quot;#AF3301&quot;),
+                       breaks = c(-20, 0, 20, 40))</code></pre>
 <p><img src="temperature_files/figure-html/visualise-may-maxtemp-1.png" width="672" /></p>
 </div>
 <div id="examples" class="section level2">
@@ -467,7 +467,7 @@ ggplot(data = tmax_data_may_df,
 <pre class="r"><code># install.packages(c(&quot;raster&quot;, &quot;ggplot2&quot;, &quot;tidyr&quot;))
 library(raster)
 library(ggplot2)
-library(tidyr)
+library(tidyverse)
 
 # Downloading monthly maximum temperature data
 tmax_data &lt;- getData(name = &quot;worldclim&quot;, var = &quot;tmax&quot;, res = 10)
@@ -479,9 +479,13 @@ gain(tmax_data)=0.1
 tmax_data_df &lt;- as.data.frame(tmax_data, xy = TRUE, na.rm = TRUE)
 rownames(tmax_data_df) &lt;- c()
 
-# Converting the dataframe into long format
+# Renaming the month columns, Converting the dataframe into long format and converting month column into a factor
 tmax_data_df_long &lt;- tmax_data_df %&gt;%
+  rename(&quot;January&quot; = &quot;tmax1&quot;, &quot;February&quot; = &quot;tmax2&quot;, &quot;March&quot; = &quot;tmax3&quot;, &quot;April&quot; = &quot;tmax4&quot;,
+         &quot;May&quot; = &quot;tmax5&quot;, &quot;June&quot; = &quot;tmax6&quot;, &quot;July&quot; = &quot;tmax7&quot;, &quot;August&quot; = &quot;tmax8&quot;,
+         &quot;September&quot; = &quot;tmax9&quot;, &quot;October&quot; = &quot;tmax10&quot;, &quot;November&quot; = &quot;tmax11&quot;, &quot;December&quot; = &quot;tmax12&quot;) %&gt;%
   pivot_longer(c(-x,-y), names_to = &quot;month&quot;, values_to = &quot;temp&quot;)
+tmax_data_df_long$month = factor(tmax_data_df_long$month, levels = month.name)
 
 tmax_data_df_long %&gt;%
   ggplot(aes(x=x,y=y)) +
@@ -491,9 +495,9 @@ tmax_data_df_long %&gt;%
        subtitle = &quot;For the years 1970-2000&quot;) +
   xlab(&quot;Longitude&quot;) +
   ylab(&quot;Latitude&quot;) +
-  scale_fill_gradient(name = &quot;Temperature (°C)&quot;,
-                      low = &quot;#FEED99&quot;,
-                      high = &quot;#AF3301&quot;)</code></pre>
+  scale_fill_gradientn(name = &quot;Temperature (°C)&quot;,
+                       colours=c(&quot;#006D9B&quot;,&quot;#0094D1&quot;,&quot;#68C1E6&quot;, &quot;#FEED99&quot;,&quot;#AF3301&quot;),
+                       breaks = c(-40, -20, 0, 20, 40))</code></pre>
 <p><img src="temperature_files/figure-html/visualise-monthly-maxtemp-example-1.png" width="672" /></p>
 </div>
 <div id="visualising-mean-monthly-temperature" class="section level3">
@@ -524,9 +528,9 @@ tmax_mean_df %&gt;%
        subtitle = &quot;For the years 1970-2000&quot;) +
   xlab(&quot;Longitude&quot;) +
   ylab(&quot;Latitude&quot;) +
-  scale_fill_gradient(name = &quot;Temperature (°C)&quot;,
-                      low = &quot;#FEED99&quot;,
-                      high = &quot;#AF3301&quot;)</code></pre>
+  scale_fill_gradientn(name = &quot;Temperature (°C)&quot;,
+                       colours=c(&quot;#0094D1&quot;,&quot;#68C1E6&quot;, &quot;#FEED99&quot;,&quot;#AF3301&quot;),
+                       breaks = c(-20, 0, 20, 40))</code></pre>
 <p><img src="temperature_files/figure-html/visualise-mean-maxtemp-example-1.png" width="672" /></p>
 </div>
 <div id="visualising-bioclimatic-variables" class="section level3">
@@ -555,9 +559,9 @@ bio5_df %&gt;%
        subtitle = &quot;In the time period 1970-2000&quot;) +
   xlab(&quot;Longitude&quot;) +
   ylab(&quot;Latitude&quot;) +
-  scale_fill_gradient(name = &quot;Temperature (°C)&quot;,
-                      low = &quot;#FEED99&quot;,
-                      high = &quot;#AF3301&quot;)</code></pre>
+  scale_fill_gradientn(name = &quot;Temperature (°C)&quot;,
+                       colours=c(&quot;#0094D1&quot;,&quot;#68C1E6&quot;, &quot;#FEED99&quot;,&quot;#AF3301&quot;),
+                       breaks = c(-20, 0, 20, 40))</code></pre>
 <p><img src="temperature_files/figure-html/warmest-month-maxtemp-example-1.png" width="672" /></p>
 </div>
 </div>

@@ -59,24 +59,95 @@ Thereafter, to extract the maximum temperature of a single month we can use the 
 tmax_data$tmax5
 ```
 
-It might also be important to get an average of the monthly maximum temperature values, which can be done as follows. Note how the RasterStack object is converted to a RasterLayer object with a single set of values.
 
-```{r calculate-mean-maxtemp}
-tmax_mean <- mean(tmax_data)
-tmax_mean
-```
-
-## Visualising the Maximum temperature data with `ggplot2`
+## Visualising the data with `ggplot2`
 
 The `ggplot2` package provides the `geom_raster()` function, which can be used to easily visualise the downloaded temperature.
 
-The following example visualises the mean of the monthly maximum temperatures across the world. Before visualising the data, we first convert the RasterLayer object to a dataframe.
+The following example visualises the maximum temperature in May. Before visualising the data, we first convert the RasterLayer object to a dataframe, as follows.
 
-```{r visualise-mean-maxtemp}
-# install.packages(c("ggplot2", "magrittr"))
+```{r visualise-may-maxtemp}
+# install.packages(c("ggplot2"))
+library(ggplot2)
+
+# Converting the raster object into a dataframe
+tmax_data_may_df <- as.data.frame(tmax_data$tmax5, xy = TRUE, na.rm = TRUE)
+rownames(tmax_data_may_df) <- c()
+
+ggplot(data = tmax_data_may_df,
+       aes(x=x,y=y)) +
+  geom_raster(aes(fill = tmax5)) +
+  labs(title = "Maximum temperature in May",
+       subtitle = "For the years 1970-2000") +
+  xlab("Longitude") +
+  ylab("Latitude") +
+  scale_fill_gradient(name = "Temperature (°C)",
+                      low = "#FEED99",
+                      high = "#AF3301")
+```
+
+## Examples
+
+### Visualising monthly maximum temperatures
+
+The following example visualises the maximum monthly temperatures for each month.
+
+```{r visualise-monthly-maxtemp-example}
+# install.packages(c("raster", "ggplot2", "tidyr"))
+library(raster)
+library(ggplot2)
+library(tidyr)
+
+# Downloading monthly maximum temperature data
+tmax_data <- getData(name = "worldclim", var = "tmax", res = 10)
+
+# Converting temperature values to Celcius
+gain(tmax_data)=0.1
+
+# Converting the raster object into a dataframe
+tmax_data_df <- as.data.frame(tmax_data, xy = TRUE, na.rm = TRUE)
+rownames(tmax_data_df) <- c()
+
+# Converting the dataframe into long format
+tmax_data_df_long <- tmax_data_df %>%
+  pivot_longer(c(-x,-y), names_to = "month", values_to = "temp")
+
+tmax_data_df_long %>%
+  ggplot(aes(x=x,y=y)) +
+  geom_raster(aes(fill = temp)) +
+  facet_wrap(~month) +
+  labs(title = "Monthly maximum temperatures",
+       subtitle = "For the years 1970-2000") +
+  xlab("Longitude") +
+  ylab("Latitude") +
+  scale_fill_gradient(name = "Temperature (°C)",
+                      low = "#FEED99",
+                      high = "#AF3301")
+
+```
+
+### Visualising mean monthly temperature
+
+The WorldClim database provides the monthly maximum temperatures across the world, but it might also be important to visualise an annual average of these values. This can be done by averaging the monthly maximum temperature values.
+
+The following is a complete example of downloading monthly maximum temperature values, calculating their mean and visualising it.
+
+```{r visualise-mean-maxtemp-example}
+# install.packages(c("raster","ggplot2", "magrittr"))
+library(raster)
 library(ggplot2)
 library(magrittr)
 
+# Downloading monthly maximum temperature data
+tmax_data <- getData(name = "worldclim", var = "tmax", res = 10)
+
+# Converting temperature values to Celcius
+gain(tmax_data)=0.1
+
+# Calculating mean of the monthly maximum temperatures
+tmax_mean <- mean(tmax_data)
+
+# Converting the raster object into a dataframe
 tmax_mean_df <- as.data.frame(tmax_mean, xy = TRUE, na.rm = TRUE)
 
 tmax_mean_df %>%
@@ -86,10 +157,11 @@ tmax_mean_df %>%
        subtitle = "For the years 1970-2000") +
   xlab("Longitude") +
   ylab("Latitude") +
-  scale_fill_continuous(name = "Temperature (°C)")
+  scale_fill_gradient(name = "Temperature (°C)",
+                      low = "#FEED99",
+                      high = "#AF3301")
 ```
 
-## Examples
 
 ### Visualising bioclimatic variables
 
@@ -97,7 +169,7 @@ The list of 19 bioclimatic variables provided by the Worldclim database are deri
 
 The complete list of variables and their codes can be found [here](https://www.worldclim.org/data/bioclim.html)
 
-The process of downloading and visualising these variables follows a similar approach to the tutorial, and the following is a complete example of downloading and visualising the "Maximum Temperature of the Warmest Month".
+The process of downloading and visualising these variables follows a similar approach to the tutorial. The following is a complete example of downloading and visualising the "Maximum Temperature of the Warmest Month".
 
 
 ```{r warmest-month-maxtemp-example}
@@ -106,19 +178,25 @@ library(raster)
 library(ggplot2)
 library(magrittr)
 
+# Downloading bioclimatic data
 bio <- getData(name = "worldclim", var = "bio", res = 10)
+
+# Converting temperature values to Celcius
 gain(bio)=0.1
 
+# Extracting only the 5th bioclimatic variable and onverting the raster object into a dataframe
 bio5_df <- as.data.frame(bio$bio5, xy = TRUE, na.rm = TRUE)
 
 bio5_df %>%
   ggplot(aes(x=x,y=y)) +
   geom_raster(aes(fill = bio5))  +
-  labs(title = "Maximum Temperature of the Warmest Month",
+  labs(title = "Maximum temperature of the warmest month",
        subtitle = "In the time period 1970-2000") +
   xlab("Longitude") +
   ylab("Latitude") +
-  scale_fill_continuous(name = "Temperature (°C)")
+  scale_fill_gradient(name = "Temperature (°C)",
+                      low = "#FEED99",
+                      high = "#AF3301")
 ```
 
 

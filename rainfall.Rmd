@@ -1,0 +1,193 @@
+---
+title: "Rainfall"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    number_sections: false
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
+library(tidyverse)
+library(DT)
+library(terra)
+```
+
+# `nasapower` package
+ 
+This package aims at making it quick and easy to automate downloading NASA [POWER](https://power.larc.nasa.gov/)(Prediction of Worldwide Energy Resource) global meteorology, surface solar energy and climatology data in your R session as a tidy data frame for analysis and use in modelling or other purposes using `get_power()`. 
+
+
+## Installing `nasapower` package 
+
+You can install the packagefrom either CRAN using:
+
+```{r CRAN,eval=FALSE}
+install.packages("nasapower")
+```
+
+or by using the devtools package directly from github using the following code:
+
+```{r git, eval=FALSE}
+if (!require(devtools)) {
+  install.packages("devtools")
+}
+
+devtools::install_github("ropensci/nasapower")
+```
+
+```{r loading}
+library(nasapower)
+```
+
+## Using `get_power()` to fetch data
+
+The `get_power()` function has five arguments and returns a data frame with a metadata header in the current R session.
+It has the following arguments:
+
+- **Community**: It can be passed with either "AG", "SB", or "SSE".
+
+    *AG*: provides access to the agroclimatology archive, which contains industry-friendly parameters for input to crop models.
+    
+    *SB*: provides access to the sustainable buildings archive, which contains parameters for the building community.
+    
+    *SSE*: provides access to the renewable energy archive, which contains parameters very specific to assist in the design of solar and wind powered renewable energy systems.
+    
+- **temporal_average**: supported values are "DAILY", "INTERANNUAL", "CLIMATOLOGY".
+  
+    *DAILY* : the daily average of `pars` by day, month and year.
+    
+    *INTERANNUAL*: the monthly average of `pars` by year.
+    
+    *CLIMATOLOGY*: the monthly average of `pars` at the surface of the earth for a given month averaged for that month over the 30 year period.
+    
+- **lonlat**: 
+
+    *For Single point*: supply a length-two numeric vector giving the decimal degree longitude an dlatitude in that order for the data to download. 
+    
+    *For regional coverage*: supply a length-four numeric as lower left(lon,lat) and upper right(lon,lat) coordinates as `lonlat = c(xmin,ymin,ymax,ymax)`
+    
+    *For global coverage*: to get globval coverage for CLIMATOLOGY, supply "GLOBAL" while also specifying "CLIMATOLOGY" for the argument `temporla_average`.
+    
+- **dates**: If only one date is provided, it will be treated as both the start and the end date and only a day's values will be returned. 
+
+    When the `temporal_average` is set to "INTERANNUAL", use only two year values, eg, dates = c(1983,2010). 
+
+    This argument should not be used when `temporal_average` is set to "CLIMATOLOGY".
+
+To know the different weather values from POWER provided within this function type `?get_power`, and in the arguments section, click on the highlighted parameters, which goes to a page which has all the available parameters. For rainfall, we use the "PRECTOT". 
+
+### Fetching daily data for single point:
+   
+```{r getdata}
+data <- get_power(community = "SSE",
+          lonlat = c(134.489563,-25.734968),
+          dates = c("2000-01-01","2000-05-01"),
+          temporal_average = "DAILY",
+          pars = "PRECTOT")
+data %>% datatable(extensions = c('Scroller','FixedColumns'), options = list(
+  deferRender = TRUE,
+  scrollY = 350,
+  scrollX = 350,
+  dom = 't',
+  scroller = TRUE,
+  fixedColumns = list(leftColumns = 3)
+))
+```
+
+### Fetching daily data for an area:
+
+```{r}
+daily_area <- get_power(community = "AG",
+          lonlat = c(150.5, -28.5 , 153.5, -25.5),
+          pars = "PRECTOT",
+          dates = c("2004-09-19","2004-09-29"),
+          temporal_average = "DAILY")
+daily_area %>% datatable(extensions = c('Scroller','FixedColumns'), options = list(
+  deferRender = TRUE,
+  scrollY = 350,
+  scrollX = 350,
+  dom = 't',
+  scroller = TRUE,
+  fixedColumns = list(leftColumns = 3)
+))
+```
+
+### Fetching climatology data:
+
+global data are only available for the climatology `temporal_average` like we discussed earlier, setting these arguments as such will fetch the global values.
+
+```{r climate}
+climate_avg <- get_power(community = "AG",
+                         pars = "PRECTOT",
+                         lonlat = "GLOBAL",
+                         temporal_average = "CLIMATOLOGY"
+)
+
+climate_avg %>% datatable(extensions = c('Scroller','FixedColumns'), options = list(
+  deferRender = TRUE,
+  scrollY = 350,
+  scrollX = 350,
+  dom = 't',
+  scroller = TRUE,
+  fixedColumns = list(leftColumns = 3)
+))
+```
+
+
+## Creating spatial objects from `get_power()`
+
+If you require spatial objects to work with, it is simple to convert the resultant data frame from `get_power()` to a spatial object using the `terra::rast(type = "...")`
+
+
+```{r climbox}
+climate_box <- split(climate_avg,climate_avg$PARAMETER)
+
+climate_box <- lapply(climate_box, function(x){
+  x["PARAMETER"] <- NULL
+  x
+})
+
+climate_box <- lapply(X = climate_box, FUN= as.matrix)
+
+PRECTOT <- rast(climate_box$PRECTOT[,c(1:2,14)],
+     crs = "+proj=eqc +lat_ts=0 +lat_0=0 +lon_0=0 +x_0=0 +y_0=0 +ellps=WGS84 +datum=WGS84 +units=m +no_defs",
+                 type = "xyz")
+
+plot(PRECTOT, plg = list(title = "World rainfall extent"))
+```
+
+## Using `nasapower` with large geographical areas
+
+```{r eval=FALSE}
+library("rnaturalearth")
+
+MEX <- ne_states(country = "Mexico",
+                 returnclass = "sf")
+
+CH <- MEX[MEX$name == "Chihuahua",]
+DU <- MEX[MEX$name == "Durango",]
+```
+
+```{r eval=FALSE}
+library("ggplot2")
+library("purrr")
+r <- rast(xmin = -180,
+     xmax = 180,
+     ymin = -90,
+     ymax = 90,
+     resolution = 0.5)
+
+values(r) <- 1:ncell(r)
+
+CH_coords <- crop(r,CH)
+DU_coords <- crop(r,DU)
+
+CH_coords <- mask(CH_coords,sf:::as_Spatial(CH))
+plot(CH_coords)
+```
+
+
+
+

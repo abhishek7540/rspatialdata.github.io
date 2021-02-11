@@ -16,12 +16,12 @@ library(terra)
 
 # `nasapower` package
  
-This package aims at making it quick and easy to automate downloading NASA [POWER](https://power.larc.nasa.gov/)(Prediction of Worldwide Energy Resource) global meteorology, surface solar energy and climatology data in your R session as a tidy data frame for analysis and use in modelling or other purposes using `get_power()`. 
+This package aims at making it quick and easy to automate downloading NASA [POWER](https://power.larc.nasa.gov/)(Prediction of Worldwide Energy Resource) global meteorology, surface solar energy and climatology data in your R session as a tidy data frame for analysis and use in modeling or other purposes using `get_power()`. 
 
 
 ## Installing `nasapower` package 
 
-You can install the packagefrom either CRAN using:
+You can install the package from either CRAN using:
 
 ```{r CRAN,eval=FALSE}
 install.packages("nasapower")

@@ -435,90 +435,26 @@ tmax_data &lt;- getData(name = &quot;worldclim&quot;, var = &quot;tmax&quot;, re
 ## source     : C:/Users/acer/Desktop/rspatialdata.github.io/wc10/tmax5.bil 
 ## names      : tmax5 
 ## values     : -19, 44.1  (min, max)</code></pre>
+<p>It might also be important to get an average of the monthly maximum temperature values, which can be done as follows. Note how the RasterStack object is converted to a RasterLayer object with a single set of values.</p>
+<pre class="r"><code>tmax_mean &lt;- mean(tmax_data)
+tmax_mean</code></pre>
+<pre><code>## class      : RasterLayer 
+## dimensions : 900, 2160, 1944000  (nrow, ncol, ncell)
+## resolution : 0.1666667, 0.1666667  (x, y)
+## extent     : -180, 180, -60, 90  (xmin, xmax, ymin, ymax)
+## crs        : +proj=longlat +datum=WGS84 +no_defs 
+## source     : C:/Users/acer/AppData/Local/Temp/RtmpQ3RoHo/raster/r_tmp_2021-01-31_235507_9928_43074.grd 
+## names      : layer 
+## values     : -25, 38.03333  (min, max)</code></pre>
 </div>
-<div id="visualising-the-data-with-ggplot2" class="section level2">
-<h2>Visualising the data with <code>ggplot2</code></h2>
+<div id="visualising-the-maximum-temperature-data-with-ggplot2" class="section level2">
+<h2>Visualising the Maximum temperature data with <code>ggplot2</code></h2>
 <p>The <code>ggplot2</code> package provides the <code>geom_raster()</code> function, which can be used to easily visualise the downloaded temperature.</p>
-<p>The following example visualises the maximum temperature in May. Before visualising the data, we first convert the RasterLayer object to a dataframe, as follows.</p>
-<pre class="r"><code># install.packages(c(&quot;ggplot2&quot;))
-library(ggplot2)
-
-# Converting the raster object into a dataframe
-tmax_data_may_df &lt;- as.data.frame(tmax_data$tmax5, xy = TRUE, na.rm = TRUE)
-rownames(tmax_data_may_df) &lt;- c()
-
-ggplot(data = tmax_data_may_df,
-       aes(x=x,y=y)) +
-  geom_raster(aes(fill = tmax5)) +
-  labs(title = &quot;Maximum temperature in May&quot;,
-       subtitle = &quot;For the years 1970-2000&quot;) +
-  xlab(&quot;Longitude&quot;) +
-  ylab(&quot;Latitude&quot;) +
-  scale_fill_gradientn(name = &quot;Temperature (°C)&quot;,
-                       colours=c(&quot;#0094D1&quot;,&quot;#68C1E6&quot;, &quot;#FEED99&quot;,&quot;#AF3301&quot;),
-                       breaks = c(-20, 0, 20, 40))</code></pre>
-<p><img src="temperature_files/figure-html/visualise-may-maxtemp-1.png" width="672" /></p>
-</div>
-<div id="examples" class="section level2">
-<h2>Examples</h2>
-<div id="visualising-monthly-maximum-temperatures" class="section level3">
-<h3>Visualising monthly maximum temperatures</h3>
-<p>The following example visualises the maximum monthly temperatures for each month.</p>
-<pre class="r"><code># install.packages(c(&quot;raster&quot;, &quot;ggplot2&quot;, &quot;tidyr&quot;))
-library(raster)
-library(ggplot2)
-library(tidyverse)
-
-# Downloading monthly maximum temperature data
-tmax_data &lt;- getData(name = &quot;worldclim&quot;, var = &quot;tmax&quot;, res = 10)
-
-# Converting temperature values to Celcius
-gain(tmax_data)=0.1
-
-# Converting the raster object into a dataframe
-tmax_data_df &lt;- as.data.frame(tmax_data, xy = TRUE, na.rm = TRUE)
-rownames(tmax_data_df) &lt;- c()
-
-# Renaming the month columns, Converting the dataframe into long format and converting month column into a factor
-tmax_data_df_long &lt;- tmax_data_df %&gt;%
-  rename(&quot;January&quot; = &quot;tmax1&quot;, &quot;February&quot; = &quot;tmax2&quot;, &quot;March&quot; = &quot;tmax3&quot;, &quot;April&quot; = &quot;tmax4&quot;,
-         &quot;May&quot; = &quot;tmax5&quot;, &quot;June&quot; = &quot;tmax6&quot;, &quot;July&quot; = &quot;tmax7&quot;, &quot;August&quot; = &quot;tmax8&quot;,
-         &quot;September&quot; = &quot;tmax9&quot;, &quot;October&quot; = &quot;tmax10&quot;, &quot;November&quot; = &quot;tmax11&quot;, &quot;December&quot; = &quot;tmax12&quot;) %&gt;%
-  pivot_longer(c(-x,-y), names_to = &quot;month&quot;, values_to = &quot;temp&quot;)
-tmax_data_df_long$month = factor(tmax_data_df_long$month, levels = month.name)
-
-tmax_data_df_long %&gt;%
-  ggplot(aes(x=x,y=y)) +
-  geom_raster(aes(fill = temp)) +
-  facet_wrap(~month) +
-  labs(title = &quot;Monthly maximum temperatures&quot;,
-       subtitle = &quot;For the years 1970-2000&quot;) +
-  xlab(&quot;Longitude&quot;) +
-  ylab(&quot;Latitude&quot;) +
-  scale_fill_gradientn(name = &quot;Temperature (°C)&quot;,
-                       colours=c(&quot;#006D9B&quot;,&quot;#0094D1&quot;,&quot;#68C1E6&quot;, &quot;#FEED99&quot;,&quot;#AF3301&quot;),
-                       breaks = c(-40, -20, 0, 20, 40))</code></pre>
-<p><img src="temperature_files/figure-html/visualise-monthly-maxtemp-example-1.png" width="672" /></p>
-</div>
-<div id="visualising-mean-monthly-temperature" class="section level3">
-<h3>Visualising mean monthly temperature</h3>
-<p>The WorldClim database provides the monthly maximum temperatures across the world, but it might also be important to visualise an annual average of these values. This can be done by averaging the monthly maximum temperature values.</p>
-<p>The following is a complete example of downloading monthly maximum temperature values, calculating their mean and visualising it.</p>
-<pre class="r"><code># install.packages(c(&quot;raster&quot;,&quot;ggplot2&quot;, &quot;magrittr&quot;))
-library(raster)
+<p>The following example visualises the mean of the monthly maximum temperatures across the world. Before visualising the data, we first convert the RasterLayer object to a dataframe.</p>
+<pre class="r"><code># install.packages(c(&quot;ggplot2&quot;, &quot;magrittr&quot;))
 library(ggplot2)
 library(magrittr)
 
-# Downloading monthly maximum temperature data
-tmax_data &lt;- getData(name = &quot;worldclim&quot;, var = &quot;tmax&quot;, res = 10)
-
-# Converting temperature values to Celcius
-gain(tmax_data)=0.1
-
-# Calculating mean of the monthly maximum temperatures
-tmax_mean &lt;- mean(tmax_data)
-
-# Converting the raster object into a dataframe
 tmax_mean_df &lt;- as.data.frame(tmax_mean, xy = TRUE, na.rm = TRUE)
 
 tmax_mean_df %&gt;%
@@ -528,40 +464,34 @@ tmax_mean_df %&gt;%
        subtitle = &quot;For the years 1970-2000&quot;) +
   xlab(&quot;Longitude&quot;) +
   ylab(&quot;Latitude&quot;) +
-  scale_fill_gradientn(name = &quot;Temperature (°C)&quot;,
-                       colours=c(&quot;#0094D1&quot;,&quot;#68C1E6&quot;, &quot;#FEED99&quot;,&quot;#AF3301&quot;),
-                       breaks = c(-20, 0, 20, 40))</code></pre>
-<p><img src="temperature_files/figure-html/visualise-mean-maxtemp-example-1.png" width="672" /></p>
+  scale_fill_continuous(name = &quot;Temperature (°C)&quot;)</code></pre>
+<p><img src="temperature_files/figure-html/visualise-mean-maxtemp-1.png" width="672" /></p>
 </div>
+<div id="examples" class="section level2">
+<h2>Examples</h2>
 <div id="visualising-bioclimatic-variables" class="section level3">
 <h3>Visualising bioclimatic variables</h3>
 <p>The list of 19 bioclimatic variables provided by the Worldclim database are derived from the monthly values, in order to generate more biologically meaningful variables.</p>
 <p>The complete list of variables and their codes can be found <a href="https://www.worldclim.org/data/bioclim.html">here</a></p>
-<p>The process of downloading and visualising these variables follows a similar approach to the tutorial. The following is a complete example of downloading and visualising the “Maximum Temperature of the Warmest Month”.</p>
+<p>The process of downloading and visualising these variables follows a similar approach to the tutorial, and the following is a complete example of downloading and visualising the “Maximum Temperature of the Warmest Month”.</p>
 <pre class="r"><code># install.packages(c(&quot;raster&quot;, &quot;ggplot2&quot;, &quot;magrittr&quot;))
 library(raster)
 library(ggplot2)
 library(magrittr)
 
-# Downloading bioclimatic data
 bio &lt;- getData(name = &quot;worldclim&quot;, var = &quot;bio&quot;, res = 10)
-
-# Converting temperature values to Celcius
 gain(bio)=0.1
 
-# Extracting only the 5th bioclimatic variable and onverting the raster object into a dataframe
 bio5_df &lt;- as.data.frame(bio$bio5, xy = TRUE, na.rm = TRUE)
 
 bio5_df %&gt;%
   ggplot(aes(x=x,y=y)) +
   geom_raster(aes(fill = bio5))  +
-  labs(title = &quot;Maximum temperature of the warmest month&quot;,
+  labs(title = &quot;Maximum Temperature of the Warmest Month&quot;,
        subtitle = &quot;In the time period 1970-2000&quot;) +
   xlab(&quot;Longitude&quot;) +
   ylab(&quot;Latitude&quot;) +
-  scale_fill_gradientn(name = &quot;Temperature (°C)&quot;,
-                       colours=c(&quot;#0094D1&quot;,&quot;#68C1E6&quot;, &quot;#FEED99&quot;,&quot;#AF3301&quot;),
-                       breaks = c(-20, 0, 20, 40))</code></pre>
+  scale_fill_continuous(name = &quot;Temperature (°C)&quot;)</code></pre>
 <p><img src="temperature_files/figure-html/warmest-month-maxtemp-example-1.png" width="672" /></p>
 </div>
 </div>

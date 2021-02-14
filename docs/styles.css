@@ -8,6 +8,11 @@ h2, .h2, h3, .h3 {
     border-bottom: 20px solid transparent;
 }
 
+h4, .h4 {
+    border-top: 20px solid transparent;
+    border-bottom: 10px solid transparent;
+}
+
 .contributors .col-md-4 {
   padding: 30px;
   text-align: center;

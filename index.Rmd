@@ -13,7 +13,7 @@ The website is currently in construction and includes tutorials on how to downlo
 [Open Street Map data](osm.html)  
 [Population](population.html)  
 Elevation  
-Temperature  
+[Temperature](temperature.html)  
 Rainfall  
 Humidity   
 Vegetation  

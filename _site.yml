@@ -13,6 +13,8 @@ navbar:
           href: osm.html
         - text: "Population"
           href: population.html
+        - text: "Temperature"
+          href: temperature.html
         - text: "Malaria"
           href: malaria.html
     - text: "Contributors"

@@ -191,10 +191,7 @@ tmax_mean <- mean(tmax_data)
 nigeria_sf <- geoboundaries("Nigeria")
 
 # Extracting temperature data of Nigeria
-tmax_mean_ngeria <- raster::crop(
-  raster::mask(tmax_mean, as_Spatial(nigeria_sf)),
-  as_Spatial(nigeria_sf)
-)
+tmax_mean_ngeria <- raster::mask(tmax_mean, as_Spatial(nigeria_sf))
 
 # Converting the raster object into a dataframe
 tmax_mean_nigeria_df <- as.data.frame(tmax_mean_ngeria, xy = TRUE, na.rm = TRUE)
@@ -207,9 +204,9 @@ tmax_mean_nigeria_df %>%
        subtitle = "For the years 1970-2000") +
   xlab("Longitude") +
   ylab("Latitude") +
-  scale_fill_gradientn(name = "Temperature (°C)",
-                       colours=c("#0094D1","#68C1E6", "#FEED99","#AF3301"),
-                       breaks = c(-20, 0, 20, 40))
+  scale_fill_gradient(name = "Temperature (°C)",
+                      low =  "#FEED99",
+                      high = "#AF3301")
 ```
 
   

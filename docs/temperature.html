@@ -558,10 +558,7 @@ tmax_mean &lt;- mean(tmax_data)
 nigeria_sf &lt;- geoboundaries(&quot;Nigeria&quot;)
 
 # Extracting temperature data of Nigeria
-tmax_mean_ngeria &lt;- raster::crop(
-  raster::mask(tmax_mean, as_Spatial(nigeria_sf)),
-  as_Spatial(nigeria_sf)
-)
+tmax_mean_ngeria &lt;- raster::mask(tmax_mean, as_Spatial(nigeria_sf))
 
 # Converting the raster object into a dataframe
 tmax_mean_nigeria_df &lt;- as.data.frame(tmax_mean_ngeria, xy = TRUE, na.rm = TRUE)
@@ -574,9 +571,9 @@ tmax_mean_nigeria_df %&gt;%
        subtitle = &quot;For the years 1970-2000&quot;) +
   xlab(&quot;Longitude&quot;) +
   ylab(&quot;Latitude&quot;) +
-  scale_fill_gradientn(name = &quot;Temperature (°C)&quot;,
-                       colours=c(&quot;#0094D1&quot;,&quot;#68C1E6&quot;, &quot;#FEED99&quot;,&quot;#AF3301&quot;),
-                       breaks = c(-20, 0, 20, 40))</code></pre>
+  scale_fill_gradient(name = &quot;Temperature (°C)&quot;,
+                      low =  &quot;#FEED99&quot;,
+                      high = &quot;#AF3301&quot;)</code></pre>
 <p><img src="temperature_files/figure-html/unnamed-chunk-1-1.png" width="672" /></p>
 </div>
 <div id="visualising-bioclimatic-variables" class="section level3">

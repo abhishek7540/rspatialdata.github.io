@@ -17,6 +17,8 @@ navbar:
           href: temperature.html
         - text: "Malaria"
           href: malaria.html
+        - text: "Elevation"
+          href: elevation.html
     - text: "Contributors"
       href: contributors.html
 output:

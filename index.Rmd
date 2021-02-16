@@ -12,7 +12,7 @@ The website is currently in construction and includes tutorials on how to downlo
 [Administrative boundaries](admin_boundaries.html)  
 [Open Street Map data](osm.html)  
 [Population](population.html)  
-Elevation  
+[Elevation](elevation.html)  
 [Temperature](temperature.html)  
 Rainfall  
 Humidity   

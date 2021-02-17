@@ -196,4 +196,4 @@ p[[1]] + geom_point(data = vec, aes(longitude, latitude), shape = 21,  show.lege
 
 - The `malariaAtlas` package repository : https://github.com/malaria-atlas-project/malariaAtlas
 - Malaria Atlas Project: https://malariaatlas.org/
-- Malria data explorer: https://malariaatlas.org/explorer/#/
+- Malaria data explorer: https://malariaatlas.org/explorer/#/

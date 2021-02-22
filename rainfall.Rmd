@@ -11,17 +11,20 @@ output:
 knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
 library(tidyverse)
 library(DT)
+library(rgdal)
+library(broom)
 library(terra)
+library(ggspatial)
 ```
 
 # `nasapower` package
  
-This package aims at making it quick and easy to automate downloading NASA [POWER](https://power.larc.nasa.gov/)(Prediction of Worldwide Energy Resource) global meteorology, surface solar energy and climatology data in your R session as a tidy data frame for analysis and use in modeling or other purposes using `get_power()`. 
+This package aims at making it quick and easy to automate downloading NASA [POWER](https://power.larc.nasa.gov/)(Prediction of Worldwide Energy Resource) global meteorology, surface solar energy and climatology data in your R session as a tidy data frame for analysis and use in modelling or other purposes using `get_power()`. 
 
 
 ## Installing `nasapower` package 
 
-You can install the package from either CRAN using:
+You can install the packagefrom either CRAN using:
 
 ```{r CRAN,eval=FALSE}
 install.packages("nasapower")
@@ -98,7 +101,7 @@ data %>% datatable(extensions = c('Scroller','FixedColumns'), options = list(
 
 ### Fetching daily data for an area:
 
-```{r}
+```{r daily}
 daily_area <- get_power(community = "AG",
           lonlat = c(150.5, -28.5 , 153.5, -25.5),
           pars = "PRECTOT",
@@ -118,7 +121,7 @@ daily_area %>% datatable(extensions = c('Scroller','FixedColumns'), options = li
 
 global data are only available for the climatology `temporal_average` like we discussed earlier, setting these arguments as such will fetch the global values.
 
-```{r climate}
+```{r climate,cache=TRUE}
 climate_avg <- get_power(community = "AG",
                          pars = "PRECTOT",
                          lonlat = "GLOBAL",
@@ -141,6 +144,23 @@ climate_avg %>% datatable(extensions = c('Scroller','FixedColumns'), options = l
 If you require spatial objects to work with, it is simple to convert the resultant data frame from `get_power()` to a spatial object using the `terra::rast(type = "...")`
 
 
+```{r eval=FALSE}
+#downloading the shapefile for the world
+download.file("http://thematicmapping.org/downloads/TM_WORLD_BORDERS_SIMPL-0.3.zip" , destfile="DATA/world_shape_file.zip")
+
+#unzipping the downloaded shapefile
+system("unzip DATA/world_shape_file.zip")
+
+shape <- readOGR( 
+  dsn= paste0(getwd()) , 
+  layer="TM_WORLD_BORDERS_SIMPL-0.3",
+  verbose=FALSE
+)
+
+tidy_shapedf <- tidy(shape, region = "NAME")
+```
+
+
 ```{r climbox}
 climate_box <- split(climate_avg,climate_avg$PARAMETER)
 
@@ -151,28 +171,29 @@ climate_box <- lapply(climate_box, function(x){
 
 climate_box <- lapply(X = climate_box, FUN= as.matrix)
 
-PRECTOT <- rast(climate_box$PRECTOT[,c(1:2,14)],
+PRECTOT <- rast(climate_box$PRECTOT[,c(1:2,15)],
      crs = "+proj=eqc +lat_ts=0 +lat_0=0 +lon_0=0 +x_0=0 +y_0=0 +ellps=WGS84 +datum=WGS84 +units=m +no_defs",
                  type = "xyz")
 
-plot(PRECTOT, plg = list(title = "World rainfall extent"))
+plot(PRECTOT)
 ```
+
 
 ## Using `nasapower` with large geographical areas
 
-```{r eval=FALSE}
+We can plot the rainfall data for large geographical areas using the shapefiles of different countries, raster cubes and finally plotting them together to show the rainfall variation throughout the region.
+
+```{r sf}
 library("rnaturalearth")
 
-MEX <- ne_states(country = "Mexico",
+CHI <- ne_states(country = "China",
                  returnclass = "sf")
 
-CH <- MEX[MEX$name == "Chihuahua",]
-DU <- MEX[MEX$name == "Durango",]
+GA <- CHI[CHI$name == "Gansu",]
+HU <- CHI[CHI$name == "Hubei",]
 ```
 
-```{r eval=FALSE}
-library("ggplot2")
-library("purrr")
+```{r coord}
 r <- rast(xmin = -180,
      xmax = 180,
      ymin = -90,
@@ -181,13 +202,44 @@ r <- rast(xmin = -180,
 
 values(r) <- 1:ncell(r)
 
-CH_coords <- crop(r,CH)
-DU_coords <- crop(r,DU)
+GA_coords <- crop(r,GA)
+HU_coords <- crop(r,HU)
 
-CH_coords <- mask(CH_coords,sf:::as_Spatial(CH))
-plot(CH_coords)
+GA_coords <- mask(GA_coords,vect(GA))
+                  
+plot(GA_coords,main = "Gansu,China")
+```
+
+```{r}
+HU_coords <- mask(HU_coords,vect(HU))
+plot(HU_coords, main = "Hubei,China")
 ```
 
 
+Let us have a look at the monthly wise data fro rainfall throughout the world. This can be done by creating a data frame which holds the names of all the months in a year, a matrix which holds all of the data for each month, and creating a for loop for conversion of each month values into a spatRaster object.
 
+```{r monthwise,out.width=800,out.height=750}
+PREC <- as.matrix(subset(climate_avg, PARAMETER == "PRECTOT")[, -3])
+
+PREC_MONTH <- vector(mode = "list", length = 12)
+names(PREC_MONTH) <- colnames(PREC)[-c(1:2,13)]
+#converting each month into a spatRaster object using the for loop
+
+for (k in colnames(PREC)[-c(1:2,13)]) {
+  PREC_MONTH[[k]] <- rast(PREC[, c("LON","LAT",k)],
+                        crs = "+proj=eqc +lat_ts=0 +lat_0=0 +lon_0=0 +x_0=0 +y_0=0 +ellps=WGS84 +datum=WGS84 +units=m +no_defs",
+                        type = "xyz")
+  
+}
+
+PREC <- c(rast(PREC_MONTH))
+
+plot(PREC)
+```
+
+## References
+
+- `nasapower` package: https://github.com/ropensci/nasapower
+
+- NASAPOWER project: https://power.larc.nasa.gov/
 

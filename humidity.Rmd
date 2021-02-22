@@ -1,0 +1,174 @@
+---
+title: "Humidity"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    number_sections: false
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
+library(tidyverse)
+library(DT)
+library(rgdal)
+library(broom)
+library(terra)
+```
+
+We have already seen a tutorial on how to retrieve the rainfall attribute using the `nasapower` package. Please have a look at the rainfall tutorial [here]() for the general knowledge on how the `nasapower` package and it's functions work. 
+
+We will use the same package to retrieve the relative humidity data for specific countries or for the world. 
+
+```{r loading}
+library(nasapower)
+```
+
+### Fetching daily data for single point:
+
+First let us have a look at how to get the daily data for humidity in agriculture, this can be done using the `get_power()` function with the argument `pars` set to **RH2M** which means **Relative Humidity at 2 meters** and passing the argument **DAILY** to the `temporal_average` argument at only one location.
+   
+```{r getdata}
+data_RH <- get_power(community = "AG",
+          lonlat = c(134.489563,-25.734968),
+          dates = c("2010-09-23","2010-12-23"),
+          temporal_average = "DAILY",
+          pars = "RH2M")
+data_RH %>% datatable(extensions = c('Scroller','FixedColumns'), options = list(
+  deferRender = TRUE,
+  scrollY = 350,
+  scrollX = 350,
+  dom = 't',
+  scroller = TRUE,
+  fixedColumns = list(leftColumns = 3)
+))
+```
+
+
+
+### Fetching daily data for an area:
+
+```{r daily}
+daily_humidity <- get_power(community = "AG",
+          lonlat = c(150.5, -28.5 , 153.5, -25.5),
+          pars = "RH2M",
+          dates = c("2004-09-19","2004-09-29"),
+          temporal_average = "DAILY")
+daily_humidity %>% datatable(extensions = c('Scroller','FixedColumns'), options = list(
+  deferRender = TRUE,
+  scrollY = 350,
+  scrollX = 350,
+  dom = 't',
+  scroller = TRUE,
+  fixedColumns = list(leftColumns = 3)
+))
+```
+
+
+### Fetching Climatology Data:
+
+global data are only available for the climatology `temporal_average` like we discussed earlier, setting these arguments as such will fetch the global values.
+
+```{r climate,cache=TRUE}
+climate_avg_RH <- get_power(community = "AG",
+                         pars = "RH2M",
+                         lonlat = "GLOBAL",
+                         temporal_average = "CLIMATOLOGY"
+)
+
+climate_avg_RH %>% datatable(extensions = c('Scroller','FixedColumns'), options = list(
+  deferRender = TRUE,
+  scrollY = 350,
+  scrollX = 350,
+  dom = 't',
+  scroller = TRUE,
+  fixedColumns = list(leftColumns = 3)
+))
+```
+
+
+## Creating spatial objects from `get_power()`
+
+If you require spatial objects to work with, it is simple to convert the resultant data frame from `get_power()` to a spatial object using the `terra::rast(type = "...")
+
+```{r climbox}
+climate_box <- split(climate_avg_RH,climate_avg_RH$PARAMETER)
+
+climate_box <- lapply(climate_box, function(x){
+  x["PARAMETER"] <- NULL
+  x
+})
+
+climate_box <- lapply(X = climate_box, FUN= as.matrix)
+
+relative_humid <- rast(climate_box$RH2M[,c(1:2,15)],
+     crs = "+proj=eqc +lat_ts=0 +lat_0=0 +lon_0=0 +x_0=0 +y_0=0 +ellps=WGS84 +datum=WGS84 +units=m +no_defs",
+                 type = "xyz")
+
+plot(relative_humid)
+```
+
+
+## Using `nasapower` with large geographical areas
+
+We can plot the relative humidity data for large geographical areas using the shapefiles of different countries, raster cubes and finally plotting them together to show the humidity variation throughout the region. 
+
+```{r sf}
+library("rnaturalearth")
+
+USA <- ne_states(country = "United States of America",
+                 returnclass = "sf")
+
+TX <- USA[USA$name == "Texas",]
+NY <- USA[USA$name == "New York",]
+```
+
+```{r coord}
+rasters <- rast(xmin = -180,
+     xmax = 180,
+     ymin = -90,
+     ymax = 90,
+     resolution = 0.5)
+
+values(rasters) <- 1:ncell(rasters)
+
+TX_coord <- crop(rasters,TX)
+NY_coord <- crop(rasters,NY)
+
+TX_coord <- mask(TX_coord,vect(TX))
+                  
+plot(TX_coord,main = "Texas, USA")
+```
+
+```{r}
+NY_coord <- mask(NY_coord,vect(NY))
+plot(NY_coord, main = "New York,USA")
+```
+
+
+Now let us have a look at the relative humidity monthly data for all the countries in the world: 
+
+```{r month_world,out.height=750,out.width=800}
+RH2M <- as.matrix(subset(climate_avg_RH, PARAMETER == "RH2M")[, -3])
+
+RH2M_MONTH <- vector(mode = "list", length = 13)
+names(RH2M_MONTH) <- colnames(RH2M)[-c(1:2,13)]
+
+#converting each month into a spatRaster object using the for loop
+for (k in colnames(RH2M)[-c(1:2,13)]) {
+  RH2M_MONTH[[k]] <- rast(RH2M[, c("LON","LAT",k)],
+                        crs = "+proj=eqc +lat_ts=0 +lat_0=0 +lon_0=0 +x_0=0 +y_0=0 +ellps=WGS84 +datum=WGS84 +units=m +no_defs",
+                        type = "xyz")
+  
+}
+
+RH2M <- c(rast(RH2M_MONTH))
+
+plot(RH2M)
+```
+
+## References
+
+- `nasapower` package: https://github.com/ropensci/nasapower
+
+- NASAPOWER project: https://power.larc.nasa.gov/

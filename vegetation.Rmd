@@ -57,19 +57,22 @@ Note how the \$bandfullnames define each of the \$bandnames, the \$quality_fulln
 The `MODIStsp()` function provides two ways of downloading data; either through a GUI (interactively) or through an R script (non-interactively). This tutorial will focus on the non-interactive execution.
 
 ```{r eval=FALSE}
+library(MODIStsp)
+spatial_file <- here::here("mongolia_administrative_boundaries_national_polygon/mongolia_administrative_boundaries_national_polygon.shp")
+
 MODIStsp(gui             = FALSE,
          out_folder      = "VegetationData",
          out_folder_mod  = "VegetationData",
          selprod         = "Vegetation_Indexes_16Days_1Km (M*D13A2)",
-         bbox = NULL,
-         bandsel         = c("EVI", "NDVI"), 
-         quality_bandsel = "QA_usef", 
-         indexes_bandsel = "SR", 
+         bandsel         = "NDVI", 
          user            = "mstp_test" ,
          password        = "MSTP_test_01",
          start_date      = "2020.06.01", 
          end_date        = "2020.06.15", 
-         verbose         = FALSE)
+         verbose         = FALSE,
+         spatmeth        = "file",
+         spafile         = spatial_file)
+
 ```
 
 The downloaded files are saved in subfolders within the defined output folder. A seperate subfolder is created for each processed original MODIS layer, Quality Indicator or Spectral Index with an image for each processed date. The images will be named using the following naming convention.
@@ -81,15 +84,15 @@ library(raster)
 library(here)
 library(ggplot2)
 
-NDVI_raster <- raster(here::here("VegetationData/VI_16Days_1Km_v6/NDVI/MOD13A2_NDVI_2020_161.tif"))
 
+NDVI_raster <- raster(here::here("VegetationData/mongolia_administrative_boundaries_national_polygon/VI_16Days_1Km_v6/NDVI/MOD13A2_NDVI_2020_161.tif"))
 # Converting the raster object into a dataframe
 NDVI_df <- as.data.frame(NDVI_raster, xy = TRUE, na.rm = TRUE)
 rownames(NDVI_df) <- c()
 
-ggplot(data = NDVI_df,
-       aes(x=x,y=y)) +
-  geom_raster(aes(fill = MOD13A2_NDVI_2020_161))
+ggplot() +
+  geom_raster(data = NDVI_df, aes(x=x,y=y,fill = MOD13A2_NDVI_2020_161))
+  
 ```
 
 ## References

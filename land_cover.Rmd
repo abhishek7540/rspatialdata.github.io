@@ -1,0 +1,61 @@
+---
+title: "Land Cover"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    number_sections: false
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
+```
+
+```{r install-MODISTools, eval=FALSE}
+install.packages("MODISTools")
+```
+
+
+```{r get-rpoducts}
+library(MODISTools)
+mt_products()
+```
+
+
+```{r eval=FALSE}
+mt_bands(product = "MCD12Q1")
+```
+
+```{r}
+library(tidyverse)
+mt_sites() %>%
+  filter(country == "Nigeria")
+```
+
+
+```{r}
+landcover_au_vic_falls_creek <- mt_subset(product = "MCD12Q1",
+                    band = "LC_Type1",
+                    start = "2004-01-01",
+                    end = "2004-12-30",
+                    km_lr = 20,
+                    km_ab = 20,
+                    site_id = "au_victoria_falls_creek",
+                    internal = TRUE)
+```
+
+
+```{r}
+landcover_au_vic_falls_creek_raster <- mt_to_raster(df = landcover_au_vic_falls_creek)
+
+library(raster)
+landcover_au_vic_falls_creek_df <- as.data.frame(landcover_au_vic_falls_creek_raster, xy = TRUE, na.rm = TRUE)
+rownames(landcover_au_vic_falls_creek_df) <- c()
+landcover_au_vic_falls_creek_df$X2004.01.01 <- as.factor(landcover_au_vic_falls_creek_df$X2004.01.01)
+
+ggplot(data = landcover_au_vic_falls_creek_df,
+       aes(x=x,y=y)) +
+  geom_raster(aes(fill = X2004.01.01))
+```
+
+

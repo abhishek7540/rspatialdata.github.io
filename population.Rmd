@@ -38,7 +38,7 @@ catalogue
 
 Then we simply subset the catalogue for Nigeria (ISO country code NGA) and download the data for the subsetted catalogue selection using the `downloadData()` function.
 Note that WOPR uses [ISO country codes](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-3) to abbreviate country names.
-Note also that `downloadData()` will not download files larger than 100MB by default unless the `maxsize` argument is changed (see `?downloadData`)
+Also note that `downloadData()` will not download files larger than 100MB by default unless the `maxsize` argument is changed (see `?downloadData`)
 
 ```{r, download-pop-data, eval=FALSE}
 # Select files from the catalogue by subsetting the data frame
@@ -115,7 +115,8 @@ library(sf)
 library(ggplot2)
 admin_level2_shape %>%
   ggplot(aes(fill = mean)) +
-  geom_sf()
+  geom_sf() +
+  scale_fill_continuous(name = "Population")
 ```
 
 

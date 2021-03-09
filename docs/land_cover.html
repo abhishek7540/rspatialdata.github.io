@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>Land Cover</title>
+
+<script src="site_libs/header-attrs-2.7/header-attrs.js"></script>
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+<link rel="stylesheet" href="styles.css" type="text/css" />
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.tab('show');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-sm-12 col-md-4 col-lg-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-sm-12 col-md-8 col-lg-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">rspatialdata</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Tutorials
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="admin_boundaries.html">Administrative boundaries</a>
+    </li>
+    <li>
+      <a href="osm.html">Open Street Map data</a>
+    </li>
+    <li>
+      <a href="population.html">Population</a>
+    </li>
+    <li>
+      <a href="elevation.html">Elevation</a>
+    </li>
+    <li>
+      <a href="temperature.html">Temperature</a>
+    </li>
+    <li>
+      <a href="malaria.html">Malaria</a>
+    </li>
+  </ul>
+</li>
+<li>
+  <a href="contributors.html">Contributors</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">Land Cover</h1>
+
+</div>
+
+
+<pre class="r"><code>install.packages(&quot;MODISTools&quot;)</code></pre>
+<pre class="r"><code>library(MODISTools)
+mt_products()</code></pre>
+<pre><code>##         product
+## 1        Daymet
+## 2  ECO4ESIPTJPL
+## 3       ECO4WUE
+## 4       MCD12Q1
+## 5       MCD12Q2
+## 6      MCD15A2H
+## 7      MCD15A3H
+## 8       MCD19A3
+## 9       MCD64A1
+## 10      MOD09A1
+## 11      MOD11A2
+## 12      MOD13Q1
+## 13      MOD14A2
+## 14     MOD15A2H
+## 15      MOD16A2
+## 16     MOD17A2H
+## 17     MOD17A3H
+## 18      MOD21A2
+## 19       MOD44B
+## 20      MYD09A1
+## 21      MYD11A2
+## 22      MYD13Q1
+## 23      MYD14A2
+## 24     MYD15A2H
+## 25      MYD16A2
+## 26     MYD17A2H
+## 27     MYD17A3H
+## 28      MYD21A2
+## 29     SPL4CMDL
+## 30      VNP09A1
+## 31      VNP09H1
+## 32      VNP13A1
+## 33     VNP15A2H
+## 34      VNP21A2
+##                                                                                    description
+## 1              Daily Surface Weather Data (Daymet) on a 1-km Grid for North America, Version 4
+## 2                         ECOSTRESS Evaporative Stress Index PT-JPL (ESI) Daily L4 Global 70 m
+## 3                                    ECOSTRESS Water Use Efficiency (WUE) Daily L4 Global 70 m
+## 4                        MODIS/Terra+Aqua Land Cover Type (LC) Yearly L3 Global 500 m SIN Grid
+## 5                   MODIS/Terra+Aqua Land Cover Dynamics (LCD) Yearly L3 Global 500 m SIN Grid
+## 6             MODIS/Terra+Aqua Leaf Area Index/FPAR (LAI/FPAR)  8-Day L4 Global 500 m SIN Grid
+## 7              MODIS/Terra+Aqua Leaf Area Index/FPAR (LAI/FPAR) 4-Day L4 Global 500 m SIN Grid
+## 8                 MODIS/Terra+Aqua BRDF Model Parameters (MAIAC) 8-Day L3 Global 1 km SIN Grid
+## 9                  MODIS/Terra+Aqua Burned Area (Burned Area) Monthly L3 Global 500 m SIN Grid
+## 10                        MODIS/Terra Surface Reflectance (SREF) 8-Day L3 Global 500m SIN Grid
+## 11     MODIS/Terra Land Surface Temperature and Emissivity (LST) 8-Day L3 Global 1 km SIN Grid
+## 12                    MODIS/Terra Vegetation Indices (NDVI/EVI) 16-Day L3 Global 250m SIN Grid
+## 13                     MODIS/Terra Thermal Anomalies/Fire (Fire) 8-Day L3 Global 1 km SIN Grid
+## 14                  MODIS/Terra Leaf Area Index/FPAR (LAI/FPAR) 8-Day L4 Global 500 m SIN Grid
+## 15                      MODIS/Terra Net Evapotranspiration (ET) 8-Day L4 Global 500 m SIN Grid
+## 16                 MODIS/Terra Gross Primary Productivity (GPP) 8-Day L4 Global 500 m SIN Grid
+## 17                    MODIS/Terra Net Primary Production (NPP) Yearly L4 Global 500 m SIN Grid
+## 18 MODIS/Terra Land Surface Temperature/3-Band Emissivity (LSTE) 8-Day L3 Global 1 km SIN Grid
+## 19              MODIS/Terra Vegetation Continuous Fields (VCF) Yearly L3 Global 250 m SIN Grid
+## 20                         MODIS/Aqua Surface Reflectance (SREF) 8-Day L3 Global 500m SIN Grid
+## 21      MODIS/Aqua Land Surface Temperature and Emissivity (LST) 8-Day L3 Global 1 km SIN Grid
+## 22                     MODIS/Aqua Vegetation Indices (NDVI/EVI) 16-Day L3 Global 250m SIN Grid
+## 23                      MODIS/Aqua Thermal Anomalies/Fire (Fire) 8-Day L3 Global 1 km SIN Grid
+## 24                   MODIS/Aqua Leaf Area Index/FPAR (LAI/FPAR) 8-Day L4 Global 500 m SIN Grid
+## 25                       MODIS/Aqua Net Evapotranspiration (ET) 8-Day L4 Global 500 m SIN Grid
+## 26                  MODIS/Aqua Gross Primary Productivity (GPP) 8-Day L4 Global 500 m SIN Grid
+## 27                     MODIS/Aqua Net Primary Production (NPP) Yearly L4 Global 500 m SIN Grid
+## 28  MODIS/Aqua Land Surface Temperature/3-Band Emissivity (LSTE) 8-Day L3 Global 1 km SIN Grid
+## 29                     SMAP Carbon Net Ecosystem Exchange (NEE) Daily L4 Global 9 km EASE-Grid
+## 30                        VIIRS/S-NPP Surface Reflectance (SREF) 8-Day L3 Global 1 km SIN Grid
+## 31                        VIIRS/S-NPP Surface Reflectance (SREF) 8-Day L3 Global 500m SIN Grid
+## 32                    VIIRS/S-NPP Vegetation Indices (NDVI/EVI) 16-Day L3 Global 500m SIN Grid
+## 33                  VIIRS/S-NPP Leaf Area Index/FPAR (LAI/FPAR) 8-Day L4 Global 500 m SIN Grid
+## 34    VIIRS/S-NPP Land Surface Temperature and Emissivity (LSTE) 8-Day L3 Global 1 km SIN Grid
+##    frequency resolution_meters
+## 1      1 day              1000
+## 2     Varies                70
+## 3     Varies                70
+## 4     1 year               500
+## 5     1 year               500
+## 6      8 day               500
+## 7      4 day               500
+## 8      8 day              1000
+## 9    Monthly               500
+## 10     8 day               500
+## 11     8 day              1000
+## 12    16 day               250
+## 13     8 day              1000
+## 14     8 day               500
+## 15     8 day               500
+## 16     8 day               500
+## 17    1 year               500
+## 18     8 day              1000
+## 19    1 year               250
+## 20     8 day               500
+## 21     8 day              1000
+## 22    16 day               250
+## 23     8 day              1000
+## 24     8 day               500
+## 25     8 day               500
+## 26     8 day               500
+## 27    1 year               500
+## 28     8 day              1000
+## 29     1 day              9000
+## 30     8 day              1000
+## 31     8 day               500
+## 32    16 day               500
+## 33     8 day               500
+## 34     8 day              1000</code></pre>
+<pre class="r"><code>mt_bands(product = &quot;MCD12Q1&quot;)</code></pre>
+<pre class="r"><code>library(tidyverse)
+mt_sites() %&gt;%
+  filter(country == &quot;Nigeria&quot;)</code></pre>
+<pre><code>##                 siteid             sitename   network latitude longitude  state
+## 1      ng_kwara_ilorin      NG Kwara Ilorin      BSRN   8.5333    4.5667  Kwara
+## 2 ng_taraba_ngel_nyaki NG Taraba Ngel Nyaki FORESTGEO   7.0680   11.0566 Taraba
+##   country
+## 1 Nigeria
+## 2 Nigeria</code></pre>
+<pre class="r"><code>landcover_au_vic_falls_creek &lt;- mt_subset(product = &quot;MCD12Q1&quot;,
+                    band = &quot;LC_Type1&quot;,
+                    start = &quot;2004-01-01&quot;,
+                    end = &quot;2004-12-30&quot;,
+                    km_lr = 20,
+                    km_ab = 20,
+                    site_id = &quot;au_victoria_falls_creek&quot;,
+                    internal = TRUE)</code></pre>
+<pre><code>## 
+  |                                                                            
+  |                                                                      |   0%
+  |                                                                            
+  |======================================================================| 100%</code></pre>
+<pre class="r"><code>landcover_au_vic_falls_creek_raster &lt;- mt_to_raster(df = landcover_au_vic_falls_creek)
+
+library(raster)
+landcover_au_vic_falls_creek_df &lt;- as.data.frame(landcover_au_vic_falls_creek_raster, xy = TRUE, na.rm = TRUE)
+rownames(landcover_au_vic_falls_creek_df) &lt;- c()
+landcover_au_vic_falls_creek_df$X2004.01.01 &lt;- as.factor(landcover_au_vic_falls_creek_df$X2004.01.01)
+
+ggplot(data = landcover_au_vic_falls_creek_df,
+       aes(x=x,y=y)) +
+  geom_raster(aes(fill = X2004.01.01))</code></pre>
+<p><img src="land_cover_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

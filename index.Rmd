@@ -9,67 +9,50 @@ Open and reliable data and analytical tools as well as collaborative research ar
 The website is currently in construction and includes tutorials on how to download and visualise administrative boundaries, Open Street Map data, population and malaria data. If you have suggestions about datasets or R packages or would like to contribute, please [get in touch](contributors.html).
 
 
-[Administrative boundaries](admin_boundaries.html)  
-[Open Street Map data](osm.html)  
-[Population](population.html)  
-[Elevation](elevation.html)  
-[Temperature](temperature.html)  
-Rainfall  
-Humidity   
-Vegetation  
-Land cover  
-Air pollution  
-DHS  
-[Malaria](malaria.html)  
-
-<br><br><br>
-
-<center>
+<!---<center>
 ![https://sdgs.un.org/goals](./figures/SDGs.png#center)
 <br>
 https://sdgs.un.org/goals
-</center>
+</center>-->
 
-
-<!---
-[Administrative Boundaries](admin_boundaries.html)  
-[Population](population.html)  
-[Elevation](elevation.html)  
-[Temperature](temperature.html)  
-[Rainfall](rainfall.html)  
-[Humidity](humidity.html)  
-[Vegetation](vegetation.html)  
-[Land Cover](land_cov.html)  
-[Malaria](malaria.html)  
-[DHS](dhs.html)  
-[Air Pollution](air_pollution.html)  
-[Socio-economic](socio_economic.html)  
-[Points of Interest using Open Street Maps](osm.html)
---->
-
-    
-<!---
-        - text: "Population"
-          href: population.html
-        - text: "Elevation"
-          href: elevation.html
-        - text: "Temperature"
-          href: temperature.html
-        - text: "Rainfall"
-          href: rainfall.html
-        - text: "Humidity"
-          href: humidity.html
-        - text: "Vegetation"
-          href: vegetation.html
-        - text: "Land Cover"
-          href: land_cov.html
-        - text: "DHS"
-          href: dhs.html
-        - text: "Mobility"
-          href: mobility.html
-        - text: "Air Pollution"
-          href: air_pollution.html
-        - text: "Socio-economic"
-          href: socio_economic.html
-
---->
+<div class="icon-grid">
+  <div class="row">
+  <div class="col-sm-1"></div>
+  <div class="col-sm-2">
+  <a href="admin_boundaries.html"><img src="figures/admin_boundaries.jpg"></a>
+  </div>
+  <div class="col-sm-2">
+  <a href="osm.html"><img src="figures/osm.jpg"></a>
+  </div>
+  <div class="col-sm-2">
+  <a href="population.html"><img src="figures/population.jpg"></a>
+  </div>
+  <div class="col-sm-2">
+  <a href="elevation.html"><img src="figures/elevation.jpg"></a>
+  </div>
+  <div class="col-sm-2">
+  <a href="temperature.html"><img src="figures/temperature.jpg"></a>
+  </div>
+  <div class="col-sm-1"></div>
+  </div>
+  <div class="row">
+  <div class="col-sm-2">
+  <a href="rainfall.html"><img src="figures/rainfall.jpg"></a>
+  </div>
+  <div class="col-sm-2">
+  <a href="humidity.html"><img src="figures/humidity.jpg"></a>
+  </div>
+  <div class="col-sm-2">
+  <a href="vegetation.html"><img src="figures/vegetation.jpg"></a>
+  </div>
+  <div class="col-sm-2">
+  <a href="land_cover.html"><img src="figures/land_cover.jpg"></a>
+  </div>
+  <div class="col-sm-2">
+  <a href="dhs.html"><img src="figures/dhs.jpg"></a>
+  </div>
+  <div class="col-sm-2">
+  <a href="malaria.html"><img src="figures/malaria.jpg"></a>
+  </div>
+  </div>
+</div>

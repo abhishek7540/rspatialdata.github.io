@@ -43,19 +43,29 @@ The DHS program has published an API that gives access to a number of different 
 
 The function `dhs_data()` interacts with the published set of standard health indicator data calculated by DHS. We can either search for specific indicators, or by querying for indicators.
 
-```{r indicators}
+```{r indicators,eval=TRUE,message=FALSE}
 indicators <- dhs_indicators() #determines the indicators
 
 # Take a look at the first 7 values within the indicator list
 indicators[order(indicators$IndicatorId),][1:7, c("IndicatorId","Definition")]
 ```
+
+```{r echo=FALSE,eval=FALSE}
+knitr::include_graphics(here::here("images","indicator.png"))
+```
+
 As there are many indicators that can be used for querying and you cannot remember every one of them, using tags for searching will be much easier. The DHS tags the indicators depending on what areas of demography and health they relate to. This can be done by using the `dhs_tags()` function. 
 
-```{r tags}
+```{r tags,eval=TRUE}
 tags <- dhs_tags() #search by tags 
 #search for 'HIV' within the column tagName using the grepl function
 tags[grepl("Malaria",tags$TagName),]
 ```
+
+```{r echo=FALSE,eval=FALSE}
+knitr::include_graphics(here::here("images","tags.png"))
+```
+
 
 Now that we have the tag we are looking for analysis "Malaria", next we can concentrate on the geographic regions we are looking to work on , here we have taken as example for *Rwanda* and *Tanzania* in the year 2005 by using a specific study of tags , in our case we chose, `TagId` 79:
 
@@ -82,7 +92,7 @@ resp <- dhs_data(indicatorIds = "ML_IRSM_H_IIR", surveyYearStart = 2005, breakdo
 
 Now let us visualise what we have from the above code, we can do so by creating a tibble of all the regions we are interested in and plotting it using the `geom_point()` function to see the number of households that have incorporated the ITN's to help reduce malaria. 
 
-```{r regions}
+```{r regions,eval=TRUE,fig.align='center'}
 #regions we are interested in
 country <- c("Ghana","Ethiopia","Tanzania","Zambia","Rwanda","Mali") 
 
@@ -96,13 +106,21 @@ ggplot(resp[resp$CountryName %in% country,],
   facet_wrap(~CountryName)
 ```
 
+```{r echo=FALSE,eval=FALSE}
+knitr::include_graphics(here::here("images","graph.png"))
+```
+
 ## Determine datasets and their surveys for analysis
 
 Let's say we want to get all the DHS survey data for Rwanda and Tanzania for the malaria care, We begin with the DHS API interaction to determine our datasets.
 
-```{r survey}
+```{r survey,eval=TRUE}
 charac <- dhs_survey_characteristics()
 charac[grepl("Malaria",charac$SurveyCharacteristicName),] 
+```
+
+```{r echo=FALSE,eval=FALSE}
+knitr::include_graphics(here::here("images","charac.png"))
 ```
 
 The DHS allows for countries to be filtered using their *countryIds*, which is one of the arguments in the `dhs_survey()` functions. To have a look at the different *countryIds* we have a function to find the same.
@@ -121,7 +139,7 @@ countryid %>% datatable(extensions = c('Scroller','FixedColumns'), options = lis
 ```
 
 
-```{r survey-data}
+```{r survey-data,eval=TRUE}
 # finding all the surveys available for our search criteria
 survey <- dhs_surveys(surveyCharacteristicIds = 57,
                      countryIds = c("RW","TZ"),
@@ -139,6 +157,10 @@ datasets %>% datatable(extensions = c('Scroller','FixedColumns'), options = list
   dom = 't',
   scroller = TRUE
 ))
+```
+
+```{r echo=FALSE,eval=FALSE}
+knitr::include_graphics(here::here("images","datasets.png"))
 ```
 
 Recommended  file formats which can be downloaded are spss (.sav), which can be given as an argument as `fileFormat = "SV"` or the other option would be flat file format (.dat), which can be given as `fileFormat = "FL"`. The flat files are quicker but some datasets cannot be read in correctly, whereas the .sav files are slower to read but so far no datasets have been found that do not read in correctly.   
@@ -180,7 +202,7 @@ Let us create the client side for our downloaded datasets, where the client can 
 The `get_rdhs_config()` function return the config being used by rdhs at the current R session. It will return be a data.frame  with class "rdhs_config" or will be NULL if this has not been set up yet. 
 
 
-```{r client}
+```{r client,eval=FALSE}
 #authenticate_dhs(config)
 configuration <- get_rdhs_config()
 # the configurations are then assigned to the client object to invoke it later for all the functions
@@ -188,10 +210,18 @@ client <- client_dhs(configuration)
 client
 ```
 
+```{r echo=FALSE}
+knitr::include_graphics(here::here("images","client.png"))
+```
+
 Let us add all the downloadable datasets into one object called downloads using the `get_datasets()` function , which is a data frame which holds the value of whether the files are accessible for the credentials provided or not. 
 
-```{r data-down}
+```{r data-down,eval=FALSE}
 downloads <- get_datasets(datasets$FileName)
+```
+
+```{r echo=FALSE,fig.height = 50,fig.width = 50}
+knitr::include_graphics(here::here("images","downloads.png"))
 ```
 
 
@@ -202,14 +232,13 @@ We can now examine what it is we have actually downloaded, by reading in one of 
 
 NOTE: to know which file holds what kind of information, the nomenclature directory is given in [here](https://dhsprogram.com/publications/publication-dhsg4-dhs-questionnaires-and-manuals.cfm)
 
-```{r read-data}
+```{r read-data,eval=FALSE}
 data_downloaded <- readRDS(downloads$RWBR70FL)
 ```
 
-
 The dataset returned here contains all the survey questions within the dataset. The dataset is by default stored as a **labelled** class from the [**haven package**](https://github.com/tidyverse/haven). This package preserves the original semantics of the data, even the special missing values are also preserved.
 
-```{r}
+```{r eval=FALSE}
 data_downloaded %>% datatable(extensions = c('Scroller','FixedColumns'), options = list(
   deferRender = TRUE,
   scrollY = 350,
@@ -219,10 +248,14 @@ data_downloaded %>% datatable(extensions = c('Scroller','FixedColumns'), options
 ))
 ```
 
+```{r echo=FALSE}
+knitr::include_graphics(here::here("images","data-downloaded.png"))
+```
+
 If we want to get the metadata for this dataset, we can use the `get_variable_labels()` function, which returns what survey question each of the variables in the dataset are referring to.
 
 
-```{r}
+```{r eval=FALSE}
 get_variable_labels(data_downloaded) %>% datatable(extensions = c('Scroller','FixedColumns'), options = list(
   deferRender = TRUE,
   scrollY = 350,
@@ -230,6 +263,10 @@ get_variable_labels(data_downloaded) %>% datatable(extensions = c('Scroller','Fi
   dom = 't',
   scroller = TRUE
 ))
+```
+
+```{r echo=FALSE}
+knitr::include_graphics(here::here("images","desc.png"))
 ```
 
 The downloaded dataset in our example is that of the birth history in the country of Rwanda, the different column names or variables description is found in the table above which tells the decoded version of all the headers within the dataset.
@@ -261,7 +298,7 @@ client$survey_variables(datasets$FileName,search_terms = "birth") %>%
 
 Another function that is available for use in this package `rdhs` is `extract_dhs()`, it extracts data from your downloaded datasets according to a data.frame of requested survey variables or survey definitions.
 
-```{r extract}
+```{r extract,eval=TRUE}
 datasets <- dhs_datasets(surveyIds = survey$SurveyId, fileFormat = "FL", fileType = "PR")
 
 data_down <- get_datasets(datasets$FileName)
@@ -271,22 +308,31 @@ extract <- extract_dhs(questions, add_geo = FALSE)
 
 Let us first extract the desired variables from the Tanzania dataset of household surveys, in our case it is "share facilities with other households", "observed place for hand washing", "household selected for hemoglobin measurements" and we are storing them into the ques object.
 
-```{r}
+```{r eval=FALSE}
 ques <- search_variables(datasets$FileName,variables = c("hv225","hv230a","hv042"))
 
 extract2 <- extract_dhs(ques,add_geo = FALSE)
 
 head(extract2$TZPR7BFL)
 ```
+
+```{r echo=FALSE}
+knitr::include_graphics(here::here("images","extra2TZ.png"))
+```
+
 And now lets do the same for Rwanda as well.
 
-```{r}
+```{r eval=FALSE}
 head(extract2$RWPR70FL)
+```
+
+```{r echo=FALSE}
+knitr::include_graphics(here::here("images","extra2RW.png"))
 ```
 
 Let us combine both the regions specific factor data into one dataframe and this can done by a function which helps combine two dataframes for further analysis , `rbind_labelled()`. 
 
-```{r combine}
+```{r combine,eval=FALSE}
 comb_extract <- rbind_labelled(extract2)
 comb_extract %>% datatable(extensions = c('Scroller','FixedColumns'), options = list(
   deferRender = TRUE,
@@ -297,6 +343,10 @@ comb_extract %>% datatable(extensions = c('Scroller','FixedColumns'), options = 
 ))
 ```
 
+```{r echo=FALSE}
+knitr::include_graphics(here::here("images","combined.png"))
+```
+  
 
 
 ## References

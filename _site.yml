@@ -21,6 +21,10 @@ navbar:
           href: malaria.html
         - text: "DHS"
           href: dhs.html
+        - text: "Rainfall"
+          href: rainfall.html
+        - text: "Humidity"
+          href: humidity.html
     - text: "Contributors"
       href: contributors.html
 output:

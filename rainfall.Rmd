@@ -11,10 +11,10 @@ output:
 knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
 library(tidyverse)
 library(DT)
-library(rgdal)
-library(broom)
 library(terra)
-library(ggspatial)
+library(rnaturalearth)
+library(viridis)
+library(rgeoboundaries)
 ```
 
 # `nasapower` package
@@ -160,22 +160,43 @@ shape <- readOGR(
 tidy_shapedf <- tidy(shape, region = "NAME")
 ```
 
+```{r eval=FALSE}
+shapefile <- readOGR(dsn = paste0(getwd()),
+                     layer = "ne_10m_admin_0_boundary_lines_land",
+                     verbose = FALSE)
+```
+
+
 
 ```{r climbox}
+#getting the shapefiles for the world 
+map <- ne_countries(returnclass = "sf")
+
 climate_box <- split(climate_avg,climate_avg$PARAMETER)
 
 climate_box <- lapply(climate_box, function(x){
   x["PARAMETER"] <- NULL
   x
 })
-
 climate_box <- lapply(X = climate_box, FUN= as.matrix)
 
+#retrieving the rainfall(precipitation) data using the above made climate_box function
 PRECTOT <- rast(climate_box$PRECTOT[,c(1:2,15)],
      crs = "+proj=eqc +lat_ts=0 +lat_0=0 +lon_0=0 +x_0=0 +y_0=0 +ellps=WGS84 +datum=WGS84 +units=m +no_defs",
                  type = "xyz")
 
-plot(PRECTOT)
+#converting above raster object into a dataframe for mapping 
+PRECTOT_df <- as.data.frame(PRECTOT, xy = TRUE, na.rm = TRUE)
+rownames(PRECTOT_df) <- c()
+
+#plotting the graph
+ggplot() + 
+  geom_raster(data = PRECTOT_df, aes(x = x, y = y, fill = ANN)) +
+  geom_sf(data = map, inherit.aes = FALSE, fill = NA) + 
+  scale_fill_viridis()+
+  labs(title = "Rainfall in inches",
+       fill = "Annual Rainfall",
+       subtitle = "Annual rainfall at various parts of the world")
 ```
 
 
@@ -185,34 +206,62 @@ We can plot the rainfall data for large geographical areas using the shapefiles 
 
 ```{r sf}
 library("rnaturalearth")
-
+#getting boundary values for China
 CHI <- ne_states(country = "China",
                  returnclass = "sf")
 
+#getting individual administrative boundaries 
 GA <- CHI[CHI$name == "Gansu",]
-HU <- CHI[CHI$name == "Hubei",]
+XI <- CHI[CHI$name == "Xinjiang",]
 ```
 
 ```{r coord}
+#creating a raster object
 r <- rast(xmin = -180,
      xmax = 180,
      ymin = -90,
      ymax = 90,
      resolution = 0.5)
-
+#defininf the cell structure 
 values(r) <- 1:ncell(r)
 
+#retrieving only the coordinates from the GA & XI tables 
 GA_coords <- crop(r,GA)
-HU_coords <- crop(r,HU)
+XI_coords <- crop(r,XI)
 
+#getting the coordinated for the first administrative boundary
 GA_coords <- mask(GA_coords,vect(GA))
-                  
-plot(GA_coords,main = "Gansu,China")
+
+#converting the coordinated into a dataframe with x and y values to map
+GA_df <- as.data.frame(GA_coords, xy = TRUE, na.rm = TRUE)
+rownames(GA_df) <- c()
+
+#getting the china administrative boundaries shapefile
+gansu_map <- geoboundaries("China","adm1")
+
+ggplot() + 
+  geom_raster(data = GA_df, aes(x = x, y = y, fill = lyr.1)) +
+  geom_sf(data = gansu_map, inherit.aes = FALSE, fill = NA) + 
+  scale_fill_viridis()+
+  theme_minimal()+
+  labs(title = "Rainfall in Gansu, China", fill = "Rainfall")
 ```
 
 ```{r}
-HU_coords <- mask(HU_coords,vect(HU))
-plot(HU_coords, main = "Hubei,China")
+#getting the coordinated for the first administrative boundary
+XI_coords <- mask(XI_coords,vect(XI))
+
+#converting the coordinated into a dataframe with x and y values to map
+XI_df <- as.data.frame(XI_coords, xy = TRUE, na.rm = TRUE)
+rownames(XI_df) <- c()
+
+#plotting them all on the map
+ggplot() + 
+  geom_raster(data = XI_df, aes(x = x, y = y, fill = lyr.1)) +
+  geom_sf(data = gansu_map, inherit.aes = FALSE, fill = NA) + 
+  scale_fill_viridis()+
+  theme_minimal()+
+  labs(title = "Rainfall in Xinjiang, China", fill = "Rainfall")
 ```
 
 
@@ -233,7 +282,6 @@ for (k in colnames(PREC)[-c(1:2,13)]) {
 }
 
 PREC <- c(rast(PREC_MONTH))
-
 plot(PREC)
 ```
 

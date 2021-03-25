@@ -37,7 +37,7 @@ https://sdgs.un.org/goals
   </div>
   <div class="row">
   <div class="col-sm-2">
-  <a href=#><img src="figures/rainfall.jpg"></a>
+  <a href="rainfall.html"><img src="figures/rainfall.jpg"></a>
   </div>
   <div class="col-sm-2">
   <a href="humidity.html"><img src="figures/humidity.jpg"></a>
@@ -49,7 +49,7 @@ https://sdgs.un.org/goals
   <a href=#><img src="figures/land_cover.jpg"></a>
   </div>
   <div class="col-sm-2">
-  <a href=#><img src="figures/dhs.jpg"></a>
+  <a href="dhs.html"><img src="figures/dhs.jpg"></a>
   </div>
   <div class="col-sm-2">
   <a href="malaria.html"><img src="figures/malaria.jpg"></a>

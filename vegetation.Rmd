@@ -226,6 +226,7 @@ ggplot() +
        x = "Longitude",
        y = "Latitude")
 ```
+
 Visualising NDVI in Mongolia using `leaflet`
 
 ```{r mongolia-example-leaflet}

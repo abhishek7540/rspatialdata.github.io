@@ -25,6 +25,8 @@ navbar:
           href: rainfall.html
         - text: "Humidity"
           href: humidity.html
+        - text: "Vegetation"
+          href: vegetation.html
     - text: "Contributors"
       href: contributors.html
 output:

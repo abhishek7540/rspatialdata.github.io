@@ -125,7 +125,7 @@ lagos_hospitals$osm_polygons
 ```
 
 
-## Visualising queried data with `ggplot2` and `ggmap`
+# Visualising queried data with `ggplot2` and `ggmap`
 
 We can visualise the retrieved data about hospitals in Lagos using the `ggplot2` package. We can easily visualise simple feature objects using the `geom_sf()` function of `ggplot2`.
 
@@ -161,7 +161,7 @@ ggmap(lagos_map) +
 ```
 
 
-## Examples
+# Examples
 
 The following is a complete example of using the `osmdata` package to retrieve data of hospitals in Lagos and `ggmap` to visualise them.
 
@@ -261,7 +261,7 @@ leaflet() %>%
 
 
 
-## References
+# References
 
 - `osmdata` repository : https://github.com/ropensci/osmdata  
 - `osmdata` package vignette : https://cran.r-project.org/web/packages/osmdata/vignettes/osmdata.html

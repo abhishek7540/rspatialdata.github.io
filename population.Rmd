@@ -51,7 +51,7 @@ selection <- subset(catalogue,
 downloadData(selection)
 ```
 
-## Understanding the downloaded data
+# Understanding the downloaded data
 
 The download will create a folder named `./wopr` in your R working directory for the downloaded files, and a spreadsheet with information on the downloaded files will be available at `./wopr/wopr_catalogue.csv`.
 Since we downloaded the population estimates of Nigeria(NGA), zipped data files will be available at `./wopr/NGA/population/v1.2` which will then have to be manually unzipped.
@@ -90,7 +90,7 @@ working directory
 The unzipped folder (at `./wopr/NGA/population/v1.2/NGA_population_v1_2_admin`) will contain multiple `.csv` files and `.shp` files containing data on multiple administrative levels of Nigeria, which we will use to visualise the population.
 The `.csv` files contain a summary of the distributions of the population estimates, while the `.shp` files contain vector geospatial data for the respective administrative divisions.
 
-## Population of different administrative levels of Nigeria
+# Population of different administrative levels of Nigeria
 
 We use the `sf` package to read in the downloaded shapefiles into R.
 We also use the `here` package to get file paths to the working directory, so that we can simply use relative paths to import files placed within the working directory.
@@ -120,9 +120,9 @@ admin_level2_shape %>%
 ```
 
 
-## Examples
+# Examples
 
-### Choropleth Maps
+## Choropleth Maps
 
 One of the most common methods of visualising population is through **Choropleth maps** - which is simply a map with divided geographical areas colored in proportion to a specific variable.
 
@@ -200,7 +200,7 @@ admin_level2_shape %>% leaflet() %>%
 
 A downside of choropleth maps is that geographical areas which are bigger in size tend to have a bigger weight on the map, and creates a bias towards that geographical area. To prevent this bias, we can use cartograms.
 
-### Cartograms
+## Cartograms
 
 Another method that can be used to visualise population is by using a **cartogram**. A cartogram is a map with its geographical regions distorted based on an alternate variable. In a cartogram the area of the geographical regions will be inflated or deflated according to the numeric value of the variable it's based on.
 
@@ -235,7 +235,7 @@ ggplot() +
 
 ```
 
-## References
+# References
 
 - `wopr` repository: https://github.com/wpgp/wopr  
 - `ggplot2` package: https://ggplot2.tidyverse.org/

@@ -84,7 +84,7 @@ ggplot(data = nigeria_chad_admlvl2_boundaries) +
   geom_sf()
 ```
 
-## Understanding the downloaded data
+# Understanding the downloaded data
 
 If we print out the downloaded administrative boundary of Nigeria, we will see that the downloaded boundary is a simple feature collection with 1 feature and 5 fields.
 A feature is thought of as a single object, Nigeria in this case. The fields are thought of as the geometrical attributes included about each feature; `shapeName`, `shapeISO`, `shapeID`, `shapeGroup` and `shapeType` in the above object.
@@ -125,7 +125,7 @@ ggplot(data = nigeria_chad_boundaries) +
 
 
 
-## Examples
+# Examples
 
 The following is an example on how to use the `rgeoboundaries` package to download administrative boundaries and `ggplot2` to visualise them.
 
@@ -175,41 +175,9 @@ nigeria_chad_admlvl1_boundaries %>% leaflet() %>%
   addPolygons(label = nigeria_chad_admlvl1_boundaries$shapeName)
 
 ```
-<!---
-
-# When do we want to use `rnaturalearth` and when rgeoboundaries?
-
-### Using the `rnaturalearth` package
-
-The `rnaturalearth` package is an alternative to the `rgeoboundaries` package, and also provides [Natural Earth](https://www.naturalearthdata.com/) vector data commonly used in world mapping.
-The following example briefly runs through how we can use the `rnaturalearth` alternatively to download and visualise administrative boundaries.
-
-```{r rnaturalearth-example}
-#install.packages("rnaturalearth")
-library(rnaturalearth)
-library(ggplot2)
-
-nigeria_chad_rnaturalearth <- ne_countries(country = c('nigeria','chad'), returnclass='sf')
-ggplot(data = nigeria_chad_rnaturalearth) +
-  geom_sf() +
-  geom_sf_label(aes(label = sovereignt)) +
-  xlab("Longitude") +
-  ylab("Latitude") +
-  ggtitle("Country boundaries")
-
-nigeria_chad_rnaturalearth_admlvl1 <- ne_states(country = c('nigeria','chad'), returnclass='sf')
-ggplot(data = nigeria_chad_rnaturalearth_admlvl1) +
-  geom_sf() +
-  ggtitle("Administrative Level 1 boundaries")
-```
-
-- The `rnaturalearth` repository : https://github.com/ropensci/rnaturalearth  
 
 
---->
-
-
-## References
+# References
 
 - `rgeoboundaries` repository: https://github.com/wmgeolab/rgeoboundaries  
 - `ggplot2` package: https://ggplot2.tidyverse.org/

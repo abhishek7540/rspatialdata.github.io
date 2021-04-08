@@ -99,11 +99,6 @@ MODIStsp(gui             = FALSE,
          out_format      = "GTiff")
 ```
 
-
-Here we note that the NDVI index is generated at 16-day composite eight days apart.
-
-
-
 ## Understanding the downloaded data
 
 The downloaded files are saved in subfolders within the defined output folder.
@@ -116,7 +111,7 @@ A separate subfolder is created for each processed original MODIS layer, Quality
 
 The following example uses the `geom_raster()` function from the `ggplot2` package to visualise the downloaded NDVI (Normalized Difference Vegetation Index) of Mongolia.
 
-```{r}
+```{r visualise-data}
 # install.packages(c("rgeoboundaries", "sf", "raster", "here", "ggplot2", "viridis"))
 library(rgeoboundaries)
 library(sf)
@@ -262,3 +257,5 @@ leaflet() %>%
 - `MODIS` website: https://modis.gsfc.nasa.gov/
 
 - `MODIStsp` vignette: https://cran.r-project.org/web/packages/MODIStsp/vignettes/MODIStsp.html
+
+- `MODIStsp vegetation index` data product page: https://modis.gsfc.nasa.gov/data/dataprod/mod13.php

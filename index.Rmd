@@ -39,7 +39,7 @@ The website is currently in construction and includes tutorials on how to downlo
   <a href="vegetation.html"><img src="figures/vegetation.jpg"></a>
   </div>
   <div class="col-sm-2">
-  <a href=#><img src="figures/land_cover.jpg"></a>
+  <a href="land_cover.html"><img src="figures/land_cover.jpg"></a>
   </div>
   <div class="col-sm-2">
   <a href="dhs.html"><img src="figures/dhs.jpg"></a>

@@ -43,56 +43,73 @@ The DHS program has published an API that gives access to a number of different 
 
 The function `dhs_data()` interacts with the published set of standard health indicator data calculated by DHS. We can either search for specific indicators, or by querying for indicators.
 
-```{r indicators,eval=TRUE,message=FALSE}
+```{r indicators,eval=FALSE}
 indicators <- dhs_indicators() #determines the indicators
 
 # Take a look at the first 7 values within the indicator list
-indicators[order(indicators$IndicatorId),][1:7, c("IndicatorId","Definition")]
+p1 <- indicators[order(indicators$IndicatorId),][1:7, c("IndicatorId","Definition")] 
 ```
 
-```{r echo=FALSE,eval=FALSE}
-knitr::include_graphics(here::here("images","indicator.png"))
+```{r out.width =700,out.height =190,echo = FALSE,fig.align = 'center'}
+knitr::include_graphics(here::here("images","indicators.png"))
 ```
+
 
 As there are many indicators that can be used for querying and you cannot remember every one of them, using tags for searching will be much easier. The DHS tags the indicators depending on what areas of demography and health they relate to. This can be done by using the `dhs_tags()` function. 
 
-```{r tags,eval=TRUE}
+```{r tags, eval=FALSE}
 tags <- dhs_tags() #search by tags 
 #search for 'HIV' within the column tagName using the grepl function
-tags[grepl("Malaria",tags$TagName),]
+t1 <- tags[grepl("Malaria",tags$TagName),]
 ```
 
-```{r echo=FALSE,eval=FALSE}
-knitr::include_graphics(here::here("images","tags.png"))
+The available tags for analysis:
+
+```{r out.width =600,out.height =420,echo = FALSE,fig.align = 'center'}
+knitr::include_graphics(here::here("images","tags_all.png"))
 ```
 
+The chosen tag word for analysis:
+
+```{r out.width =320,out.height =90,echo = FALSE,fig.align = 'left'}
+knitr::include_graphics(here::here("images","chosen_tags.png"))
+```
 
 Now that we have the tag we are looking for analysis "Malaria", next we can concentrate on the geographic regions we are looking to work on , here we have taken as example for *Rwanda* and *Tanzania* in the year 2005 by using a specific study of tags , in our case we chose, `TagId` 79:
 
-```{r country-data}
+```{r country-data, eval=FALSE}
 data_BT <- dhs_data(tagIds = 79,countryIds = c("RW","TZ"),breakdown = "subnational",surveyYearStart = 2015)
 
 # displaying the first 5 outputs for tanzania and brazil in the year 2005 for HIV attitudes
 data_BT %>% datatable(extensions = c('Scroller','FixedColumns'), options = list(
   deferRender = TRUE,
   scrollY = 350,
-  scrollX = 350,
+  #scrollX = 350,
   dom = 't',
   scroller = TRUE,
   fixedColumns = list(leftColumns = 3)
 ))
 ```
 
+```{r out.width =900,out.height =350,echo = FALSE,fig.align = 'center'}
+knitr::include_graphics(here::here("images","capture1.png"))
+```
+
 You can also use the [DHS STATcompiler](https://www.statcompiler.com/en/) for a click and collect datasets. It is easier to use the `rdhs` API interaction to find out about the data for multiple countries an their breakdowns using the `dhs_data()` function.
 
-```{r indicator-data}
+```{r indicator-data,eval=FALSE}
 #finding the data for Households with at least one insecticide treated net (ITN) and in the year 2005 by regions(subnational)
-resp <- dhs_data(indicatorIds = "ML_IRSM_H_IIR", surveyYearStart = 2005, breakdown = "subnational")
+resp <- dhs_data(indicatorIds = "ML_IRSM_H_IIR", surveyYearStart = 2005,breakdown = "subnational")
+```
+
+
+```{r out.width =800,out.height =350,echo = FALSE,fig.align = 'center'}
+knitr::include_graphics(here::here("images","indicators_dat.png"))
 ```
 
 Now let us visualise what we have from the above code, we can do so by creating a tibble of all the regions we are interested in and plotting it using the `geom_point()` function to see the number of households that have incorporated the ITN's to help reduce malaria. 
 
-```{r regions,eval=TRUE,fig.align='center'}
+```{r regions,eval=FALSE}
 #regions we are interested in
 country <- c("Ghana","Ethiopia","Tanzania","Zambia","Rwanda","Mali") 
 
@@ -102,30 +119,31 @@ ggplot(resp[resp$CountryName %in% country,],
            color = CountryName)) + 
   geom_point()+
   geom_smooth(method = "lm") +
-  labs(y = "Households with at least one insecticide treated net (ITN)", color = "Country")+
+  labs(y = "Households with at least one ins ecticide treated net (ITN)", color = "Country")+
   facet_wrap(~CountryName)
 ```
 
-```{r echo=FALSE,eval=FALSE}
+```{r out.width =800,out.height =350,echo = FALSE,fig.align = 'center'}
 knitr::include_graphics(here::here("images","graph.png"))
 ```
+
 
 ## Determine datasets and their surveys for analysis
 
 Let's say we want to get all the DHS survey data for Rwanda and Tanzania for the malaria care, We begin with the DHS API interaction to determine our datasets.
 
-```{r survey,eval=TRUE}
+```{r survey,eval=FALSE}
 charac <- dhs_survey_characteristics()
 charac[grepl("Malaria",charac$SurveyCharacteristicName),] 
 ```
 
-```{r echo=FALSE,eval=FALSE}
-knitr::include_graphics(here::here("images","charac.png"))
+```{r out.width =500,out.height =190,echo = FALSE,fig.align = 'left'}
+knitr::include_graphics(here::here("images","survey_charac.png"))
 ```
 
 The DHS allows for countries to be filtered using their *countryIds*, which is one of the arguments in the `dhs_survey()` functions. To have a look at the different *countryIds* we have a function to find the same.
 
-```{r countryid}
+```{r countryid,eval=FALSE}
 countryid <- dhs_countries(returnFields = c("CountryName","DHS_CountryCode"))
 
 countryid %>% datatable(extensions = c('Scroller','FixedColumns'), options = list(
@@ -139,7 +157,12 @@ countryid %>% datatable(extensions = c('Scroller','FixedColumns'), options = lis
 ```
 
 
-```{r survey-data,eval=TRUE}
+```{r out.width =490,out.height =250,echo = FALSE,fig.align = 'left'}
+knitr::include_graphics(here::here("images","countryid.png"))
+```
+
+
+```{r survey-data,eval=FALSE}
 # finding all the surveys available for our search criteria
 survey <- dhs_surveys(surveyCharacteristicIds = 57,
                      countryIds = c("RW","TZ"),
@@ -159,7 +182,8 @@ datasets %>% datatable(extensions = c('Scroller','FixedColumns'), options = list
 ))
 ```
 
-```{r echo=FALSE,eval=FALSE}
+
+```{r out.width =860,out.height =340,echo = FALSE,fig.align = 'center'}
 knitr::include_graphics(here::here("images","datasets.png"))
 ```
 
@@ -210,7 +234,8 @@ client <- client_dhs(configuration)
 client
 ```
 
-```{r echo=FALSE}
+
+```{r out.width =800,out.height =350,echo = FALSE,fig.align = 'center'}
 knitr::include_graphics(here::here("images","client.png"))
 ```
 
@@ -220,10 +245,9 @@ Let us add all the downloadable datasets into one object called downloads using 
 downloads <- get_datasets(datasets$FileName)
 ```
 
-```{r echo=FALSE,fig.height = 50,fig.width = 50}
+```{r out.width =800,out.height =350,echo = FALSE,fig.align = 'center'}
 knitr::include_graphics(here::here("images","downloads.png"))
 ```
-
 
 ## Loading datasets and associating its metadata into R
 
@@ -248,9 +272,10 @@ data_downloaded %>% datatable(extensions = c('Scroller','FixedColumns'), options
 ))
 ```
 
-```{r echo=FALSE}
+```{r out.width =950,out.height =320,echo = FALSE,fig.align = 'center'}
 knitr::include_graphics(here::here("images","data-downloaded.png"))
 ```
+
 
 If we want to get the metadata for this dataset, we can use the `get_variable_labels()` function, which returns what survey question each of the variables in the dataset are referring to.
 
@@ -263,10 +288,6 @@ get_variable_labels(data_downloaded) %>% datatable(extensions = c('Scroller','Fi
   dom = 't',
   scroller = TRUE
 ))
-```
-
-```{r echo=FALSE}
-knitr::include_graphics(here::here("images","desc.png"))
 ```
 
 The downloaded dataset in our example is that of the birth history in the country of Rwanda, the different column names or variables description is found in the table above which tells the decoded version of all the headers within the dataset.
@@ -282,23 +303,10 @@ The default behavior for the function is to download the datasets, read them in 
 
 - `get_datasets(download.options = "both")`: both the zip is downloaded as well as the read in rds and saved.
 
-Now let us try querying for a particular search terms or survey variables, and they can be done thus:
-
-
-```{r eval=FALSE}
-client$survey_variables(datasets$FileName,search_terms = "birth") %>% 
-  datatable(extensions = c('Scroller','FixedColumns'), options = list(
-  deferRender = TRUE,
-  #scrollY = 350,
-  scrollX = 350,
-  dom = 't',
-  scroller = TRUE
-))
-```
 
 Another function that is available for use in this package `rdhs` is `extract_dhs()`, it extracts data from your downloaded datasets according to a data.frame of requested survey variables or survey definitions.
 
-```{r extract,eval=TRUE}
+```{r extract,eval=FALSE}
 datasets <- dhs_datasets(surveyIds = survey$SurveyId, fileFormat = "FL", fileType = "PR")
 
 data_down <- get_datasets(datasets$FileName)
@@ -313,22 +321,24 @@ ques <- search_variables(datasets$FileName,variables = c("hv225","hv230a","hv042
 
 extract2 <- extract_dhs(ques,add_geo = FALSE)
 
-head(extract2$TZPR7BFL)
-```
-
-```{r echo=FALSE}
-knitr::include_graphics(here::here("images","extra2TZ.png"))
+extra2 <- head(extract2$TZPR7BFL)
 ```
 
 And now lets do the same for Rwanda as well.
 
-```{r eval=FALSE}
-head(extract2$RWPR70FL)
+```{r out.width =800,out.height =240,echo = FALSE,fig.align = 'center'}
+knitr::include_graphics(here::here("images","extra2TZ.png"))
 ```
 
-```{r echo=FALSE}
+
+```{r eval=FALSE}
+extra2RW <- head(extract2$RWPR70FL)
+```
+
+```{r out.width =800,out.height =240,echo = FALSE,fig.align = 'center'}
 knitr::include_graphics(here::here("images","extra2RW.png"))
 ```
+
 
 Let us combine both the regions specific factor data into one dataframe and this can done by a function which helps combine two dataframes for further analysis , `rbind_labelled()`. 
 
@@ -342,11 +352,10 @@ comb_extract %>% datatable(extensions = c('Scroller','FixedColumns'), options = 
   scroller = TRUE
 ))
 ```
-
-```{r echo=FALSE}
+  
+```{r out.width =810,out.height =250,echo = FALSE,fig.align = 'center'}
 knitr::include_graphics(here::here("images","combined.png"))
 ```
-  
 
 
 ## References

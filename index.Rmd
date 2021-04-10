@@ -38,7 +38,7 @@ pagetitle: "rspatialdata"
   <a href="land_cover.html"><img src="figures/land_cover.jpg"></a>
   </div>
   <div class="col-sm-2">
-  <a href="dhs.html"><img src="figures/dhs.jpg"></a>
+  <a href="dhs-data.html"><img src="figures/dhs.jpg"></a>
   </div>
   <div class="col-sm-2">
   <a href="malaria.html"><img src="figures/malaria.jpg"></a>

@@ -26,7 +26,7 @@ navbar:
         - text: "Land Cover"
           href: land_cover.html
         - text: "DHS"
-          href: dhs.html
+          href: dhs-data.html
         - text: "Malaria"
           href: malaria.html
     - text: "Contributors"

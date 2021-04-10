@@ -17,7 +17,7 @@ library(viridis)
 library(rgeoboundaries)
 ```
 
-We have already seen a tutorial on how to retrieve the rainfall attribute using the `nasapower` package. Please have a look at the rainfall tutorial [here]() for the general knowledge on how the `nasapower` package and it's functions work. 
+We have already seen a tutorial on how to retrieve the rainfall attribute using the `nasapower` package. Please have a look at the rainfall tutorial [here](https://rspatialdata.github.io/rainfall) for the general knowledge on how the `nasapower` package and it's functions work. 
 
 We will use the same package to retrieve the relative humidity data for specific countries or for the world. 
 

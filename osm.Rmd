@@ -190,8 +190,10 @@ ggmap(lagos_map) +
           colour = "#08519c",
           fill = "#08306b",
           alpha = .5,
-          size = 1)+
-  labs(x = "", y = "")
+          size = 1) +
+  labs(title = "Hospitals in Lagos(Nigeria)",
+       x = "Latitude",
+       y = "Longitude")
 ```
 
 
@@ -236,14 +238,17 @@ Then we use the `ggplot2` package to visualise each of these features along with
 
 
 ```{r vis-lagos-features-and-hospitals-example}
-# visualising all retreived features over each other to form a map of Lagos
+# visualising all retrieved features over each other to form a map of Lagos
 ggplot() +
   geom_sf(data = lagos_streets$osm_lines, inherit.aes = FALSE, color = "#ffbe7f", size = .4, alpha = .8) +
   geom_sf(data = lagos_small_streets$osm_lines, inherit.aes = FALSE, color = "#a6a6a6", size = .2, alpha = .8) +
   geom_sf(data = lagos_rivers$osm_lines, inherit.aes = FALSE, color = "#7fc0ff", size = .8, alpha = .5) +
   geom_sf(data = lagos_hospitals$osm_polygons, inherit.aes = FALSE, colour = "#08519c", fill = "#08306b",alpha = .5, size = 1) +
   coord_sf(xlim = c(3.23, 3.56), ylim = c(6.4,6.629), expand = FALSE) +
-  theme_bw()
+  theme_bw() +
+  labs(title = "Hospitals in Lagos(Nigeria)",
+       x = "Latitude",
+       y = "Longitude")
 ```
 
 We can also use the `leaflet` package to visualise an interactive map of the hospitals in Lagos.
@@ -256,9 +261,7 @@ leaflet() %>%
   addTiles() %>% 
   addPolygons(data = lagos_hospitals$osm_polygons,
               label = lagos_hospitals$osm_polygons$name)
-
 ```
-
 
 
 # References

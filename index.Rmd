@@ -8,40 +8,40 @@ pagetitle: "rspatialdata"
   <div class="row">
   <div class="col-sm-1"></div>
   <div class="col-sm-2">
-  <a href="admin_boundaries.html"><img src="figures/admin_boundaries.jpg"></a>
+  <a href="admin_boundaries.html"><img src="images/admin_boundaries.jpg"></a>
   </div>
   <div class="col-sm-2">
-  <a href="osm.html"><img src="figures/osm.jpg"></a>
+  <a href="osm.html"><img src="images/osm.jpg"></a>
   </div>
   <div class="col-sm-2">
-  <a href="population.html"><img src="figures/population.jpg"></a>
+  <a href="population.html"><img src="images/population.jpg"></a>
   </div>
   <div class="col-sm-2">
-  <a href="elevation.html"><img src="figures/elevation.jpg"></a>
+  <a href="elevation.html"><img src="images/elevation.jpg"></a>
   </div>
   <div class="col-sm-2">
-  <a href="temperature.html"><img src="figures/temperature.jpg"></a>
+  <a href="temperature.html"><img src="images/temperature.jpg"></a>
   </div>
   <div class="col-sm-1"></div>
   </div>
   <div class="row">
   <div class="col-sm-2">
-  <a href="rainfall.html"><img src="figures/rainfall.jpg"></a>
+  <a href="rainfall.html"><img src="images/rainfall.jpg"></a>
   </div>
   <div class="col-sm-2">
-  <a href="humidity.html"><img src="figures/humidity.jpg"></a>
+  <a href="humidity.html"><img src="images/humidity.jpg"></a>
   </div>
   <div class="col-sm-2">
-  <a href="vegetation.html"><img src="figures/vegetation.jpg"></a>
+  <a href="vegetation.html"><img src="images/vegetation.jpg"></a>
   </div>
   <div class="col-sm-2">
-  <a href="land_cover.html"><img src="figures/land_cover.jpg"></a>
+  <a href="land_cover.html"><img src="images/land_cover.jpg"></a>
   </div>
   <div class="col-sm-2">
-  <a href="dhs-data.html"><img src="figures/dhs.jpg"></a>
+  <a href="dhs-data.html"><img src="images/dhs.jpg"></a>
   </div>
   <div class="col-sm-2">
-  <a href="malaria.html"><img src="figures/malaria.jpg"></a>
+  <a href="malaria.html"><img src="images/malaria.jpg"></a>
   </div>
   </div>
 </div>

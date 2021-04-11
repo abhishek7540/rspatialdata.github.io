@@ -1,6 +1,6 @@
-#rspatialdata
+# rspatialdata
 
-rspatialdata is a collection of data sources and tutorials on visualising spatial data using R
+## rspatialdata is a collection of data sources and tutorials on visualising spatial data using R
 
 Tutorials are available on the following spatial properties
 
@@ -14,4 +14,8 @@ Tutorials are available on the following spatial properties
 - Vegetation
 - Land Cover
 - DHS
-_ Malaria
+- Malaria
+
+<img src="images/lagos_hospitals.PNG" width="500">
+<img src="images/nigeria_population.PNG" width="500">
+<img src="images/ndvi_mongolia.PNG" width="500">

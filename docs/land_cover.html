@@ -356,7 +356,7 @@ div.tocify {
       <a href="land_cover.html">Land Cover</a>
     </li>
     <li>
-      <a href="dhs.html">DHS</a>
+      <a href="dhs-data.html">DHS</a>
     </li>
     <li>
       <a href="malaria.html">Malaria</a>
@@ -389,22 +389,22 @@ div.tocify {
 </div>
 <div id="downloading-land-cover-data-using-modistsp" class="section level2">
 <h2>Downloading Land Cover data using <code>MODIStsp</code></h2>
-<p><code>MODIStsp</code> an acronym for ‘MODIS Time Series Processing’, is an R-package for downloading and preprocessing time series of raster data from MODIS data products. This tutorial will focus on downloading and visualising land cover data, but the same process can be followed with other MODIS data products as well.</p>
+<p><code>MODIStsp</code> is an R package for downloading and preprocessing time series of raster data from MODIS data products. The package’s name is an acronym for ‘MODIS Time Series Processing’. This tutorial will focus on downloading and visualising land cover data, but the same process can be followed with other MODIS data products as well.</p>
 <div id="installing-modistsp" class="section level3">
 <h3>Installing <code>MODIStsp</code></h3>
-<p>The <code>MODIStsp</code> package can be simply downloaded from CRAN as follows</p>
+<p>The <code>MODIStsp</code> package can be downloaded from CRAN as follows.</p>
 <pre class="r"><code>install.packages(&quot;MODIStsp&quot;)</code></pre>
 </div>
 <div id="identifying-the-modis-data-product" class="section level3">
 <h3>Identifying the MODIS data product</h3>
 <p>The first step of downloading data is to identify which <a href="https://modis.gsfc.nasa.gov/data/dataprod/">MODIS data product</a> to use.</p>
-<p>This tutorial will use the <a href="https://modis.gsfc.nasa.gov/data/dataprod/mod12.php">Land Cover Products</a>, which uses different classification schemes to identify types of land cover. The primary land cover scheme identifies 17 classes defined by the International Geosphere-Biosphere Programme (IGBP) as detailed in their <a href="https://lpdaac.usgs.gov/documents/101/MCD12_User_Guide_V6.pdf">user guide</a>.This product contains annually averaged data, collected bi-annually allowing for hemispheric differences in the growing seasons, and enabling the product to capture two growth cycles if necessary.</p>
+<p>This tutorial will use the <a href="https://modis.gsfc.nasa.gov/data/dataprod/mod12.php">Land Cover Products</a>, which uses different classification schemes to identify types of land cover. The primary land cover scheme identifies 17 classes defined by the <strong>International Geosphere-Biosphere Programme (IGBP)</strong> as detailed in their <a href="https://lpdaac.usgs.gov/documents/101/MCD12_User_Guide_V6.pdf">user guide</a>.This product contains annually averaged data, collected bi-annually allowing for hemispheric differences in the growing seasons, and enabling the product to capture two growth cycles if necessary.</p>
 <p>The product IDs for each of these products can also be found on the <a href="https://modis.gsfc.nasa.gov/data/dataprod/mod13.php">data product page</a>.</p>
 <p>This tutorial will use the ‘Land Cover Type Yearly L3 Global 500m’ product with the product IDs MCD12Q1 (Combined Aqua and Terra Product ID)</p>
 </div>
-<div id="retreiving-modis-layers-for-a-product" class="section level3">
-<h3>Retreiving MODIS layers for a product</h3>
-<p>The product layers (original MODIS layers, quality layers and spectral indexes) available for a given product can be retreived using the following function.</p>
+<div id="retrieving-modis-layers-for-a-product" class="section level3">
+<h3>Retrieving MODIS layers for a product</h3>
+<p>The product layers (original MODIS layers, quality layers and spectral indexes) available for a given product can be retrieved using the following function.</p>
 <pre class="r"><code>library(MODIStsp)
 MODIStsp_get_prodlayers(&quot;MCD12Q1&quot;)</code></pre>
 <pre style="max-height: 200px;"><code>## $prodname
@@ -443,12 +443,12 @@ MODIStsp_get_prodlayers(&quot;MCD12Q1&quot;)</code></pre>
 ## 
 ## $indexes_fullnames
 ## NULL</code></pre>
-<p>Note how the $bandfullnames define each of the $bandnames.</p>
+<p>Note how the <code>\$bandfullnames</code> define each of the <code>\$bandnames</code>.</p>
 </div>
 <div id="the-modistsp-function" class="section level3">
 <h3>The <code>MODIStsp()</code> function</h3>
-<p><code>MODItsp()</code> is the main function of the <code>MODIStsp</code> package, and allows us to download MODIS data products. While this is a very comprehensive function and we only a very few of its arguments in this tutorial, the entire list of arguments can be found in the <a href="https://docs.ropensci.org/MODIStsp/reference/MODIStsp.html">MODItsp documentation</a>.</p>
-<p>The <code>MODIStsp()</code> function provides two ways of downloading data; through a GUI (interactive) or through an R script (non-interactive). This tutorial will focus on the non-interactive execution.</p>
+<p><code>MODIStsp()</code> is the main function of the <code>MODIStsp</code> package, and allows us to download MODIS data products. While this is a very comprehensive function and we only a very few of its arguments in this tutorial, the entire list of arguments can be found in the <a href="https://docs.ropensci.org/MODIStsp/reference/MODIStsp.html">MODIStsp documentation</a>.</p>
+<p>The <code>MODIStsp()</code> function provides two ways of downloading data, namely, through a GUI (interactive) or through an R script (non-interactive). This tutorial will focus on the non-interactive execution.</p>
 </div>
 <div id="downloading-igbp-land-cover-classification-data" class="section level3">
 <h3>Downloading IGBP land cover classification data</h3>
@@ -456,22 +456,18 @@ MODIStsp_get_prodlayers(&quot;MCD12Q1&quot;)</code></pre>
 <pre class="r"><code># install.packages(c(&quot;rgeoboundaries&quot;, &quot;sf&quot;))
 library(rgeoboundaries)
 library(sf)
-
 # Downloading the country boundary of Zimbabwe
-mongolia_boundary &lt;- geoboundaries(&quot;Zimbabwe&quot;)
-
+map_boundary &lt;- geoboundaries(&quot;Zimbabwe&quot;)
 # Defining filepath to save downloaded spatial file
 spatial_filepath &lt;- &quot;LandCoverData/zimbabwe.shp&quot;
-
 # Saving downloaded spatial file on to our computer
-st_write(zimbabwe_boundary, paste0(spatial_filepath))</code></pre>
+st_write(map_boundary, paste0(spatial_filepath))</code></pre>
 <p>Then we use the <code>MODIStsp()</code> function to download the IGBP land cover classification data.</p>
 <p>To download data in Zimbabwe, we use the boundary of Zimbabwe we downloaded. So in the <code>MODIStsp()</code> function we set the <code>spatmeth</code> argument as “file” and set the <code>spafile</code> argument as the path of the map we saved.</p>
-<p>Since IGBP land cover classification data is provided annually and dated on the <sup>1</sup>st of January each year, the <code>start-date</code> and <code>end_date</code> arguments should contain the <sup>1</sup>st of January of each year for which we want the data to be downloaded.</p>
-<p>can be categorised as spatio-temporal data, the <code>start-date</code> and <code>end_date</code> arguments define the period for which we want the data to be downloaded. Here we use the same date for both the start and end date since we want to download the data for a single date.</p>
+<p>Since IGBP land cover classification data is provided annually and dated on the 1st of January each year, the <code>start-date</code> and <code>end_date</code> arguments should contain the 1st of January of each year for which we want the data to be downloaded.</p>
+<p>The <code>start-date</code> and <code>end_date</code> arguments define the period for which we want the data to be downloaded.</p>
 <p>Note that this tutorial uses a test username and password. The <code>user</code> and <code>password</code> arguments should be the username and password corresponding to your <a href="https://urs.earthdata.nasa.gov/">earthdata</a> credentials.</p>
 <pre class="r"><code>library(MODIStsp)
-
 MODIStsp(gui             = FALSE,
          out_folder      = &quot;LandCoverData&quot;,
          out_folder_mod  = &quot;LandCoverData&quot;,
@@ -506,20 +502,21 @@ library(viridis)
 library(dplyr)
 
 # Downloading the boundary of Zimbabwe
-zimbabwe_boundary &lt;- geoboundaries(&quot;Zimbabwe&quot;)
+map_boundary &lt;- geoboundaries(&quot;Zimbabwe&quot;)
 
-# Reading in the downloaded landcover raster data, transforming, and cropping it
+# Reading in the downloaded landcover raster data
 IGBP_raster &lt;- raster(here::here(&quot;LandCoverData/zimbabwe/LandCover_Type_Yearly_500m_v6/LC1/MCD12Q1_LC1_2019_001.tif&quot;))
 
+# Transforming data
 IGBP_raster &lt;- projectRaster(IGBP_raster, crs = &quot;+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs&quot;)
-IGBP_raster &lt;- raster::mask(IGBP_raster, as_Spatial(zimbabwe_boundary))
 
+# Cropping data
+IGBP_raster &lt;- raster::mask(IGBP_raster, as_Spatial(map_boundary))
 
 # Converting the raster object into a dataframe and converting the IGBP classification into a factor
 IGBP_df &lt;- as.data.frame(IGBP_raster, xy = TRUE, na.rm = TRUE) %&gt;%
   mutate(MCD12Q1_LC1_2019_001 = as.factor(round(MCD12Q1_LC1_2019_001)))
 rownames(IGBP_df) &lt;- c()
-
 # Renaming IGBP classification levels
 levels(IGBP_df$MCD12Q1_LC1_2019_001) &lt;- c( &quot;Evergreen needleleaf forests&quot;,
                                            &quot;Evergreen broadleaf forests&quot;,
@@ -538,106 +535,17 @@ levels(IGBP_df$MCD12Q1_LC1_2019_001) &lt;- c( &quot;Evergreen needleleaf forests
                                            &quot;Snow and ice&quot;,
                                            &quot;Barren&quot;,
                                            &quot;Water bodies&quot;)
-
-
 # Visualising using ggplot2
 ggplot() + 
   geom_raster(data = IGBP_df,
               aes(x = x, y = y, fill = MCD12Q1_LC1_2019_001)) +
-  geom_sf(data = zimbabwe_boundary, inherit.aes = FALSE, fill = NA) +
+  geom_sf(data = map_boundary, inherit.aes = FALSE, fill = NA) +
   scale_fill_viridis(name = &quot;Land Cover Type&quot;, discrete = TRUE) +
   labs(title = &quot;Land Cover classification in Zimbabwe&quot;,
        subtitle = &quot;01-01-2019 - 31-12-2019&quot;,
        x = &quot;Longitude&quot;,
        y = &quot;Latitude&quot;)</code></pre>
 <p><img src="land_cover_files/figure-html/visualise-data-1.png" width="672" /></p>
-</div>
-<div id="examples" class="section level2">
-<h2>Examples</h2>
-<p>The following are complete examples on downloading and visualising IGBP land cover classification data in Zimbabwe</p>
-<p>Downloading IGBP land cover classification data using the <code>MODIStsp</code> package</p>
-<pre class="r"><code># install.packages(c(&quot;MODIStsp&quot;, &quot;rgeoboundaries&quot;, &quot;sf&quot;))
-library(MODIStsp)
-library(rgeoboundaries)
-library(sf)
-
-# Downloading the country boundary of Zimbabwe
-mongolia_boundary &lt;- geoboundaries(&quot;Zimbabwe&quot;)
-
-# Defining filepath to save downloaded spatial file
-spatial_filepath &lt;- &quot;LandCoverData/zimbabwe.shp&quot;
-
-# Saving downloaded spatial file on to our computer
-st_write(zimbabwe_boundary, paste0(spatial_filepath))
-
-# Downloading data
-MODIStsp(gui             = FALSE,
-         out_folder      = &quot;LandCoverData&quot;,
-         out_folder_mod  = &quot;LandCoverData&quot;,
-         selprod         = &quot;LandCover_Type_Yearly_500m (MCD12Q1)&quot;,
-         bandsel         = &quot;LC1&quot;, 
-         user            = &quot;mstp_test&quot; ,
-         password        = &quot;MSTP_test_01&quot;,
-         start_date      = &quot;2019.01.01&quot;, 
-         end_date        = &quot;2019.12.31&quot;, 
-         verbose         = FALSE,
-         spatmeth        = &quot;file&quot;,
-         spafile         = spatial_filepath,
-         out_format      = &quot;GTiff&quot;)</code></pre>
-<p>Visualising land cover in Zimbabwe using <code>ggplot2</code></p>
-<pre class="r"><code># install.packages(c(&quot;sf&quot;, &quot;raster&quot;, &quot;here&quot;, &quot;ggplot2&quot;, &quot;viridis&quot;, &quot;rgeoboundaries&quot;))
-library(sf)
-library(raster)
-library(here)
-library(ggplot2)
-library(viridis)
-library(rgeoboundaries)
-
-# Downloading the boundary of Zimbabwe
-zimbabwe_boundary &lt;- geoboundaries(&quot;Zimbabwe&quot;)
-
-# Reading in the downloaded landcover raster data, transforming, and cropping it
-IGBP_raster &lt;- raster(here::here(&quot;LandCoverData/zimbabwe/LandCover_Type_Yearly_500m_v6/LC1/MCD12Q1_LC1_2019_001.tif&quot;))
-IGBP_raster &lt;- projectRaster(IGBP_raster, crs = &quot;+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs&quot;)
-IGBP_raster &lt;- raster::mask(IGBP_raster, as_Spatial(zimbabwe_boundary))
-
-
-# Converting the raster object into a dataframe and converting the IGBP classification into a factor
-IGBP_df &lt;- as.data.frame(IGBP_raster, xy = TRUE, na.rm = TRUE) %&gt;%
-  mutate(MCD12Q1_LC1_2019_001 = as.factor(round(MCD12Q1_LC1_2019_001)))
-rownames(IGBP_df) &lt;- c()
-
-# Renaming IGBP classification levels
-levels(IGBP_df$MCD12Q1_LC1_2019_001) &lt;- c( &quot;Evergreen needleleaf forests&quot;,
-                                           &quot;Evergreen broadleaf forests&quot;,
-                                           &quot;Deciduous needleleaf forests&quot;,
-                                           &quot;Deciduous broadleaf forests&quot;,
-                                           &quot;Mixed forests&quot;,
-                                           &quot;Closed shrublands&quot;,
-                                           &quot;Open shrublands&quot;,
-                                           &quot;Woody savannas&quot;,
-                                           &quot;Savannas&quot;,
-                                           &quot;Grasslands&quot;,
-                                           &quot;Permanent wetlands&quot;,
-                                           &quot;Croplands&quot;,
-                                           &quot;Urban and built-up lands&quot;,
-                                           &quot;Cropland/natural vegetation mosaics&quot;,
-                                           &quot;Snow and ice&quot;,
-                                           &quot;Barren&quot;,
-                                           &quot;Water bodies&quot;)
-
-
-# Visualising using ggplot2
-ggplot() + 
-  geom_raster(data = IGBP_df,
-              aes(x = x, y = y, fill = MCD12Q1_LC1_2019_001)) +
-  geom_sf(data = zimbabwe_boundary, inherit.aes = FALSE, fill = NA) +
-  scale_fill_viridis(name = &quot;Land Cover Type&quot;, discrete = TRUE) +
-  labs(title = &quot;Land Cover classification in Zimbabwe&quot;,
-       subtitle = &quot;01-01-2019 - 31-12-2019&quot;,
-       x = &quot;Longitude&quot;,
-       y = &quot;Latitude&quot;)</code></pre>
-<p><img src="land_cover_files/figure-html/zimbabwe-example-ggplot2-1.png" width="672" /></p>
 </div>
 <div id="references" class="section level2">
 <h2>References</h2>

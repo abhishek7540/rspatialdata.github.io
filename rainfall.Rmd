@@ -17,26 +17,25 @@ library(viridis)
 library(rgeoboundaries)
 ```
 
-# `nasapower` package
+## Downloading rainfall data with `nasapower`
  
-This package aims at making it quick and easy to automate downloading NASA [POWER](https://power.larc.nasa.gov/)(Prediction of Worldwide Energy Resource) global meteorology, surface solar energy and climatology data in your R session as a tidy data frame for analysis and use in modelling or other purposes using `get_power()`. 
+The `nasapower` package aims at making it quick and easy to automate downloading [NASA POWER](https://power.larc.nasa.gov/) (NASA Prediction of Worldwide Energy Resource) global meteorology, surface solar energy and climatology data.
 
 
 ## Installing `nasapower` package 
 
-You can install the packagefrom either CRAN using:
+We can install the package from either CRAN using
 
 ```{r CRAN,eval=FALSE}
 install.packages("nasapower")
 ```
 
-or by using the devtools package directly from github using the following code:
+or by using the `devtools` package directly from GitHub using the following code:
 
 ```{r git, eval=FALSE}
 if (!require(devtools)) {
   install.packages("devtools")
 }
-
 devtools::install_github("ropensci/nasapower")
 ```
 
@@ -49,39 +48,41 @@ library(nasapower)
 The `get_power()` function has five arguments and returns a data frame with a metadata header in the current R session.
 It has the following arguments:
 
-- **Community**: It can be passed with either "AG", "SB", or "SSE".
+- `pars`: character vector of solar, meteorological or climatology parameters to download.
 
-    *AG*: provides access to the agroclimatology archive, which contains industry-friendly parameters for input to crop models.
+- `community`: character vector providing community name. Supported values are `"AG"`, `"SB"` or `"SSE"`.
+
+`"AG"`: provides access to the agroclimatology archive, which contains industry-friendly parameters for input to crop models.
     
-    *SB*: provides access to the sustainable buildings archive, which contains parameters for the building community.
+`"SB"`: provides access to the sustainable buildings archive, which contains parameters for the building community.
     
-    *SSE*: provides access to the renewable energy archive, which contains parameters very specific to assist in the design of solar and wind powered renewable energy systems.
+`"SSE"`: provides access to the renewable energy archive, which contains parameters very specific to assist in the design of solar and wind powered renewable energy systems.
     
-- **temporal_average**: supported values are "DAILY", "INTERANNUAL", "CLIMATOLOGY".
+- `temporal_average`: temporal average for data being queried. Supported values are `"DAILY"`, `"INTERANNUAL"` or `"CLIMATOLOGY"`.
   
-    *DAILY* : the daily average of `pars` by day, month and year.
+`"DAILY"`: daily average of `pars` by day, month and year.
     
-    *INTERANNUAL*: the monthly average of `pars` by year.
+`"INTERANNUAL"`: monthly average of `pars` by year.
     
-    *CLIMATOLOGY*: the monthly average of `pars` at the surface of the earth for a given month averaged for that month over the 30 year period.
+`"CLIMATOLOGY"`: monthly average of `pars` at the surface of the earth for a given month averaged for that month over the 30 year period.
     
-- **lonlat**: 
+- `lonlat`: numeric vector of geographic coordinates for a cell or region or `"GLOBAL"` for global coverage.
 
-    *For Single point*: supply a length-two numeric vector giving the decimal degree longitude an dlatitude in that order for the data to download. 
+For single point supply a length-two numeric vector giving the decimal degree longitude an dlatitude in that order for the data to download. 
     
-    *For regional coverage*: supply a length-four numeric as lower left(lon,lat) and upper right(lon,lat) coordinates as `lonlat = c(xmin,ymin,ymax,ymax)`
+For regional coverage supply a length-four numeric as lower left (lon, lat) and upper right (lon, lat) coordinates as `lonlat = c(xmin, ymin, ymax, ymax)`
     
-    *For global coverage*: to get globval coverage for CLIMATOLOGY, supply "GLOBAL" while also specifying "CLIMATOLOGY" for the argument `temporla_average`.
+To get global coverage for `CLIMATOLOGY`, supply `GLOBAL` while also specifying `CLIMATOLOGY` for the argument `temporal_average`.
     
-- **dates**: If only one date is provided, it will be treated as both the start and the end date and only a day's values will be returned. 
+- `dates`: start and end dates. If only one date is provided, it will be treated as both the start and the end date and only a day's values will be returned. 
+When the `temporal_average` is set to `INTERANNUAL`, use only two year values, e.g., `dates = c(1983, 2010)`. 
+This argument should not be used when `temporal_average` is set to `"CLIMATOLOGY"`.
 
-    When the `temporal_average` is set to "INTERANNUAL", use only two year values, eg, dates = c(1983,2010). 
+To know the different weather values from POWER provided within this function type `?get_power`, and in the arguments section, click on the highlighted parameters, which goes to a page which has all the available parameters.
 
-    This argument should not be used when `temporal_average` is set to "CLIMATOLOGY".
+To download rainfall, we use the `pars = "PRECTOT"`. 
 
-To know the different weather values from POWER provided within this function type `?get_power`, and in the arguments section, click on the highlighted parameters, which goes to a page which has all the available parameters. For rainfall, we use the "PRECTOT". 
-
-### Fetching daily data for single point:
+### Fetching daily data for single point
    
 ```{r getdata}
 data <- get_power(community = "SSE",
@@ -99,7 +100,7 @@ data %>% datatable(extensions = c('Scroller','FixedColumns'), options = list(
 ))
 ```
 
-### Fetching daily data for an area:
+### Fetching daily data for an area
 
 ```{r daily}
 daily_area <- get_power(community = "AG",
@@ -127,7 +128,6 @@ climate_avg <- get_power(community = "AG",
                          lonlat = "GLOBAL",
                          temporal_average = "CLIMATOLOGY"
 )
-
 climate_avg %>% datatable(extensions = c('Scroller','FixedColumns'), options = list(
   deferRender = TRUE,
   scrollY = 350,
@@ -141,51 +141,31 @@ climate_avg %>% datatable(extensions = c('Scroller','FixedColumns'), options = l
 
 ## Creating spatial objects from `get_power()`
 
-If you require spatial objects to work with, it is simple to convert the resultant data frame from `get_power()` to a spatial object using the `terra::rast(type = "...")`
+If you require spatial objects to work with, it is simple to convert the resultant data frame from `get_power()` to a spatial object using the `terra::rast(type = "...")`.
 
-
-```{r eval=FALSE}
-#downloading the shapefile for the world
-download.file("http://thematicmapping.org/downloads/TM_WORLD_BORDERS_SIMPL-0.3.zip" , destfile="DATA/world_shape_file.zip")
-
-#unzipping the downloaded shapefile
-system("unzip DATA/world_shape_file.zip")
-
-shape <- readOGR( 
-  dsn= paste0(getwd()) , 
-  layer="TM_WORLD_BORDERS_SIMPL-0.3",
-  verbose=FALSE
-)
-
-tidy_shapedf <- tidy(shape, region = "NAME")
-```
-
-```{r eval=FALSE}
-shapefile <- readOGR(dsn = paste0(getwd()),
-                     layer = "ne_10m_admin_0_boundary_lines_land",
-                     verbose = FALSE)
-```
 
 
 
 ```{r climbox}
-#getting the shapefiles for the world 
+library("rnaturalearth")
+
+# Getting world map
 map <- ne_countries(returnclass = "sf")
 
-climate_box <- split(climate_avg,climate_avg$PARAMETER)
+climate_box <- split(climate_avg, climate_avg$PARAMETER)
 
 climate_box <- lapply(climate_box, function(x){
   x["PARAMETER"] <- NULL
   x
 })
-climate_box <- lapply(X = climate_box, FUN= as.matrix)
 
-#retrieving the rainfall(precipitation) data using the above made climate_box function
-PRECTOT <- rast(climate_box$PRECTOT[,c(1:2,15)],
-     crs = "+proj=eqc +lat_ts=0 +lat_0=0 +lon_0=0 +x_0=0 +y_0=0 +ellps=WGS84 +datum=WGS84 +units=m +no_defs",
-                 type = "xyz")
+climate_box <- lapply(X = climate_box, FUN = as.matrix)
 
-#converting above raster object into a dataframe for mapping 
+#retrieving precipitation data using the above made climate_box() function
+PRECTOT <- terra::rast(climate_box$PRECTOT[,c(1:2, 15)],
+     crs = "+proj=eqc +lat_ts=0 +lat_0=0 +lon_0=0 +x_0=0 +y_0=0 +ellps=WGS84 +datum=WGS84 +units=m +no_defs", type = "xyz")
+
+#converting above raster object into a data.frame for mapping 
 PRECTOT_df <- as.data.frame(PRECTOT, xy = TRUE, na.rm = TRUE)
 rownames(PRECTOT_df) <- c()
 
@@ -206,9 +186,9 @@ We can plot the rainfall data for large geographical areas using the shapefiles 
 
 ```{r sf}
 library("rnaturalearth")
-#getting boundary values for China
-CHI <- ne_states(country = "China",
-                 returnclass = "sf")
+
+# Getting map for China
+CHI <- ne_states(country = "China", returnclass = "sf")
 
 #getting individual administrative boundaries 
 GA <- CHI[CHI$name == "Gansu",]
@@ -222,7 +202,8 @@ r <- rast(xmin = -180,
      ymin = -90,
      ymax = 90,
      resolution = 0.5)
-#defininf the cell structure 
+
+#defining the cell structure 
 values(r) <- 1:ncell(r)
 
 #retrieving only the coordinates from the GA & XI tables 
@@ -238,7 +219,6 @@ rownames(GA_df) <- c()
 
 #getting the china administrative boundaries shapefile
 gansu_map <- geoboundaries("China","adm1")
-
 ggplot() + 
   geom_raster(data = GA_df, aes(x = x, y = y, fill = lyr.1)) +
   geom_sf(data = gansu_map, inherit.aes = FALSE, fill = NA) + 
@@ -280,7 +260,6 @@ for (k in colnames(PREC)[-c(1:2,13)]) {
                         type = "xyz")
   
 }
-
 PREC <- c(rast(PREC_MONTH))
 plot(PREC)
 ```
@@ -290,4 +269,3 @@ plot(PREC)
 - `nasapower` package: https://github.com/ropensci/nasapower
 
 - NASAPOWER project: https://power.larc.nasa.gov/
-

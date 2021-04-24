@@ -17,17 +17,35 @@ library(viridis)
 library(rgeoboundaries)
 ```
 
-We have already seen a tutorial on how to retrieve the rainfall attribute using the `nasapower` package. Please have a look at the rainfall tutorial [here](https://rspatialdata.github.io/rainfall) for the general knowledge on how the `nasapower` package and it's functions work. 
 
-We will use the same package to retrieve the relative humidity data for specific countries or for the world. 
+## Downloading humidity data with `nasapower`
+
+The `nasapower` package aims at making it quick and easy to automate downloading [NASA POWER](https://power.larc.nasa.gov/) (NASA Prediction of Worldwide Energy Resource) global meteorology, surface solar energy and climatology data.
+
+Here, we will use the `nasapower` package to retrieve the relative humidity data for specific countries or for the world. 
+
+We have also used the `nasapower` package to retrieve rainfall data [here](https://rspatialdata.github.io/rainfall).
+The rainfall tutorial includes an introduction on the `nasapower` package and how its functions work. 
+
+## Installing `nasapower` package 
+
+We can install the package from CRAN and load it as follows.
+
+```{r CRAN,eval=FALSE}
+install.packages("nasapower")
+```
 
 ```{r loading}
 library(nasapower)
 ```
 
-### Fetching daily data for single point:
+## Using `get_power()` to fetch data
 
-First let us have a look at how to get the daily data for humidity in agriculture, this can be done using the `get_power()` function with the argument `pars` set to **RH2M** which means **Relative Humidity at 2 meters** and passing the argument **DAILY** to the `temporal_average` argument at only one location.
+First let us have a look at how to get the daily data for humidity in agriculture. This can be done using the `get_power()` function.
+
+### Fetching daily data for single point
+
+We use `get_power()` function arguments `pars = "RH2M"` which means relative Humidity at 2 meters, `temporal_average = "DAILY"`, and `longlat` equal to a single location.
    
 ```{r getdata}
 data_RH <- get_power(community = "AG",
@@ -47,7 +65,8 @@ data_RH %>% datatable(extensions = c('Scroller','FixedColumns'), options = list(
 
 
 
-### Fetching daily data for an area:
+### Fetching daily data for an area
+
 
 ```{r daily}
 daily_humidity <- get_power(community = "AG",
@@ -66,9 +85,9 @@ daily_humidity %>% datatable(extensions = c('Scroller','FixedColumns'), options 
 ```
 
 
-### Fetching Climatology Data:
+### Fetching climatology data
 
-global data are only available for the climatology `temporal_average` like we discussed earlier, setting these arguments as such will fetch the global values.
+Global data are obtained by setting `community = "AG"` and `temporal_average = "CLIMATOLOGY"`.
 
 ```{r climate,cache=TRUE}
 climate_avg_RH <- get_power(community = "AG",
@@ -76,7 +95,6 @@ climate_avg_RH <- get_power(community = "AG",
                          lonlat = "GLOBAL",
                          temporal_average = "CLIMATOLOGY"
 )
-
 climate_avg_RH %>% datatable(extensions = c('Scroller','FixedColumns'), options = list(
   deferRender = TRUE,
   scrollY = 350,
@@ -90,7 +108,7 @@ climate_avg_RH %>% datatable(extensions = c('Scroller','FixedColumns'), options 
 
 ## Creating spatial objects from `get_power()`
 
-If you require spatial objects to work with, it is simple to convert the resultant data frame from `get_power()` to a spatial object using the `terra::rast(type = "...")
+If you require spatial objects to work with, it is simple to convert the resultant data frame from `get_power()` to a spatial object using the `terra::rast(type = "...")`.
 
 ```{r climbox}
 #getting the shapefiles for the world 
@@ -107,8 +125,7 @@ climate_box <- lapply(X = climate_box, FUN= as.matrix)
 
 #retrieving the humidity data using the above made climate_box function
 relative_humid <- rast(climate_box$RH2M[,c(1:2,15)],
-     crs = "+proj=eqc +lat_ts=0 +lat_0=0 +lon_0=0 +x_0=0 +y_0=0 +ellps=WGS84 +datum=WGS84 +units=m +no_defs",
-                 type = "xyz")
+     crs = "+proj=eqc +lat_ts=0 +lat_0=0 +lon_0=0 +x_0=0 +y_0=0 +ellps=WGS84 +datum=WGS84 +units=m +no_defs", type = "xyz")
 
 #converting above raster object into a dataframe for mapping 
 RH_df <- as.data.frame(relative_humid, xy = TRUE, na.rm = TRUE)
@@ -131,10 +148,8 @@ We can plot the relative humidity data for large geographical areas using the sh
 
 ```{r sf}
 library("rnaturalearth")
-
 AUS <- ne_states(country = "Australia",
                  returnclass = "sf")
-
 NT <- AUS[AUS$name == "Northern Territory",]
 WA <- AUS[AUS$name == "Western Australia",]
 ```
@@ -146,24 +161,17 @@ rasters <- rast(xmin = -180,
      ymin = -90,
      ymax = 90,
      resolution = 0.5)
-
 values(rasters) <- 1:ncell(rasters)
-
 #retrieving only the coordinates from the NT & WA tables 
 NT_coord <- crop(rasters,NT)
 WA_coord <- crop(rasters,WA)
-
 #getting the coordinated for the first administrative boundary
 NT_coord <- mask(NT_coord,vect(NT))
-
 #converting the coordinated into a dataframe with x and y values to map
 NT_df <- as.data.frame(NT_coord, xy = TRUE, na.rm = TRUE)
 rownames(NT_df) <- c()
-
-
 #getting the US administrative boundaries shapefile, can alos use the ozmap package for australia shapefile
 AUS_map <- geoboundaries("Australia","adm1")
-
 ggplot() + 
   geom_raster(data = NT_df, aes(x = x, y = y, fill = lyr.1))+ 
   geom_sf(data = AUS_map, inherit.aes = FALSE, fill = NA)+
@@ -176,7 +184,6 @@ ggplot() +
 WA_coord <- mask(WA_coord,vect(WA))
 WA_df <- as.data.frame(WA_coord, xy = TRUE, na.rm = TRUE)
 rownames(WA_df) <- c()
-
 ggplot() + 
   geom_raster(data = WA_df, aes(x = x, y = y, fill = lyr.1))+ 
   geom_sf(data = AUS_map, inherit.aes = FALSE, fill = NA)+
@@ -190,10 +197,8 @@ Now let us have a look at the relative humidity monthly data for all the countri
 
 ```{r month_world,out.height=750,out.width=800}
 RH2M <- as.matrix(subset(climate_avg_RH, PARAMETER == "RH2M")[, -3])
-
 RH2M_MONTH <- vector(mode = "list", length = 13)
 names(RH2M_MONTH) <- colnames(RH2M)[-c(1:2,13)]
-
 #converting each month into a spatRaster object using the for loop
 for (k in colnames(RH2M)[-c(1:2,13)]) {
   RH2M_MONTH[[k]] <- rast(RH2M[, c("LON","LAT",k)],
@@ -201,9 +206,7 @@ for (k in colnames(RH2M)[-c(1:2,13)]) {
                         type = "xyz")
   
 }
-
 RH2M <- c(rast(RH2M_MONTH))
-
 plot(RH2M)
 ```
 

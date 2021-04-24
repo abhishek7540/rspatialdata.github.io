@@ -1,10 +1,4 @@
 base
-methods
-datasets
-utils
-grDevices
-graphics
-stats
 tidyverse
 ggplot2
 tibble
@@ -21,3 +15,7 @@ broom
 terra
 ggspatial
 nasapower
+rnaturalearth
+viridisLite
+viridis
+rgeoboundaries

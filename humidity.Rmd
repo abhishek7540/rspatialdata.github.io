@@ -171,10 +171,9 @@ NT_coord <- mask(NT_coord,vect(NT))
 NT_df <- as.data.frame(NT_coord, xy = TRUE, na.rm = TRUE)
 rownames(NT_df) <- c()
 #getting the US administrative boundaries shapefile, can alos use the ozmap package for australia shapefile
-AUS_map <- geoboundaries("Australia","adm1")
 ggplot() + 
   geom_raster(data = NT_df, aes(x = x, y = y, fill = lyr.1))+ 
-  geom_sf(data = AUS_map, inherit.aes = FALSE, fill = NA)+
+  geom_sf(data = AUS, inherit.aes = FALSE, fill = NA)+
   scale_fill_viridis()+
   theme_minimal()+
   labs(title = "Relative Humidity in Northern Territory,Australia", fill = "Humidity")
@@ -186,7 +185,7 @@ WA_df <- as.data.frame(WA_coord, xy = TRUE, na.rm = TRUE)
 rownames(WA_df) <- c()
 ggplot() + 
   geom_raster(data = WA_df, aes(x = x, y = y, fill = lyr.1))+ 
-  geom_sf(data = AUS_map, inherit.aes = FALSE, fill = NA)+
+  geom_sf(data = AUS, inherit.aes = FALSE, fill = NA)+
   scale_fill_viridis()+
   theme_minimal()+
   labs(title = "Relative Humidity in Western Australia, Australia", fill = "Humidity")

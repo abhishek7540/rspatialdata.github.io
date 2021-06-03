@@ -29,6 +29,8 @@ navbar:
           href: dhs-data.html
         - text: "Malaria"
           href: malaria.html
+        - text: "Air Pollution"
+          href: air_pollution.html 
     - text: "Contributors"
       href: contributors.html
 output:

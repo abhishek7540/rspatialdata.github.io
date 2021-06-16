@@ -119,7 +119,7 @@ ggplot() +
   geom_sf(data = swiss_bound, color = "white", fill = NA) +
   coord_sf() +
   scale_fill_viridis_c() +
-  ggtitle("Elevation data of Switzerland")
+  labs(title = "Elevation data of Switzerland",x = "Longitude", y = "Latitude", fill = "Elevation level(meters)")
 ```
 
 
@@ -147,7 +147,7 @@ ggplot() +
   geom_sf(data = sf_swiss, color = "white", fill = NA) +
   coord_sf(xlim = c(5.3,10.8), ylim = c(45.5,47.8))+
   scale_fill_viridis_c()+
-  ggtitle("Elevation data of Switzerland admininstrative areas")
+  labs(title = "Elevation data of Switzerland",x = "Longitude", y = "Latitude", fill = "Elevation level(meters)")
 ```
 
 <!--

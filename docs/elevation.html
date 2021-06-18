@@ -13,6 +13,7 @@
 
 <title>Elevation data</title>
 
+<script src="site_libs/header-attrs-2.7/header-attrs.js"></script>
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
@@ -556,7 +557,7 @@ ggplot() +
   geom_sf(data = swiss_bound, color = &quot;white&quot;, fill = NA) +
   coord_sf() +
   scale_fill_viridis_c() +
-  labs(title = &quot;Elevation data of Switzerland&quot;,x = &quot;Longitude&quot;, y = &quot;Latitude&quot;, fill = &quot;Elevation level(meters)&quot;)</code></pre>
+  labs(title = &quot;Elevation in Switzerland&quot;,x = &quot;Longitude&quot;, y = &quot;Latitude&quot;, fill = &quot;Elevation (meters)&quot;)</code></pre>
 <p><img src="elevation_files/figure-html/raster-elev-1.png" width="672" /></p>
 <p>We can also get the different administrative areas of the country Switzerland, by using the <code>ne_states</code> function from the <code>rnaturalearth</code> package. And the <code>get_elev_raster</code> function, you can get the elevation data. The following code does the same:</p>
 <p>!! NOTE: increasing or decreasing the <code>z</code> argument will make the map zoom in and out on the country by setting the appropriate z-axis value.</p>
@@ -577,7 +578,7 @@ ggplot() +
   geom_sf(data = sf_swiss, color = &quot;white&quot;, fill = NA) +
   coord_sf(xlim = c(5.3,10.8), ylim = c(45.5,47.8))+
   scale_fill_viridis_c()+
-  labs(title = &quot;Elevation data of Switzerland&quot;,x = &quot;Longitude&quot;, y = &quot;Latitude&quot;, fill = &quot;Elevation level(meters)&quot;)</code></pre>
+  labs(title = &quot;Elevation in Switzerland&quot;,x = &quot;Longitude&quot;, y = &quot;Latitude&quot;, fill = &quot;Elevation (meters)&quot;)</code></pre>
 <p><img src="elevation_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
 <!--
 

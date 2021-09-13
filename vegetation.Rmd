@@ -150,7 +150,8 @@ ggplot() +
   labs(title = "NDVI (Normalized Difference Vegetation Index) in Mongolia",
        subtitle = "01-06-2020",
        x = "Longitude",
-       y = "Latitude")
+       y = "Latitude") +
+  theme_minimal()
 ```
 
 

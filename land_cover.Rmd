@@ -163,7 +163,8 @@ ggplot() +
   labs(title = "Land Cover classification in Zimbabwe",
        subtitle = "01-01-2019 - 31-12-2019",
        x = "Longitude",
-       y = "Latitude")
+       y = "Latitude") +
+  theme_minimal()
 ```
 
 
